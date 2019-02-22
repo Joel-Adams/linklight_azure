@@ -29,7 +29,7 @@ The Ansible Networking Linklight project is intended for effectively demonstrati
      - [Ansible Tower Workshop Exercises](exercises/ansible_tower/README.md)
 
   * [Lab Provisioner](provisioner)  
-    AWS playbook for building up a testing environment (in the form of Virtual Machines) for someone to try the exercises provided above.
+    Azure playbook for building up a testing environment (in the form of Virtual Machines) for someone to try the exercises provided above.
 
 ### SELF-PACED EXERCISES:
 
