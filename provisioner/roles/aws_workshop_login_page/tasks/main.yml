@@ -26,6 +26,8 @@
 
 - name: DNS FOR STUDENT WEBPAGE FOR EASTUS
   azure_rm_dnsrecordset:
+    resource_group: "{{azure_name_prefix}}"
+    relative_name: www
     state: "{{ storage_state }}"
     zone_name: "{{workshop_dns_zone}}"
     records:

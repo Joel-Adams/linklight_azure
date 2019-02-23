@@ -1,12 +1,11 @@
-- name: DNS FOR STUDENT WEBPAGE FOR US-EAST-1
+- name: DNS FOR STUDENT WEBPAGE FOR EASTUS
   become: False
-  route53:
-    state: "{{ s3_state }}"
-    zone: "{{workshop_dns_zone}}"
-    record: "{{username}}.{{ec2_name_prefix|lower}}.{{workshop_dns_zone}}"
-    type: A
-    overwrite: yes
-    value: "{{ansible_host}}"
+  azure_rm_dnsrecordset:
+    state: "{{ storage_state }}"
+    zone_name: "{{workshop_dns_zone}}"
+    records:
+      - entry: "{{username}}.{{azure_name_prefix|lower}}.{{workshop_dns_zone}}"
+    record_type: A
   delegate_to: localhost
 
 - name: CERTBOT FOR TOWER
