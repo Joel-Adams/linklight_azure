@@ -24,7 +24,7 @@
 
 - name: Put student inventory in proper spot
   copy:
-    src: ./{{ec2_name_prefix}}/{{ username }}-instances.txt
+    src: ./{{azure_name_prefix}}/{{ username }}-instances.txt
     dest: "{{ control_node_inventory_path }}"
     owner: "{{ username }}"
     group: "{{ username }}"
