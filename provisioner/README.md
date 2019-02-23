@@ -26,8 +26,8 @@
 
 ```
 ---
-ec2_region: us-east-1                  # region where the nodes will live
-ec2_name_prefix: TESTWORKSHOP          # name prefix for all the VMs
+azure_region: us-east-1                  # region where the nodes will live
+azure_name_prefix: TESTWORKSHOP          # name prefix for all the VMs
 student_total: 2                       # creates student_total of workbenches for the workshop
 #OPTIONAL VARIABLES
 admin_password: ansible                # password for Ansible control node, defaults to ansible
