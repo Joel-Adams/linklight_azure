@@ -37,17 +37,22 @@ multivendor:
 # Instance types used for lab configurations
 azure_instance_types:
   junos-byol:
-    owners: 679593333241
     vm_size: Standard_D4s_v3
-    os_type: linux
+    image:
+      offer: 'vmx-services-gateway-byol'
+      publisher: 'juniper-networks'
+      sku: 'vmx-services-gateway-byol'
+      version: '17.4.3'    
     os_disk_size: 32
-    filter: "vmx-nested-17.4R1-S2.2-3-ami*"
     os: junos
 
   csr-byol:
-    owners: 679593333241
     vm_size: Standard_B2s
-    os_type: linux
+    image:
+      offer: 'cisco-csr-1000v'
+      publisher: cisco
+      sku: '16_10-byol'
+      version: '16.10.120190108'
     os_disk_size: 20
     os: ios
 
@@ -62,20 +67,22 @@ azure_instance_types:
     os_disk_size: 10
 
   rhel7-tower:
-    owners: 309956199498
     vm_size: Standard_B2s
-    os_type: linux
+    image:
+      offer: RHEL
+      publisher: RedHat
+      sku: '7-RAW'
+      version: latest
     os_disk_size: 20
-    architecture: x86_64
-    filter: 'RHEL-7.4*GA*'
 
   f5node:
-    owners: 679593333241
     vm_size: Standard_D2s_v3
-    os_type: linux
+    image:
+      offer: 'f5-big-ip-byol'
+      publisher: 'f5-networks'
+      sku: 'f5-big-all-1slot-byol'
+      version: '14.1.001000'
     os_disk_size: 40
-    architecture: x86_64
-    filter: 'F5 Networks Prelicensed Hourly BIGIP-13.1*Good 25MBPS*'
 
 # Login names used for SSH connections. These are baked in to the AMIs.
 azure_login_names:
