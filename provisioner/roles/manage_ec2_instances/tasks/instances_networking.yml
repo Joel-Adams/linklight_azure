@@ -39,14 +39,14 @@
 - name: Create EC2 instances for rtr1 node (NETWORKING MODE)
   ec2:
     assign_public_ip: yes
-    key_name: "{{ ec2_name_prefix }}-key"
+    key_name: "{{ azure_name_prefix }}-key"
     group: "{{ ec2_security_group }}"
     instance_type: "{{ ec2_instance_types[rtr1_node].size }}"
     image: "{{ rtr1_ami.image_id }}"
     region: "{{ ec2_region }}"
     exact_count: "{{ student_total }}"
     count_tag:
-      Workshop_rtr1: "{{ec2_name_prefix}}-rtr1"
+      Workshop_rtr1: "{{azure_name_prefix}}-rtr1"
     wait: "{{ ec2_wait }}"
     vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
   register: rtr1_output
@@ -57,9 +57,9 @@
     resource: "{{item.1}}"
     state: present
     tags:
-      Name: "{{ ec2_name_prefix }}-student{{item.0 + 1}}-rtr1"
-      Workshop_rtr1: "{{ec2_name_prefix}}-rtr1"
-      Workshop: "{{ec2_name_prefix}}"
+      Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-rtr1"
+      Workshop_rtr1: "{{azure_name_prefix}}-rtr1"
+      Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
       Student: "student{{item.0 + 1}}"
       AWS_USERNAME: "{{ linklight_user }}"
@@ -93,14 +93,14 @@
 - name: Create EC2 instances for rtr2 node in VPC-2 (NETWORKING MODE)
   ec2:
     assign_public_ip: yes
-    key_name: "{{ ec2_name_prefix }}-key"
+    key_name: "{{ azure_name_prefix }}-key"
     group: "{{ ec2_security_group2 }}"
     instance_type: "{{ ec2_instance_types[rtr2_node].size }}"
     image: "{{ rtr2_ami.image_id }}"
     region: "{{ ec2_region }}"
     exact_count: "{{ student_total }}"
     count_tag:
-      Workshop_rtr2: "{{ec2_name_prefix}}-rtr2"
+      Workshop_rtr2: "{{azure_name_prefix}}-rtr2"
     wait: "{{ ec2_wait }}"
     vpc_subnet_id: "{{ ec2_vpc_subnet_id2 }}"
   register: rtr2_output
@@ -111,9 +111,9 @@
     resource: "{{item.1}}"
     state: present
     tags:
-      Name: "{{ ec2_name_prefix }}-student{{item.0 + 1}}-rtr2"
-      Workshop_rtr2: "{{ec2_name_prefix}}-rtr2"
-      Workshop: "{{ec2_name_prefix}}"
+      Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-rtr2"
+      Workshop_rtr2: "{{azure_name_prefix}}-rtr2"
+      Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
       Student: "student{{item.0 + 1}}"
       AWS_USERNAME: "{{ linklight_user }}"
@@ -146,14 +146,14 @@
   - name: Create EC2 instances for rtr3 node (NETWORKING MODE)
     ec2:
       assign_public_ip: yes
-      key_name: "{{ ec2_name_prefix }}-key"
+      key_name: "{{ azure_name_prefix }}-key"
       group: "{{ ec2_security_group }}"
       instance_type: "{{ ec2_instance_types[rtr3_node].size }}"
       image: "{{ rtr3_ami.image_id }}"
       region: "{{ ec2_region }}"
       exact_count: "{{ student_total }}"
       count_tag:
-        Workshop_rtr3: "{{ec2_name_prefix}}-rtr3"
+        Workshop_rtr3: "{{azure_name_prefix}}-rtr3"
       wait: "{{ ec2_wait }}"
       vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
     register: rtr3_output
@@ -164,9 +164,9 @@
       resource: "{{item.1}}"
       state: present
       tags:
-        Name: "{{ ec2_name_prefix }}-student{{item.0 + 1}}-rtr3"
-        Workshop_rtr3: "{{ec2_name_prefix}}-rtr3"
-        Workshop: "{{ec2_name_prefix}}"
+        Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-rtr3"
+        Workshop_rtr3: "{{azure_name_prefix}}-rtr3"
+        Workshop: "{{azure_name_prefix}}"
         Index: "{{ item[0] }}"
         Student: "student{{item.0 + 1}}"
         AWS_USERNAME: "{{ linklight_user }}"
@@ -199,14 +199,14 @@
   - name: Create EC2 instances for rtr4 node in VPC-2 (NETWORKING MODE)
     ec2:
       assign_public_ip: yes
-      key_name: "{{ ec2_name_prefix }}-key"
+      key_name: "{{ azure_name_prefix }}-key"
       group: "{{ ec2_security_group2 }}"
       instance_type: "{{ ec2_instance_types[rtr4_node].size }}"
       image: "{{ rtr4_ami.image_id }}"
       region: "{{ ec2_region }}"
       exact_count: "{{ student_total }}"
       count_tag:
-        Workshop_rtr4: "{{ec2_name_prefix}}-rtr4"
+        Workshop_rtr4: "{{azure_name_prefix}}-rtr4"
       wait: "{{ ec2_wait }}"
       vpc_subnet_id: "{{ ec2_vpc_subnet_id2 }}"
     register: rtr4_output
@@ -217,9 +217,9 @@
       resource: "{{item.1}}"
       state: present
       tags:
-        Name: "{{ ec2_name_prefix }}-student{{item.0 + 1}}-rtr4"
-        Workshop_rtr4: "{{ec2_name_prefix}}-rtr4"
-        Workshop: "{{ec2_name_prefix}}"
+        Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-rtr4"
+        Workshop_rtr4: "{{azure_name_prefix}}-rtr4"
+        Workshop: "{{azure_name_prefix}}"
         Index: "{{ item[0] }}"
         Student: "student{{item.0 + 1}}"
         AWS_USERNAME: "{{ linklight_user }}"
@@ -250,14 +250,14 @@
 - name: Create EC2 instances for host1 node in VPC-2 (NETWORKING MODE)
   ec2:
     assign_public_ip: yes
-    key_name: "{{ ec2_name_prefix }}-key"
+    key_name: "{{ azure_name_prefix }}-key"
     group: "{{ ec2_security_group2 }}"
     instance_type: "{{ ec2_instance_types[host1_node].size }}"
     image: "{{ host1_ami.image_id }}"
     region: "{{ ec2_region }}"
     exact_count: "{{ student_total }}"
     count_tag:
-      Workshop_host1: "{{ec2_name_prefix}}-host1"
+      Workshop_host1: "{{azure_name_prefix}}-host1"
     wait: "{{ ec2_wait }}"
     vpc_subnet_id: "{{ ec2_vpc_subnet_id2 }}"
   register: host1_output
@@ -268,9 +268,9 @@
     resource: "{{item.1}}"
     state: present
     tags:
-      Name: "{{ ec2_name_prefix }}-student{{item.0 + 1}}-host1"
-      Workshop_host1: "{{ec2_name_prefix}}-host1"
-      Workshop: "{{ec2_name_prefix}}"
+      Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-host1"
+      Workshop_host1: "{{azure_name_prefix}}-host1"
+      Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
       Student: "student{{item.0 + 1}}"
       AWS_USERNAME: "{{ linklight_user }}"

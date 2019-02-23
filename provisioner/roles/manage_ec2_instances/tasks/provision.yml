@@ -1,6 +1,6 @@
-- name: ensure workshop folder {{ec2_name_prefix}} exists
+- name: ensure workshop folder {{azure_name_prefix}} exists
   file:
-    path: "{{ playbook_dir }}/{{ec2_name_prefix}}"
+    path: "{{ playbook_dir }}/{{azure_name_prefix}}"
     state: directory
 
 ## These AWS resources are used for every workshop type
@@ -35,14 +35,14 @@
 - name: Create EC2 instances for ansible node (control node)
   ec2:
     assign_public_ip: yes
-    key_name: "{{ ec2_name_prefix }}-key"
+    key_name: "{{ azure_name_prefix }}-key"
     group: "{{ ec2_security_group }}"
     instance_type: "{{ ec2_instance_types[ansible_node].size }}"
     image: "{{ ansible_control_node_ami.image_id }}"
     region: "{{ ec2_region }}"
     exact_count: "{{ student_total }}"
     count_tag:
-      Workshop_ansible: "{{ec2_name_prefix}}-ansible"
+      Workshop_ansible: "{{azure_name_prefix}}-ansible"
     wait: "{{ ec2_wait }}"
     vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
     volumes:
@@ -58,9 +58,9 @@
     resource: "{{item.1}}"
     state: present
     tags:
-      Name: "{{ ec2_name_prefix }}-student{{item.0 + 1}}-ansible"
-      Workshop_ansible: "{{ec2_name_prefix}}-ansible"
-      Workshop: "{{ec2_name_prefix}}"
+      Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-ansible"
+      Workshop_ansible: "{{azure_name_prefix}}-ansible"
+      Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
       Student: "student{{item.0 + 1}}"
       Username: "{{ linklight_user }}"

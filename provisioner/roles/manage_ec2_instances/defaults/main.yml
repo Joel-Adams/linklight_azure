@@ -1,27 +1,27 @@
 ---
-ec2_name_prefix: TRAINING
-ec2_region: us-east-1
-ec2_wait: yes
+azure_name_prefix: TRAINING
+azure_region: eastus
+azure_wait: yes
 #need to circle back and fix this for teardown - sean
-ec2_az: "{{ec2_region}}a"
-ec2_subnet: "172.16.0.0/16"
-ec2_subnet2: "172.17.0.0/16"
+azure_az: "{{azure_region}}"
+azure_subnet: "172.16.0.0/16"
+azure_subnet2: "172.17.0.0/16"
 networking: false
 ssh_port: 22
 
-ec2_control_node:
+azure_control_node:
   ansible: rhel7-tower
 
-ec2_lab_node_types:
+azure_lab_node_types:
   node1: rhel7
   node2: rhel7
   node3: rhel7
 
-ec2_lab_node_types_f5:
+azure_lab_node_types_f5:
   f5: f5-prelicensed
   host1: rhel7
 
-ec2_lab_node_types_networking:
+azure_lab_node_types_networking:
   rtr1: csr-byol
   rtr2: csr-byol
   host1: rhel7
@@ -35,10 +35,10 @@ multivendor:
   rtr4: junos-byol
 
 # Instance types used for lab configurations
-ec2_instance_types:
+azure_instance_types:
   junos-byol:
     owners: 679593333241
-    size: m4.xlarge
+    size: Standard_D4s_v3
     os_type: linux
     disk_space: 32
     architecture: x86_64
@@ -47,7 +47,7 @@ ec2_instance_types:
 
   csr-byol:
     owners: 679593333241
-    size: t2.medium
+    size: Standard_B2s
     os_type: linux
     disk_space: 20
     architecture: x86_64
@@ -57,7 +57,7 @@ ec2_instance_types:
   # Look for owner 309956199498 to find official Red Hat AMIs
   rhel7:
     owners: 309956199498
-    size: t2.micro
+    size: Standard_B1s
     os_type: linux
     disk_space: 10
     architecture: x86_64
@@ -65,7 +65,7 @@ ec2_instance_types:
 
   rhel7-tower:
     owners: 309956199498
-    size: t2.medium
+    size: Standard_B2s
     os_type: linux
     disk_space: 20
     architecture: x86_64
@@ -73,21 +73,21 @@ ec2_instance_types:
 
   f5node:
     owners: 679593333241
-    size: t2.large
+    size: Standard_D2s_v3
     os_type: linux
     disk_space: 40
     architecture: x86_64
     filter: 'F5 Networks Prelicensed Hourly BIGIP-13.1*Good 25MBPS*'
 
 # Login names used for SSH connections. These are baked in to the AMIs.
-ec2_login_names:
-  rhel7-tower: ec2-user
-  rhel7: ec2-user
+azure_login_names:
+  rhel7-tower: azure-user
+  rhel7: azure-user
   centos7-tower: centos
   centos7: centos
   ubuntu14: ubuntu
   ubuntu16: ubuntu
-  csr-byol: ec2-user
+  csr-byol: azure-user
   junos-byol: jnpr
   f5-prelicensed: admin
-  f5_hosts: ec2-user
+  f5_hosts: azure-user

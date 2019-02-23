@@ -1,6 +1,6 @@
-- name: Create AWS VPC {{ ec2_name_prefix }}-vpc2 (NETWORKING MODE)
+- name: Create AWS VPC {{ azure_name_prefix }}-vpc2 (NETWORKING MODE)
   ec2_vpc_net:
-    name: "{{ ec2_name_prefix }}-vpc2"
+    name: "{{ azure_name_prefix }}-vpc2"
     cidr_block: "{{ ec2_subnet2 }}"
     region: "{{ ec2_region }}"
     tags:
@@ -13,9 +13,9 @@
   until: create_vpc2 is not failed
   retries: 5
 
-- name: Create EC2 security group 2 for VPC named {{ ec2_name_prefix }}-vpc (NETWORKING MODE)
+- name: Create EC2 security group 2 for VPC named {{ azure_name_prefix }}-vpc (NETWORKING MODE)
   ec2_group:
-    name: "{{ ec2_name_prefix }}-insecure_all2"
+    name: "{{ azure_name_prefix }}-insecure_all2"
     description: all ports open
     region: "{{ ec2_region }}"
     vpc_id: "{{create_vpc2.vpc.id}}"
@@ -65,14 +65,14 @@
   until: create_sg2 is not failed
   retries: 5
 
-- name: Create subnet for {{ ec2_name_prefix }}-vpc2 (NETWORKING MODE)
+- name: Create subnet for {{ azure_name_prefix }}-vpc2 (NETWORKING MODE)
   ec2_vpc_subnet:
     region: "{{ ec2_region }}"
     az: "{{ ec2_az }}"
     vpc_id: "{{create_vpc2.vpc.id}}"
     cidr: "{{ec2_subnet2}}"
     resource_tags:
-      Name: "{{ ec2_name_prefix }}-subnet2"
+      Name: "{{ azure_name_prefix }}-subnet2"
       Username: "{{ linklight_user }}"
       Info: "Username that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
@@ -119,12 +119,12 @@
   set_fact:
     ec2_vpc_id2: "{{ create_vpc2.vpc.id }}"
     ec2_vpc_subnet_id2: "{{ create_subnet2.subnet.id }}"
-    ec2_security_group2: "{{ ec2_name_prefix }}-insecure_all2"
+    ec2_security_group2: "{{ azure_name_prefix }}-insecure_all2"
   when: ec2_vpc_id2 is undefined
 
 - name: debugging all variables for ec2 instance creation VPC-2 (NETWORKING MODE)
   debug:
     msg:
-      - "ec2_name_prefix: {{ec2_name_prefix}}"
+      - "azure_name_prefix: {{azure_name_prefix}}"
       - "ec2_vpc_id2: {{ ec2_vpc_id2 }}"
       - "ec2_vpc_subnet_id2: {{ ec2_vpc_subnet_id2 }}"

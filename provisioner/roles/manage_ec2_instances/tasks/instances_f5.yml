@@ -16,14 +16,14 @@
 - name: Create EC2 instances for f5 node (F5 MODE)
   ec2:
     assign_public_ip: yes
-    key_name: "{{ ec2_name_prefix }}-key"
+    key_name: "{{ azure_name_prefix }}-key"
     group: "{{ ec2_security_group }}"
     instance_type: "{{ ec2_instance_types.f5node.size }}"
     image: "{{ f5_ami.image_id }}"
     region: "{{ ec2_region }}"
     exact_count: "{{ student_total }}"
     count_tag:
-      Workshop_f5: "{{ec2_name_prefix}}-f5"
+      Workshop_f5: "{{azure_name_prefix}}-f5"
     wait: "{{ ec2_wait }}"
     vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
   register: f5_output
@@ -34,10 +34,10 @@
     resource: "{{item.1}}"
     state: present
     tags:
-      Name: "{{ ec2_name_prefix }}-student{{item.0 + 1}}-f5"
+      Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-f5"
       short_name: "f5"
-      Workshop_f5: "{{ec2_name_prefix}}-f5"
-      Workshop: "{{ec2_name_prefix}}"
+      Workshop_f5: "{{azure_name_prefix}}-f5"
+      Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
       Student: "student{{item.0 + 1}}"
       AWS_USERNAME: "{{ linklight_user }}"
@@ -65,14 +65,14 @@
 - name: Create EC2 instances for host1 node in VPC (F5 MODE)
   ec2:
     assign_public_ip: yes
-    key_name: "{{ ec2_name_prefix }}-key"
+    key_name: "{{ azure_name_prefix }}-key"
     group: "{{ ec2_security_group }}"
     instance_type: "{{ ec2_instance_types.rhel7.size }}"
     image: "{{ host1_ami.image_id }}"
     region: "{{ ec2_region }}"
     exact_count: "{{ student_total }}"
     count_tag:
-      Workshop_host1: "{{ec2_name_prefix}}-host1"
+      Workshop_host1: "{{azure_name_prefix}}-host1"
     wait: "{{ ec2_wait }}"
     vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
   register: host1_output
@@ -83,9 +83,9 @@
     resource: "{{item.1}}"
     state: present
     tags:
-      Name: "{{ ec2_name_prefix }}-student{{item.0 + 1}}-host1"
-      Workshop_host1: "{{ec2_name_prefix}}-host1"
-      Workshop: "{{ec2_name_prefix}}"
+      Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-host1"
+      Workshop_host1: "{{azure_name_prefix}}-host1"
+      Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
       Student: "student{{item.0 + 1}}"
       AWS_USERNAME: "{{ linklight_user }}"
@@ -100,14 +100,14 @@
 - name: Create EC2 instances for host2 node in VPC (F5 MODE)
   ec2:
     assign_public_ip: yes
-    key_name: "{{ ec2_name_prefix }}-key"
+    key_name: "{{ azure_name_prefix }}-key"
     group: "{{ ec2_security_group }}"
     instance_type: "{{ ec2_instance_types.rhel7.size }}"
     image: "{{ host1_ami.image_id }}"
     region: "{{ ec2_region }}"
     exact_count: "{{ student_total }}"
     count_tag:
-      Workshop_host2: "{{ec2_name_prefix}}-host2"
+      Workshop_host2: "{{azure_name_prefix}}-host2"
     wait: "{{ ec2_wait }}"
     vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
   register: host2_output
@@ -118,9 +118,9 @@
     resource: "{{item.1}}"
     state: present
     tags:
-      Name: "{{ ec2_name_prefix }}-student{{item.0 + 1}}-host2"
-      Workshop_host2: "{{ec2_name_prefix}}-host2"
-      Workshop: "{{ec2_name_prefix}}"
+      Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-host2"
+      Workshop_host2: "{{azure_name_prefix}}-host2"
+      Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
       Student: "student{{item.0 + 1}}"
       AWS_USERNAME: "{{ linklight_user }}"
