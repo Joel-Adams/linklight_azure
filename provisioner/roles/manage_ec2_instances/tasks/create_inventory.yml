@@ -1,9 +1,7 @@
 - name: grab facts for control_nodes
   azure_rm_virtualmachine_facts:
-    region: "{{ ec2_region }}"
-    filters:
-      instance-state-name: running
-      "tag:Workshop_ansible": "{{azure_name_prefix}}-ansible"
+    resource_group: "{{azure_name_prefix}}"
+    tags: "{{azure_name_prefix}}-ansible"
   register: ansible_node_facts
 
 - name: DEBUG ansible_node_facts
