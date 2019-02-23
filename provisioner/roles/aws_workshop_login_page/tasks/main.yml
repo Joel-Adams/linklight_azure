@@ -2,56 +2,58 @@
   template:
     src: ./templates/index.html.j2
     dest: "{{ playbook_dir }}/{{ azure_name_prefix }}/{{ azure_name_prefix|lower }}-index.html"
-  when: s3_state == 'present'
+  when: storage_state == 'present'
 
-- name: CREATE S3 BUCKET
-  s3_bucket:
-    name: "{{azure_name_prefix|lower}}.{{workshop_dns_zone|lower}}"
-    state: "{{ s3_state }}"
-    region: "{{ec2_region}}"
+- name: CREATE AZURE STORAGE BLOB
+  azure_rm_storageblob:
+    resource_group: "{{azure_name_prefix}}"
+    storage_account_name: "{{azure_name_prefix|lower}}.{{workshop_dns_zone|lower}}"
+    container: "{{azure_name_prefix}}"
+    pubic_access: container
+    src: "{{ playbook_dir }}/{{ azure_name_prefix }}/{{ azure_name_prefix|lower }}-index.html"
+    state: "{{ storage_state }}"
     force: yes
+  register: azure_site
 
-- name: ENABLE WEB HOSTING
-  s3_website:
-   name: "{{azure_name_prefix|lower}}.{{workshop_dns_zone|lower}}"
-   state: "{{ s3_state }}"
-   region: "{{ec2_region}}"
-   suffix: "{{ azure_name_prefix|lower }}-index.html"
-  register: s3_site
-  when: s3_state == 'present'
+# - name: ENABLE WEB HOSTING
+#   s3_website:
+#    name: "{{azure_name_prefix|lower}}.{{workshop_dns_zone|lower}}"
+#    state: "{{ storage_state }}"
+#    region: "{{azure_region}}"
+#    suffix: "{{ azure_name_prefix|lower }}-index.html"
+#   register: s3_site
+#   when: storage_state == 'present'
 
-- name: DNS FOR STUDENT WEBPAGE FOR US-EAST-1
-  route53:
-    state: "{{ s3_state }}"
-    zone: "{{workshop_dns_zone}}"
-    record: "{{azure_name_prefix|lower}}.{{workshop_dns_zone}}"
-    type: CNAME
-    overwrite: yes
-    value: "{{azure_name_prefix|lower}}.{{workshop_dns_zone}}.s3-website-{{ec2_region}}.amazonaws.com"
+- name: DNS FOR STUDENT WEBPAGE FOR EASTUS
+  azure_rm_dnsrecordset:
+    state: "{{ storage_state }}"
+    zone_name: "{{workshop_dns_zone}}"
+    records:
+      - entry: "{{azure_name_prefix|lower}}.{{workshop_dns_zone}}"
+    record_type: CNAME
   when:
-    - ec2_region == 'us-east-1'
+    - azure_region == 'eastus'
 
 - name: DNS FOR WEBPAGE
-  route53:
-    state: "{{ s3_state }}"
-    zone: "{{workshop_dns_zone}}"
-    record: "{{azure_name_prefix|lower}}.{{workshop_dns_zone}}"
-    type: CNAME
-    overwrite: yes
-    value: "{{azure_name_prefix|lower}}.{{workshop_dns_zone}}.s3-website.{{ec2_region}}.amazonaws.com"
+  azure_rm_dnsrecordset:
+    state: "{{ storage_state }}"
+    zone_name: "{{workshop_dns_zone}}"
+    records:
+      - entry: "{{azure_name_prefix|lower}}.{{workshop_dns_zone}}"
+    record_type: CNAME
   when:
-    - ec2_region != 'us-east-1'
+    - azure_region != 'eastus'
 
-- name: PUT STUDENT WEBPAGE
-  s3_sync:
-    bucket: "{{azure_name_prefix|lower}}.{{workshop_dns_zone}}"
-    region: "{{ec2_region}}"
-    file_root: "{{ playbook_dir }}/{{azure_name_prefix}}"
-    mime_map:
-      .html: text/html
-    permission: public-read
-    include: "{{ azure_name_prefix|lower }}-index.html"
-  when: s3_state == 'present'
+# - name: PUT STUDENT WEBPAGE
+#   s3_sync:
+#     bucket: "{{azure_name_prefix|lower}}.{{workshop_dns_zone}}"
+#     region: "{{azure_region}}"
+#     file_root: "{{ playbook_dir }}/{{azure_name_prefix}}"
+#     mime_map:
+#       .html: text/html
+#     permission: public-read
+#     include: "{{ azure_name_prefix|lower }}-index.html"
+#   when: storage_state == 'present'
 
 - name: SET WEBSITE INFORMATION VARIABLE
   set_fact:
