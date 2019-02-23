@@ -1,38 +1,44 @@
 ##############f5 node##############
-- name: find ami for f5 (F5 MODE)
-  ec2_ami_facts:
-    region: "{{ ec2_region }}"
-    owners: "{{ ec2_instance_types.f5node.owners }}"
-    filters:
-      name: "{{ ec2_instance_types.f5node.filter }}"
-      architecture: "{{ ec2_instance_types.f5node.architecture }}"
-  register: amis
-
-- name: save ami for f5 (F5 MODE)
-  set_fact:
-    f5_ami: >
-      {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
+# - name: find ami for f5 (F5 MODE)
+#   ec2_ami_facts:
+#     region: "{{ ec2_region }}"
+#     owners: "{{ azure_instance_types.f5node.owners }}"
+#     filters:
+#       name: "{{ azure_instance_types.f5node.filter }}"
+#       architecture: "{{ azure_instance_types.f5node.architecture }}"
+#   register: amis
+#
+# - name: save ami for f5 (F5 MODE)
+#   set_fact:
+#     f5_ami: >
+#       {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
 
 - name: Create EC2 instances for f5 node (F5 MODE)
-  ec2:
-    assign_public_ip: yes
-    key_name: "{{ azure_name_prefix }}-key"
-    group: "{{ ec2_security_group }}"
-    instance_type: "{{ ec2_instance_types.f5node.size }}"
-    image: "{{ f5_ami.image_id }}"
-    region: "{{ ec2_region }}"
-    exact_count: "{{ student_total }}"
-    count_tag:
-      Workshop_f5: "{{azure_name_prefix}}-f5"
-    wait: "{{ ec2_wait }}"
-    vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
+  azure_rm_virtualmachine:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{azure_name_prefix}}.{{ item }}"
+    public_ip_allocation_method: Static
+    instance_type: "{{ azure_instance_types.f5node.vm_size }}"
+    image:
+      offer: "{{ azure_instance_types[f5_node].offer }}"
+      publisher: "{{ azure_instance_types[f5_node].publisher }}"
+      sku: "{{ azure_instance_types[f5_node].sku }}"
+      version: "{{ azure_instance_types[f5_node].version }}"
+    ssh_public_keys:
+      - path: /home/azure-user/.ssh/authorized_keys
+        key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
+    append_tags: yes
+    tags:
+      'Workshop_f5': "{{azure_name_prefix}}-f5"
+  with_sequence: start=0 end="{{ student_total }}"
   register: f5_output
 
 - name: Ensure tags are present for f5 node (F5 MODE)
-  ec2_tag:
-    region: "{{ ec2_region }}"
-    resource: "{{item.1}}"
+  azure_rm_virtualmachine:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{item.1}}"
     state: present
+    append_tags: yes
     tags:
       Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-f5"
       short_name: "f5"
@@ -40,56 +46,62 @@
       Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
       Student: "student{{item.0 + 1}}"
-      AWS_USERNAME: "{{ linklight_user }}"
-      Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
+      # AWS_USERNAME: "{{ linklight_user }}"
+      # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "{{student_total}}"
   with_indexed_items:
     - "{{ f5_output.instance_ids }}"
   when: f5_output.instance_ids is not none
 
-- name: find ami for host1 & host2 (F5 MODE)
-  ec2_ami_facts:
-    region: "{{ ec2_region }}"
-    owners: "{{ ec2_instance_types.rhel7.owners }}"
-    filters:
-      name: "{{ ec2_instance_types.rhel7.filter }}"
-      architecture: "{{ ec2_instance_types.rhel7.architecture }}"
-  register: amis
-
-- name: save ami for host1 & host2 (F5 MODE)
-  set_fact:
-    host1_ami: >
-      {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
+# - name: find ami for host1 & host2 (F5 MODE)
+#   ec2_ami_facts:
+#     region: "{{ ec2_region }}"
+#     owners: "{{ azure_instance_types.rhel7.owners }}"
+#     filters:
+#       name: "{{ azure_instance_types.rhel7.filter }}"
+#       architecture: "{{ azure_instance_types.rhel7.architecture }}"
+#   register: amis
+#
+# - name: save ami for host1 & host2 (F5 MODE)
+#   set_fact:
+#     host1_ami: >
+#       {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
 
 - name: Create EC2 instances for host1 node in VPC (F5 MODE)
-  ec2:
-    assign_public_ip: yes
-    key_name: "{{ azure_name_prefix }}-key"
-    group: "{{ ec2_security_group }}"
-    instance_type: "{{ ec2_instance_types.rhel7.size }}"
-    image: "{{ host1_ami.image_id }}"
-    region: "{{ ec2_region }}"
-    exact_count: "{{ student_total }}"
-    count_tag:
+  azure_rm_virtualmachine:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{azure_name_prefix}}.{{ item }}"
+    public_ip_allocation_method: Static
+    instance_type: "{{ azure_instance_types.rhel7.vm_size }}"
+    image:
+      offer: "{{ azure_instance_types.rehl7.offer }}"
+      publisher: "{{ azure_instance_types.rehl7.publisher }}"
+      sku: "{{ azure_instance_types.rehl7.sku }}"
+      version: "{{ azure_instance_types.rehl7.version }}"
+    ssh_public_keys:
+      - path: /home/azure-user/.ssh/authorized_keys
+        key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
+    append_tags: yes
+    tags:
       Workshop_host1: "{{azure_name_prefix}}-host1"
-    wait: "{{ ec2_wait }}"
-    vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
+  with_sequence: start=0 end="{{ student_total }}"
   register: host1_output
 
 - name: Ensure tags are present for host1 node (F5 MODE)
-  ec2_tag:
-    region: "{{ ec2_region }}"
-    resource: "{{item.1}}"
+  azure_rm_virtualmachine:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{item.1}}"
     state: present
+    append_tags: yes
     tags:
       Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-host1"
       Workshop_host1: "{{azure_name_prefix}}-host1"
       Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
       Student: "student{{item.0 + 1}}"
-      AWS_USERNAME: "{{ linklight_user }}"
-      Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
+      # AWS_USERNAME: "{{ linklight_user }}"
+      # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner for F5 workshop"
       Students: "{{student_total}}"
       short_name: host1
@@ -98,33 +110,39 @@
   when: host1_output.instance_ids is not none
 
 - name: Create EC2 instances for host2 node in VPC (F5 MODE)
-  ec2:
-    assign_public_ip: yes
-    key_name: "{{ azure_name_prefix }}-key"
-    group: "{{ ec2_security_group }}"
-    instance_type: "{{ ec2_instance_types.rhel7.size }}"
-    image: "{{ host1_ami.image_id }}"
-    region: "{{ ec2_region }}"
-    exact_count: "{{ student_total }}"
-    count_tag:
+  azure_rm_virtualmachine:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{azure_name_prefix}}.{{ item }}"
+    public_ip_allocation_method: Static
+    instance_type: "{{ azure_instance_types.rhel7.vm_size }}"
+    image:
+      offer: "{{ azure_instance_types.rehl7.offer }}"
+      publisher: "{{ azure_instance_types.rehl7.publisher }}"
+      sku: "{{ azure_instance_types.rehl7.sku }}"
+      version: "{{ azure_instance_types.rehl7.version }}"
+    ssh_public_keys:
+      - path: /home/azure-user/.ssh/authorized_keys
+        key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
+    append_tags: yes
+    tags:
       Workshop_host2: "{{azure_name_prefix}}-host2"
-    wait: "{{ ec2_wait }}"
-    vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
+  with_sequence: start=0 end="{{ student_total }}"
   register: host2_output
 
 - name: Ensure tags are present for host2 node (F5 MODE)
-  ec2_tag:
-    region: "{{ ec2_region }}"
-    resource: "{{item.1}}"
+  azure_rm_virtualmachine:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{item.1}}"
     state: present
+    append_tags: yes
     tags:
       Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-host2"
       Workshop_host2: "{{azure_name_prefix}}-host2"
       Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
       Student: "student{{item.0 + 1}}"
-      AWS_USERNAME: "{{ linklight_user }}"
-      Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
+      # AWS_USERNAME: "{{ linklight_user }}"
+      # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner for F5 workshop"
       Students: "{{student_total}}"
       short_name: host2
