@@ -22,22 +22,24 @@
 
     azure_instance_types:
       junos-byol:
-        owners: 679593333241
-        size: m4.xlarge
-        os_type: linux
-        disk_space: 32
-        architecture: x86_64
-        filter: "vmx-nested-17.4R1-S2.2-3-ami*"
+        vm_size: Standard_D4s_v3
+        image:
+          offer: 'vmx-services-gateway-byol'
+          publisher: 'juniper-networks'
+          sku: 'vmx-services-gateway-byol'
+          version: '17.4.3'
+        os_disk_size: 32
         os: junos
 
       csr-byol:
-        owners: 679593333241
-        size: t2.medium
-        os_type: linux
-        disk_space: 20
-        architecture: x86_64
-        filter: "cisco-CSR*BYOL*"
-        os: ios
+        vm_size: Standard_B2s
+        image:
+          offer: 'cisco-csr-1000v'
+          publisher: cisco
+          sku: '16_10-byol'
+          version: '16.10.120190108'
+        os_disk_size: 20
+        os: ioss
 
     azure_lab_node_types_networking: "{{all_cisco}}"
 
