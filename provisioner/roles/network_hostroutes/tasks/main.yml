@@ -2,7 +2,7 @@
   azure_rm_virtualmachine_facts:
     resource_group: "{{azure_name_prefix}}"
     tags:
-      - Name: "{{azure_name_prefix}}-{{username}}-rtr1"
+      - Name: rtr1
   register: rtr1_facts
   delegate_to: localhost
 
