@@ -1,5 +1,5 @@
-# Ansible AWS training provisioner
-**aws_lab_setup** is an automated lab setup for Ansible training on AWS (Amazon Web Services).  There are currently three modes:
+# Ansible Azure training provisioner
+**azure_lab_setup** is an automated lab setup for Ansible training on Azure (Amazon Web Services).  There are currently three modes:
  - [Ansible Engine Workshop](../exercises/ansible_engine) for demonstrating Ansible capabilities on Red Hat Enterprise Linux.
  - [Ansible Networking Workshop](../exercises/networking) for demonstrating Ansible’s capabilities on network equipment (e.g. Cisco Systems IOS).
  - [Ansible F5 Workshop](../exercises/ansible_f5) for demonstrating Ansible’s capabilities on F5 BIG-IP
@@ -10,12 +10,12 @@
   - [One Time Setup](#one-time-setup)
   - [Setup (per workshop)](#setup-per-workshop)
   - [Accessing student documentation and slides](#Accessing-student-documentation-and-slides)
-- [Lab Teardown](#aws-teardown)
+- [Lab Teardown](#azure-teardown)
 - [FAQ](../docs/faq.md)
 
 # Requirements
 - This provisioner must be run with Ansible Engine v2.7.0 or higher.
-- AWS Account (follow directions on one time setup below)
+- Azure Account (follow directions on one time setup below)
 
 # Lab Setup
 [For One Time Setup - click here](../docs/setup.md)
@@ -26,13 +26,17 @@
 
 ```
 ---
-azure_region: us-east-1                  # region where the nodes will live
-azure_name_prefix: TESTWORKSHOP          # name prefix for all the VMs
+azure_region: eastus                   # region where the nodes will live
+azure_name_prefix: TESTWORKSHOP        # name prefix for all the VMs
 student_total: 2                       # creates student_total of workbenches for the workshop
+azure_subscription_id:            
+azure_client_id:                 
+azure_client_secret:
+azure_tenant_id:
 #OPTIONAL VARIABLES
 admin_password: ansible                # password for Ansible control node, defaults to ansible
 networking: true                       # Set this if you want the workshop in networking mode
-create_login_page: true                # creates AWS S3 website for ec2_name_prefix.workshop_dns_zone
+create_login_page: true                # creates Azure S3 website for ec2_name_prefix.workshop_dns_zone
 workshop_dns_zone: rhdemo.io           # Sets the Route53 DNS zone to use for the S3 website
 towerinstall: true                     # automatically installs Tower to control node
 #autolicense: true                     # automatically licenses Tower if license is provided
@@ -51,7 +55,7 @@ For more extra_vars examples, look at the following:
 
         ansible-playbook provision_lab.yml -e @extra_vars.yml
 
-3. Login to the EC2 console and you should see instances being created like:
+3. Login to the Azure console and you should see instances being created like:
 
         `TESTWORKSHOP-student1-ansible`
 
