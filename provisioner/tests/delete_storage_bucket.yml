@@ -6,7 +6,7 @@
     azure_region: eastus
     azure_name_prefix: multivendor
     workshop_dns_zone: "{{workshop_dns_zone}}"
-    dns_state: absent
+    storage_state: absent
   tasks:
     - name: DNS for student webpage
       azure_rm_dnsrecordset:
