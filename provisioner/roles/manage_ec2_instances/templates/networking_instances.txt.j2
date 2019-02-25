@@ -47,7 +47,7 @@ juniper
 {% endif %}
 
 [cisco:vars]
-ansible_user=ec2-user
+ansible_user=azure-user
 ansible_network_os=ios
 ansible_connection=network_cli
 
@@ -73,7 +73,7 @@ rtr4
 [hosts]
 {% for vm in host1_node_facts.instances %}
 {% if 'student' + item == vm.tags.Student %}
-{{ vm.tags.short_name }} ansible_host={{ vm.public_ip_address }} ansible_user={{ ec2_login_names[host1_node] }} private_ip={{ vm.private_ip_address }}
+{{ vm.tags.short_name }} ansible_host={{ vm.public_ip_address }} ansible_user={{ azure_login_names[host1_node] }} private_ip={{ vm.private_ip_address }}
 {% endif %}
 {% endfor %}
 
