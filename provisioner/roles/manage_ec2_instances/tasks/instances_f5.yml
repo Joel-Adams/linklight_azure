@@ -153,16 +153,15 @@
 ############## eni check ##############
 
 - name: grab all network interfaces for VPC 1 (F5 MODE)
-  ec2_eni_facts:
-    region: "{{ ec2_region }}"
-    filters:
-      vpc-id: "{{ec2_vpc_id}}"
-  register: eni_facts_1
+  azure_rm_networkinterface_facts:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{azure_vpc_id}}"
+  register: vpc_facts_1
 
-- name: Disable Source/Dest check on instance {{ec2_vpc_id}} (F5 MODE)
-  ec2_eni:
+- name: Disable Source/Dest check on instance {{azure_vpc_id}} (F5 MODE)
+  azure_rm_networkinterface_facts:
     eni_id: "{{ item['network_interface_id'] }}"
-    region: "{{ ec2_region }}"
-    source_dest_check: false
+    resource_group: "{{azure_name_prefix}}"
+    cert_validation_mode: ignore
   with_items:
-    - "{{eni_facts_1['network_interfaces']}}"
+    - "{{vpc_facts_1['network_interfaces']}}"
