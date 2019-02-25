@@ -1,9 +1,9 @@
 - include_tasks: teardown.yml
   when: teardown
 
-- name: provision workshop in AWS public cloud
+- name: provision workshop in Azure public cloud
   block:
-    - name: provision aws resources and instances
+    - name: provision Azure resources and instances
       include_tasks: provision.yml
 
     - name: create instructor_inventory, and student files
