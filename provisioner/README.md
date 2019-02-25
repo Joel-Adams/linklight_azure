@@ -29,8 +29,8 @@
 azure_region: eastus                   # region where the nodes will live
 azure_name_prefix: TESTWORKSHOP        # name prefix for all the VMs
 student_total: 2                       # creates student_total of workbenches for the workshop
-azure_subscription_id:            
-azure_client_id:                 
+azure_subscription_id:
+azure_client_id:
 azure_client_secret:
 azure_tenant_id:
 #OPTIONAL VARIABLES
