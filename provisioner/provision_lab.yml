@@ -26,14 +26,14 @@
           - not networking
       when: f5workshop
 
-    - name: run role to check if local environment setup will work with AWS
+    - name: run role to check if local environment setup will work with Azure
       include_role:
-        name: aws_check_setup
+        name: azure_check_setup
 
     - name: make sure we are not running with TESTWORKSHOP as the name so no overlap
       assert:
         that:
-          - ec2_name_prefix != "TESTWORKSHOP"
+          - azure_name_prefix != "TESTWORKSHOP"
 
     - name: if special lab is defined, make sure its a supported mode
       assert:
@@ -57,13 +57,13 @@
        - autolicense is defined
        - autolicense
 
-- name: Create lab instances in AWS
+- name: Create lab instances in Azure
   hosts: localhost
   connection: local
   become: no
   gather_facts: no
   roles:
-    - manage_ec2_instances
+    - manage_azure_instances
 
 - name: wait for all nodes to have SSH reachability
   hosts: "managed_nodes:control_nodes"
@@ -99,7 +99,7 @@
   become: yes
   gather_facts: no
   roles:
-    - { role: aws_dns, when: create_login_page is defined and create_login_page }
+    - { role: azure_dns, when: create_login_page is defined and create_login_page }
 
 - name: Setup Amazon S3 Website for Student Login
   hosts: localhost
@@ -107,7 +107,7 @@
   become: no
   gather_facts: no
   roles:
-    - { role: aws_workshop_login_page, when: create_login_page is defined and create_login_page }
+    - { role: azure_workshop_login_page, when: create_login_page is defined and create_login_page }
 
 - name: Setup Host routes for ansible control node and host1 when in networking mode
   hosts: "managed_nodes:control_nodes"
@@ -124,7 +124,7 @@
   roles:
     - { role: f5_setup, when: f5workshop }
 
-- name: GATHER AWS FACTS FOR ROUTERS
+- name: GATHER Azure FACTS FOR ROUTERS
   hosts: access,core
   connection: local
   gather_facts: no
@@ -195,9 +195,9 @@
         summary_information: |
           PROVISIONER SUMMARY
           *******************
-          - Workshop name is {{ec2_name_prefix}}
-          - Instructor inventory is located at  {{playbook_dir}}/{{ec2_name_prefix}}/instructor_inventory.txt
-          - Private key is located at {{playbook_dir}}/{{ec2_name_prefix}}/{{ec2_name_prefix}}.pem
+          - Workshop name is {{azure_name_prefix}}
+          - Instructor inventory is located at  {{playbook_dir}}/{{azure_name_prefix}}/instructor_inventory.txt
+          - Private key is located at {{playbook_dir}}/{{azure_name_prefix}}/{{azure_name_prefix}}.pem
           {{website_information}}
           FAILURES
           *******************
