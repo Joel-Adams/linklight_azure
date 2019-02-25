@@ -36,8 +36,8 @@ azure_tenant_id:
 #OPTIONAL VARIABLES
 admin_password: ansible                # password for Ansible control node, defaults to ansible
 networking: true                       # Set this if you want the workshop in networking mode
-create_login_page: true                # creates Azure S3 website for ec2_name_prefix.workshop_dns_zone
-workshop_dns_zone: rhdemo.io           # Sets the Route53 DNS zone to use for the S3 website
+create_login_page: true                # creates Azure website for azure_name_prefix.workshop_dns_zone
+workshop_dns_zone: rhdemo.io           # Sets the DNS zone to use for the website
 towerinstall: true                     # automatically installs Tower to control node
 #autolicense: true                     # automatically licenses Tower if license is provided
 #xrdp: true                            # install xrdp with xfce for graphical interface
