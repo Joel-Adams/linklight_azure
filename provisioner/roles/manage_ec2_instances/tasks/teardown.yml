@@ -1,37 +1,36 @@
 - name: grab facts for workshop
   azure_rm_virtualmachine_facts:
-    region: "{{ ec2_region }}"
-    filters:
-      instance-state-name: running
-      "tag:Workshop": "{{azure_name_prefix}}"
+    resource_group: "{{azure_name_prefix}}"
+    tags:
+      - "{{azure_name_prefix}}"
   register: all_workshop_nodes
 
 # - name: debug test
 #   debug:
 #     var: all_workshop_nodes
 
-- name: destroy EC2 instances
-  ec2:
-    region: "{{ ec2_region }}"
+- name: destroy Azure instances
+  azure_rm_virtualmachine:
+    resource_group: "{{azure_name_prefix}}"
     state: absent
-    instance_ids: "{{ all_workshop_nodes.instances | map(attribute='instance_id') | list }}"
+    name: "{{ all_workshop_nodes.instances | map(attribute='name') | list }}"
   register: result
   when: all_workshop_nodes.instances
 
-- name: Get the VPC ID for {{ azure_name_prefix }}
-  ec2_vpc_net_facts:
-    filters:
-      "tag:Name": "{{ azure_name_prefix }}-vpc"
-    region: "{{ ec2_region }}"
-  register: vpc_net_facts
-
-- name: Get the VPC ID 2 for {{ azure_name_prefix }} (NETWORKING MODE)
-  ec2_vpc_net_facts:
-    filters:
-      "tag:Name": "{{ azure_name_prefix }}-vpc2"
-    region: "{{ ec2_region }}"
-  register: vpc_net_facts2
-  when: networking
+# - name: Get the VPC ID for {{ azure_name_prefix }}
+#   azure_rm_virtualnetwork_facts:
+#     resource_group: "{{azure_name_prefix}}"
+#       "tag:Name": "{{ azure_name_prefix }}-vpc"
+#     region: "{{ azure_region }}"
+#   register: vpc_net_facts
+#
+# - name: Get the VPC ID 2 for {{ azure_name_prefix }} (NETWORKING MODE)
+#   azure_rm_virtualnetwork_facts:
+#     resource_group: "{{azure_name_prefix}}"
+#       "tag:Name": "{{ azure_name_prefix }}-vpc2"
+#     region: "{{ azure_region }}"
+#   register: vpc_net_facts2
+#   when: networking
 
 # - name: debugging vpc id for {{ azure_name_prefix }}
 #   debug:
@@ -40,35 +39,33 @@
 
 - name: use set fact for easier variables
   set_fact:
-    ec2_vpc_id: "{{vpc_net_facts.vpcs[0].id}}"
-    ec2_security_group: "{{ azure_name_prefix }}-insecure_all"
-  when: vpc_net_facts.vpcs|length > 0 and ec2_security_group is undefined
+    azure_vpc_id: "{{vpc_net_facts.vpcs[0].id}}"
+    azure_security_group: "{{ azure_name_prefix }}-insecure_all"
+  when: vpc_net_facts.vpcs|length > 0 and azure_security_group is undefined
 
 - name: set variables for instance creation dynamically since VPC was not supplied by user (NETWORKING MODE)
   set_fact:
-    ec2_vpc_id2: "{{vpc_net_facts2.vpcs[0].id}}"
-    ec2_security_group2: "{{ azure_name_prefix }}-insecure_all2"
+    azure_vpc_id2: "{{vpc_net_facts2.vpcs[0].id}}"
+    azure_security_group2: "{{ azure_name_prefix }}-insecure_all2"
   when:
     - networking
     - vpc_net_facts2.vpcs|length > 0
-    - ec2_security_group2 is undefined
+    - azure_security_group2 is undefined
 
-- name: Deleted EC2 security group for VPC vpc-{{ azure_name_prefix }}
-  ec2_group:
-    name: "{{ec2_security_group}}"
-    region: "{{ ec2_region }}"
-    vpc_id: "{{ec2_vpc_id}}"
+- name: Deleted Azure security group for VPC vpc-{{ azure_name_prefix }}
+  azure_rm_securitygroup:
+    name: "{{ azure_name_prefix }}-insecure_all"
+    resource_group: "{{azure_name_prefix}}"
     state: absent
   register: delete_sg
   until: delete_sg is not failed
   retries: 50
   when: vpc_net_facts.vpcs|length > 0
 
-- name: Deleted EC2 security group for VPC-2 vpc-{{ azure_name_prefix }} (NETWORKING MODE)
-  ec2_group:
-    name: "{{ec2_security_group2}}"
-    region: "{{ ec2_region }}"
-    vpc_id: "{{ec2_vpc_id2}}"
+- name: Deleted Azure security group for VPC-2 vpc-{{ azure_name_prefix }} (NETWORKING MODE)
+  azure_rm_securitygroup:
+    name: "{{ azure_name_prefix }}-insecure_all2"
+    resource_group: "{{azure_name_prefix}}"
     state: absent
   register: delete_sgnetworking
   until: delete_sgnetworking is not failed
@@ -78,104 +75,104 @@
     - vpc_net_facts2.vpcs|length > 0
 
 - name: Delete subnet for {{ azure_name_prefix }}-vpc
-  ec2_vpc_subnet:
-    region: "{{ ec2_region }}"
-    az: "{{ec2_az}}"
-    vpc_id: "{{ec2_vpc_id}}"
-    cidr: "{{ec2_subnet}}"
+  azure_rm_subnet:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{ azure_name_prefix }}-subnet"
+    virtual_network_name: "{{ azure_name_prefix }}-vpc"
+    cidr: "{{azure_subnet}}"
     state: absent
   when: vpc_net_facts.vpcs|length > 0
 
 - name: Delete subnet for {{ azure_name_prefix }}-vpc2 (NETWORKING MODE)
-  ec2_vpc_subnet:
-    region: "{{ ec2_region }}"
-    az: "{{ec2_az}}"
-    vpc_id: "{{ec2_vpc_id2}}"
-    cidr: "{{ec2_subnet2}}"
+  azure_rm_subnet:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{ azure_name_prefix }}-subnet2"
+    virtual_network_name: "{{ azure_name_prefix }}-vpc2"
+    cidr: "{{azure_subnet2}}"
     state: absent
   when:
     - networking
     - vpc_net_facts2.vpcs|length > 0
 
-- name: vpc internet gateway is deleted for vpc-{{ azure_name_prefix }}
-  ec2_vpc_igw:
-    region: "{{ ec2_region }}"
-    vpc_id: "{{ec2_vpc_id}}"
-    state: absent
-  when: vpc_net_facts.vpcs|length > 0
-
-- name: vpc internet gateway is deleted for vpc-{{ azure_name_prefix }} (NETWORKING MODE)
-  ec2_vpc_igw:
-    region: "{{ ec2_region }}"
-    vpc_id: "{{ec2_vpc_id2}}"
-    state: absent
-  when:
-    - networking
-    - vpc_net_facts2.vpcs|length > 0
-
-- name: grab route information for {{ azure_name_prefix }} on {{ ec2_region }}
-  ec2_vpc_route_table_facts:
-    region: "{{ ec2_region }}"
-    filters:
-      vpc_id: "{{ec2_vpc_id}}"
-  register: route_table_facts
-  when: vpc_net_facts.vpcs|length > 0
-
-- name: grab route information for {{ azure_name_prefix }} on {{ ec2_region }} vpc2 (NETWORKING MODE)
-  ec2_vpc_route_table_facts:
-    region: "{{ ec2_region }}"
-    filters:
-      vpc_id: "{{ec2_vpc_id2}}"
-  register: route_table_facts2
-  when:
-    - networking
-    - vpc_net_facts2.vpcs|length > 0
-
-- name: vpc public subnet route table is deleted
-  ec2_vpc_route_table:
-    region: "{{ ec2_region }}"
-    vpc_id: "{{ec2_vpc_id}}"
-    route_table_id: "{{item.id}}"
-    lookup: id
-    state: absent
-  with_items: "{{route_table_facts.route_tables}}"
-  when: vpc_net_facts.vpcs|length > 0 and item.associations == []
-
-- name: vpc public subnet route table is deleted (VPC2) (NETWORKING MODE)
-  ec2_vpc_route_table:
-    region: "{{ ec2_region }}"
-    vpc_id: "{{ec2_vpc_id2}}"
-    route_table_id: "{{item.id}}"
-    lookup: id
-    state: absent
-  with_items: "{{route_table_facts2.route_tables}}"
-  when:
-    - networking
-    - vpc_net_facts2.vpcs|length > 0
-    - item.associations == []
+# - name: vpc internet gateway is deleted for vpc-{{ azure_name_prefix }}
+#   azure_vpc_igw:
+#     region: "{{ azure_region }}"
+#     vpc_id: "{{azure_vpc_id}}"
+#     state: absent
+#   when: vpc_net_facts.vpcs|length > 0
+#
+# - name: vpc internet gateway is deleted for vpc-{{ azure_name_prefix }} (NETWORKING MODE)
+#   azure_vpc_igw:
+#     region: "{{ azure_region }}"
+#     vpc_id: "{{azure_vpc_id2}}"
+#     state: absent
+#   when:
+#     - networking
+#     - vpc_net_facts2.vpcs|length > 0
+#
+# - name: grab route information for {{ azure_name_prefix }} on {{ azure_region }}
+#   azure_vpc_route_table_facts:
+#     region: "{{ azure_region }}"
+#     filters:
+#       vpc_id: "{{azure_vpc_id}}"
+#   register: route_table_facts
+#   when: vpc_net_facts.vpcs|length > 0
+#
+# - name: grab route information for {{ azure_name_prefix }} on {{ azure_region }} vpc2 (NETWORKING MODE)
+#   azure_vpc_route_table_facts:
+#     region: "{{ azure_region }}"
+#     filters:
+#       vpc_id: "{{azure_vpc_id2}}"
+#   register: route_table_facts2
+#   when:
+#     - networking
+#     - vpc_net_facts2.vpcs|length > 0
+#
+# - name: vpc public subnet route table is deleted
+#   azure_vpc_route_table:
+#     region: "{{ azure_region }}"
+#     vpc_id: "{{azure_vpc_id}}"
+#     route_table_id: "{{item.id}}"
+#     lookup: id
+#     state: absent
+#   with_items: "{{route_table_facts.route_tables}}"
+#   when: vpc_net_facts.vpcs|length > 0 and item.associations == []
+#
+# - name: vpc public subnet route table is deleted (VPC2) (NETWORKING MODE)
+#   azure_vpc_route_table:
+#     region: "{{ azure_region }}"
+#     vpc_id: "{{azure_vpc_id2}}"
+#     route_table_id: "{{item.id}}"
+#     lookup: id
+#     state: absent
+#   with_items: "{{route_table_facts2.route_tables}}"
+#   when:
+#     - networking
+#     - vpc_net_facts2.vpcs|length > 0
+#     - item.associations == []
 
 - name: set keys for instance creation dynamically since key was not supplied by user
   set_fact:
-    ec2_key_name: "{{ azure_name_prefix }}-key"
+    azure_key_name: "{{ azure_name_prefix }}-key"
 
 - name: delete ssh key pair for workshop {{ azure_name_prefix }}
-  ec2_key:
-    name: "{{ec2_key_name}}"
-    region: "{{ ec2_region }}"
+  azure_key:
+    name: "{{azure_key_name}}"
+    region: "{{ azure_region }}"
     state: absent
 
-- name: delete AWS VPC {{ azure_name_prefix }}
-  ec2_vpc_net:
+- name: delete Azure VPC {{ azure_name_prefix }}
+  azure_rm_virtualnetwork:
     name: "{{ azure_name_prefix }}-vpc"
-    cidr_block: "{{ ec2_subnet }}"
-    region: "{{ ec2_region }}"
+    address_prefixes_cidr: "{{ azure_subnet }}"
+    resource_group: "{{azure_name_prefix}}"
     state: absent
 
-- name: delete AWS VPC {{ azure_name_prefix }}-vpc2 (NETWORKING MODE)
-  ec2_vpc_net:
+- name: delete Azure VPC {{ azure_name_prefix }}-vpc2 (NETWORKING MODE)
+  azure_rm_virtualnetwork:
     name: "{{ azure_name_prefix }}-vpc2"
-    cidr_block: "{{ ec2_subnet2 }}"
-    region: "{{ ec2_region }}"
+    address_prefixes_cidr: "{{ azure_subnet2 }}"
+    resource_group: "{{azure_name_prefix}}"
     state: absent
   when:
     - networking
