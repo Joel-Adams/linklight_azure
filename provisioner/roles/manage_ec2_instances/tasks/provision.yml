@@ -3,68 +3,72 @@
     path: "{{ playbook_dir }}/{{azure_name_prefix}}"
     state: directory
 
-## These AWS resources are used for every workshop type
+## These Azure resources are used for every workshop type
 ## This includes VPC, subnet, Security Group, Internet Gateway and route table
-- name: provision aws resources
+- name: provision Azure resources
   include_tasks: resources.yml
 
 ## This duplicates the above when networking workshop uses 2 VPCs
-- name: provision networking aws resources
+- name: provision networking Azure resources
   include_tasks: resources_networking.yml
   when: networking
 
 ## control node setup ###
 - name: set control node type
   set_fact:
-    ansible_node: "{{ ec2_control_node['ansible'] }}"
+    ansible_node: "{{ azure_control_node['ansible'] }}"
 
-- name: find ami for ansible control node
-  ec2_ami_facts:
-    region: "{{ ec2_region }}"
-    owners: "{{ ec2_instance_types[ansible_node].owners }}"
-    filters:
-      name: "{{ ec2_instance_types[ansible_node].filter }}"
-      architecture: "{{ ec2_instance_types[ansible_node].architecture }}"
-  register: amis
+# - name: find ami for ansible control node
+#   ec2_ami_facts:
+#     region: "{{ ec2_region }}"
+#     owners: "{{ ec2_instance_types[ansible_node].owners }}"
+#     filters:
+#       name: "{{ ec2_instance_types[ansible_node].filter }}"
+#       architecture: "{{ ec2_instance_types[ansible_node].architecture }}"
+#   register: amis
+#
+# - name: save ami for ansible control node
+#   set_fact:
+#     ansible_control_node_ami: >
+#       {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
 
-- name: save ami for ansible control node
-  set_fact:
-    ansible_control_node_ami: >
-      {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
-
-- name: Create EC2 instances for ansible node (control node)
-  ec2:
-    assign_public_ip: yes
-    key_name: "{{ azure_name_prefix }}-key"
-    group: "{{ ec2_security_group }}"
-    instance_type: "{{ ec2_instance_types[ansible_node].size }}"
-    image: "{{ ansible_control_node_ami.image_id }}"
-    region: "{{ ec2_region }}"
-    exact_count: "{{ student_total }}"
-    count_tag:
+- name: Create Azure instances for ansible node (control node)
+  azure_rm_virtualmachine:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{azure_name_prefix}}.{{ item }}"
+    public_ip_allocation_method: Static
+    instance_type: "{{ azure_instance_types[ansible_node].vm_size }}"
+    image:
+      offer: "{{ azure_instance_types[rhel7-tower].offer }}"
+      publisher: "{{ azure_instance_types[rhel7-tower].publisher }}"
+      sku: "{{ azure_instance_types[rhel7-tower].sku }}"
+      version: "{{ azure_instance_types[rhel7-tower].version }}"
+    ssh_public_keys:
+      - path: /home/azure-user/.ssh/authorized_keys
+        key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
+    append_tags: yes
+    tags:
       Workshop_ansible: "{{azure_name_prefix}}-ansible"
-    wait: "{{ ec2_wait }}"
-    vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
-    volumes:
-      - device_name: /dev/sda1
-        volume_type: gp2
-        volume_size: "{{ ec2_instance_types[ansible_node].disk_space }}"
-        delete_on_termination: true
+    data_disks:
+      - lun: 0
+        managed_disk_type: Standard_LRS
+        disk_size_gb: "{{ azure_instance_types[ansible_node].disk_space }}"
   register: control_output
 
 - name: Ensure tags are present
-  ec2_tag:
-    region: "{{ ec2_region }}"
-    resource: "{{item.1}}"
+  azure_rm_virtualmachine:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{item.1}}"
     state: present
+    append_tags: yes
     tags:
       Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-ansible"
       Workshop_ansible: "{{azure_name_prefix}}-ansible"
       Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
       Student: "student{{item.0 + 1}}"
-      Username: "{{ linklight_user }}"
-      Info: "Username that provisioned this-> {{ linklight_user }}"
+      # Username: "{{ linklight_user }}"
+      # Info: "Username that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "{{student_total}}"
       short_name: "ansible"
