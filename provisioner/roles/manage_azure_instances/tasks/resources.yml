@@ -113,50 +113,42 @@
 #     azure_vpc_subnet_id: "{{ create_subnet.subnet.id }}"
 #   when: azure_vpc_id is undefined
 
-- name: Create Azure Key Vault
-  azure_rm_keyvault:
-    resource_group: "{{azure_name_prefix}}"
-    vault_name: "{{azure_name_prefix}}"
-    enabled_for_deployment: yes
-    vault_tenant: "{{azure_tenant_id}}"
-    sku:
-      name: standard
-    access_policies:
-      - tenant_id: "{{azure_tenant_id}}"
-        object_id: "{{azure_object_id}}"
-        keys:
-          - get
-          - list
-          - update
-          - create
-          - import
-          - delete
-          - recover
-          - backup
-          - restore
-          - encrypt
-          - decrypt
-        secrets:
-          - get
-          - list
-          - set
-          - delete
-          - recover
-          - backup
-          - restore
+- name: Create directory for SSH keys
+  file:
+    path: "~/.ssh/ansible/"
+    state: directory
+    mode: 0755
 
-- name: Create ssh key pair for workshop "{{ azure_name_prefix }}"
-  azure_rm_keyvaultkey:
-    key_name: "{{ azure_name_prefix }}-key"
-    keyvault_uri: "https://{{azure_name_prefix}}.vault.azure.net/"
-  register: create_key
+- name: ensure SSH key is removed
+  file:
+    path: "~/.ssh/ansible/{{ item }}"
+    state: absent
+  with_items:
+    - id_rsa
+    - id_rsa.pub
 
-- name: save private key
-  copy:
-    content: "{{ lookup('azure_keyvault_secret','{{ azure_name_prefix }}-key') }}"
-    dest: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
-    mode: '0400'
-  when: create_key.changed
+- name: ensure SSH key is generated
+  command: ssh-keygen -b 2048 -t rsa -f ~/.ssh/ansible/id_rsa -N ''
+  register: azure_key
+  args:
+    creates: ~/.ssh/asnible/id_rsa
+
+- name: Remove old keypair
+  file:
+    state: absent
+    path: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
+
+- name: Create ssh keypair
+  copy: src=~/.ssh/ansible/id_rsa
+        dest="{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
+        mode=0400
+
+# - name: save private key
+#   copy:
+#     content: "{{ lookup('azure_keyvault_secret','{{ azure_name_prefix }}-key') }}"
+#     dest: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
+#     mode: '0400'
+#   when: create_key.changed
 
 - name: debugging all variables for azure instance creation VPC-1
   debug:
