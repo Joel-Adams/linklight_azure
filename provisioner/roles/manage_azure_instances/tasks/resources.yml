@@ -40,8 +40,7 @@
         priority: 100
         direction: Inbound
       - name: 'AllowAllOutbound'
-        protocol: *
-        priority: 101
+        priority: 201
         direction: Outbound
   when: azure_vpc_id is undefined
   register: create_sg
