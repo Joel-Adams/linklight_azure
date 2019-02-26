@@ -33,7 +33,7 @@
       Students: "Student Count {{student_total}}"
     rules:
       - name: 'AllowMultiplePorts'
-        protocol: tcp
+        protocol: Tcp
         destination_port_range:
           - 47
           - 443
