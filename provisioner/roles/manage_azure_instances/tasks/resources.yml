@@ -134,6 +134,8 @@
           - recover
           - backup
           - restore
+          - encrypt
+          - decrypt
         secrets:
           - get
           - list
@@ -151,7 +153,7 @@
 
 - name: save private key
   copy:
-    content: "{{ create_key.key.private_key }}"
+    content: !azurekeyvault | !azurekeyvault:"https://{{azure_name_prefix}}.vault.azure.net/:{{ azure_name_prefix }}-key"
     dest: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
     mode: '0400'
   when: create_key.changed
