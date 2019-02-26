@@ -105,6 +105,7 @@
   when: azure_vpc_id is undefined
 
 - name: Create Azure Key Vault
+  azure_rm_keyvault:
     resource_group: "{{azure_name_prefix}}"
     vault_name: "{{azure_name_prefix}}"
     enabled_for_deployment: yes
