@@ -22,7 +22,7 @@
   until: create_vpc is not failed
   retries: 5
 
-- name: Create EC2 security group for VPC named {{ azure_name_prefix }}-vpc
+- name: Create Azure security group for VPC named {{ azure_name_prefix }}-vpc
   azure_rm_securitygroup:
     name: "{{ azure_name_prefix }}-insecure_all"
     resource_group: "{{azure_name_prefix}}"
@@ -113,6 +113,10 @@
 #     azure_vpc_subnet_id: "{{ create_subnet.subnet.id }}"
 #   when: azure_vpc_id is undefined
 
+- name: set facts
+  set_fact:
+    object_id: "{{ lookup('env', 'AZURE_OBJECT_ID') }}"
+
 - name: Create Azure Key Vault
   azure_rm_keyvault:
     resource_group: "{{azure_name_prefix}}"
@@ -121,6 +125,27 @@
     vault_tenant: "{{azure_tenant_id}}"
     sku:
       name: standard
+    access_policies:
+      - tenant_id: "{{azure_tenant_id}}"
+        object_id: "{{ object_id }}"
+        keys:
+          - get
+          - list
+          - update
+          - create
+          - import
+          - delete
+          - recover
+          - backup
+          - restore
+        secrets:
+          - get
+          - list
+          - set
+          - delete
+          - recover
+          - backup
+          - restore
 
 - name: Create ssh key pair for workshop "{{ azure_name_prefix }}"
   azure_rm_keyvaultkey:

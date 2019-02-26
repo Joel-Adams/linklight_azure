@@ -13,7 +13,7 @@
   until: create_vpc2 is not failed
   retries: 5
 
-- name: Create EC2 security group 2 for VPC named {{ azure_name_prefix }}-vpc (NETWORKING MODE)
+- name: Create Azure security group 2 for VPC named {{ azure_name_prefix }}-vpc (NETWORKING MODE)
   azure_rm_securitygroup:
     name: "{{ azure_name_prefix }}-insecure_all2"
     resource_group: "{{azure_name_prefix}}"
