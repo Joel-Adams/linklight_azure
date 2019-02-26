@@ -53,6 +53,7 @@
       - lun: 0
         managed_disk_type: Standard_LRS
         disk_size_gb: "{{ azure_instance_types[ansible_node].disk_space }}"
+  with_sequence: start=0 end="{{ student_total }}"
   register: control_output
 
 - name: Ensure tags are present
