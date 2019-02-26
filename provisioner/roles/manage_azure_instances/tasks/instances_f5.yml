@@ -49,7 +49,7 @@
       # AWS_USERNAME: "{{ linklight_user }}"
       # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
-      Students: "{{student_total}}"
+      Students: "Student Count {{student_total}}"
   with_indexed_items:
     - "{{ f5_output.instance_ids }}"
   when: f5_output.instance_ids is not none
@@ -103,7 +103,7 @@
       # AWS_USERNAME: "{{ linklight_user }}"
       # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner for F5 workshop"
-      Students: "{{student_total}}"
+      Students: "Student Count {{student_total}}"
       short_name: host1
   with_indexed_items:
     - "{{ host1_output.instance_ids }}"
@@ -144,7 +144,7 @@
       # AWS_USERNAME: "{{ linklight_user }}"
       # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner for F5 workshop"
-      Students: "{{student_total}}"
+      Students: "Student Count {{student_total}}"
       short_name: host2
   with_indexed_items:
     - "{{ host2_output.instance_ids }}"

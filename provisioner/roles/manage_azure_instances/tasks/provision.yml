@@ -70,7 +70,7 @@
       # Username: "{{ linklight_user }}"
       # Info: "Username that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
-      Students: "{{student_total}}"
+      Students: "Student Count {{student_total}}"
       short_name: "ansible"
   with_indexed_items:
     - "{{ control_output.instance_ids }}"

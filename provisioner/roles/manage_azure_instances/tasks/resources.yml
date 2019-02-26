@@ -16,7 +16,7 @@
       # Username: "{{ linklight_user }}"
       # Info: "Username that provisioned this-> {{ linklight_user }}"
         Linklight: "This was provisioned through the linklight provisioner"
-        Students: "{{student_total}}"
+        Students: "Student Count {{student_total}}"
   register: create_vpc
   when: azure_vpc_id is undefined
   until: create_vpc is not failed
@@ -30,7 +30,7 @@
       # Username: "{{ linklight_user }}"
       # Info: "Username that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
-      Students: "{{student_total}}"
+      Students: "Student Count {{student_total}}"
     rules:
       - name: 'AllowMultiplePorts'
         protocol: tcp
@@ -67,7 +67,7 @@
       # Username: "{{ linklight_user }}"
       # Info: "Username that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
-      Students: "{{student_total}}"
+      Students: "Student Count {{student_total}}"
   register: create_subnet
   when: azure_vpc_id is undefined
   until: create_subnet is not failed
@@ -100,7 +100,7 @@
 #       Username: "{{ linklight_user }}"
 #       Info: "Username that provisioned this-> {{ linklight_user }}"
 #       Linklight: "This was provisioned through the linklight provisioner"
-#       Students: "{{student_total}}"
+#       Students: "Student Count {{student_total}}"
 #   register: routetable
 #   until: routetable is not failed
 #   retries: 5
