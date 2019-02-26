@@ -104,10 +104,18 @@
     azure_vpc_subnet_id: "{{ create_subnet.subnet.id }}"
   when: azure_vpc_id is undefined
 
+- name: Create Azure Key Vault
+    resource_group: "{{azure_name_prefix}}"
+    vault_name: "{{azure_name_prefix}}"
+    enabled_for_deployment: yes
+    vault_tenant: "{{azure_tenant_id}}"
+    sku:
+      name: standard
+
 - name: Create ssh key pair for workshop "{{ azure_name_prefix }}"
-  azure_key:
-    name: "{{ azure_name_prefix }}-key"
-    region: "{{ azure_region }}"
+  azure_rm_keyvaultkey:
+    key_name: "{{ azure_name_prefix }}-key"
+    keyvault_uri: "https://{{azure_name_prefix}}.vault.azure.net/"
   register: create_key
 
 - name: save private key
