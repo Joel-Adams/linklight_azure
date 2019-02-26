@@ -104,7 +104,7 @@
     azure_vpc_subnet_id: "{{ create_subnet.subnet.id }}"
   when: azure_vpc_id is undefined
 
-- name: Create ssh key pair for workshop {{ azure_name_prefix }}
+- name: Create ssh key pair for workshop "{{ azure_name_prefix }}"
   azure_key:
     name: "{{ azure_name_prefix }}-key"
     region: "{{ azure_region }}"
