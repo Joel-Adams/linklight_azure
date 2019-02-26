@@ -4,7 +4,7 @@
     location: "{{azure_region}}"
     tags:
         Linklight: "This was provisioned through the linklight provisioner"
-        Students: "{{student_total}}"
+        Students: "Student Count {{student_total}}"
   register: resource_group
 
 - name: Create Azure VPC {{ azure_name_prefix }}-vpc
