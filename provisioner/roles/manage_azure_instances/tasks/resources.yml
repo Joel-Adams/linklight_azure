@@ -113,10 +113,6 @@
 #     azure_vpc_subnet_id: "{{ create_subnet.subnet.id }}"
 #   when: azure_vpc_id is undefined
 
-- name: set facts
-  set_fact:
-    object_id: "{{ lookup('env', 'AZURE_OBJECT_ID') }}"
-
 - name: Create Azure Key Vault
   azure_rm_keyvault:
     resource_group: "{{azure_name_prefix}}"
@@ -127,7 +123,7 @@
       name: standard
     access_policies:
       - tenant_id: "{{azure_tenant_id}}"
-        object_id: "{{ object_id }}"
+        object_id: "{{azure_object_id}}"
         keys:
           - get
           - list
