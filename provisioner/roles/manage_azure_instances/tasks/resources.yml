@@ -61,7 +61,7 @@
     resource_group: "{{azure_name_prefix}}"
     name: "{{ azure_name_prefix }}-subnet"
     virtual_network_name: "{{ azure_name_prefix }}-vpc"
-    cidr: "{{azure_subnet}}"
+    address_prefix_cidr: "{{azure_subnet}}"
     tags:
       Name: "{{ azure_name_prefix }}-subnet"
       # Username: "{{ linklight_user }}"
