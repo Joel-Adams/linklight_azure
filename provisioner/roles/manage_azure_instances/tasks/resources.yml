@@ -106,12 +106,12 @@
 #   retries: 5
 #   when: ec2_vpc_id is undefined
 
-- name: set variables for instance creation dynamically since VPC was not supplied by user
-  set_fact:
-    azure_vpc_id: "{{ create_vpc.vpc.id }}"
-    azure_security_group: "{{ azure_name_prefix }}-insecure_all"
-    azure_vpc_subnet_id: "{{ create_subnet.subnet.id }}"
-  when: azure_vpc_id is undefined
+# - name: set variables for instance creation dynamically since VPC was not supplied by user
+#   set_fact:
+#     azure_vpc_id: "{{ create_vpc.vpc.id }}"
+#     azure_security_group: "{{ azure_name_prefix }}-insecure_all"
+#     azure_vpc_subnet_id: "{{ create_subnet.subnet.id }}"
+#   when: azure_vpc_id is undefined
 
 - name: Create Azure Key Vault
   azure_rm_keyvault:

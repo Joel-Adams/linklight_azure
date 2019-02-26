@@ -95,12 +95,12 @@
 #   retries: 5
 #   when: ec2_vpc_id2 is undefined
 
-- name: set variables for instance creation dynamically since VPC was not supplied by user (NETWORKING MODE)
-  set_fact:
-    azure_vpc_id2: "{{ create_vpc2.vpc.id }}"
-    azure_vpc_subnet_id2: "{{ create_subnet2.subnet.id }}"
-    azure_security_group2: "{{ azure_name_prefix }}-insecure_all2"
-  when: azure_vpc_id2 is undefined
+# - name: set variables for instance creation dynamically since VPC was not supplied by user (NETWORKING MODE)
+#   set_fact:
+#     azure_vpc_id2: "{{ create_vpc2.vpc.id }}"
+#     azure_vpc_subnet_id2: "{{ create_subnet2.subnet.id }}"
+#     azure_security_group2: "{{ azure_name_prefix }}-insecure_all2"
+#   when: azure_vpc_id2 is undefined
 
 - name: debugging all variables for azure instance creation VPC-2 (NETWORKING MODE)
   debug:
