@@ -150,11 +150,11 @@
 #     mode: '0400'
 #   when: create_key.changed
 
-- name: debugging all variables for azure instance creation VPC-1
-  debug:
-    msg:
-      - "azure_name_prefix: {{azure_name_prefix}}"
-      # - "azure_vpc_id: {{ azure_vpc_id }}"
-      - "{{ azure_name_prefix }}-key: {{ azure_name_prefix }}-key"
-      - "azure_security_group: {{ azure_security_group }}"
-      # - "azure_vpc_subnet_id: {{ azure_vpc_subnet_id }}"
+# - name: debugging all variables for azure instance creation VPC-1
+#   debug:
+#     msg:
+#       - "azure_name_prefix: {{azure_name_prefix}}"
+#       - "azure_vpc_id: {{ azure_vpc_id }}"
+#       - "{{ azure_name_prefix }}-key: {{ azure_name_prefix }}-key"
+#       - "azure_security_group: {{ azure_security_group }}"
+#       - "azure_vpc_subnet_id: {{ azure_vpc_subnet_id }}"
