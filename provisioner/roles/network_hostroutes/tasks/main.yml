@@ -9,8 +9,8 @@
 - name: grab facts for rtr2
   azure_rm_virtualmachine_facts:
     resource_group: "{{azure_name_prefix}}"
-      tags:
-        - "{{azure_name_prefix}}-{{username}}-rtr2"
+    tags:
+      - Name: "{{azure_name_prefix}}-{{username}}-rtr2"
   register: rtr2_facts
   delegate_to: localhost
 
