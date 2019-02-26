@@ -101,9 +101,9 @@
 #     azure_security_group2: "{{ azure_name_prefix }}-insecure_all2"
 #   when: azure_vpc_id2 is undefined
 
-- name: debugging all variables for azure instance creation VPC-2 (NETWORKING MODE)
-  debug:
-    msg:
-      - "azure_name_prefix: {{azure_name_prefix}}"
-      - "azure_vpc_id2: {{ azure_vpc_id2 }}"
-      - "azure_vpc_subnet_id2: {{ azure_vpc_subnet_id2 }}"
+# - name: debugging all variables for azure instance creation VPC-2 (NETWORKING MODE)
+#   debug:
+#     msg:
+#       - "azure_name_prefix: {{azure_name_prefix}}"
+#       - "azure_vpc_id2: {{ azure_vpc_id2 }}"
+#       - "azure_vpc_subnet_id2: {{ azure_vpc_subnet_id2 }}"
