@@ -1,3 +1,12 @@
+- name: Create a Azure resource group
+  azure_rm_resourcegroup:
+    name: "{{azure_name_prefix}}"
+    location: "{{azure_region}}"
+    tags:
+        Linklight: "This was provisioned through the linklight provisioner"
+        Students: "{{student_total}}"
+  register: resource_group
+
 - name: Create Azure VPC {{ azure_name_prefix }}-vpc
   azure_rm_virtualnetwork:
     name: "{{ azure_name_prefix }}-vpc"
@@ -6,8 +15,8 @@
     tags:
       # Username: "{{ linklight_user }}"
       # Info: "Username that provisioned this-> {{ linklight_user }}"
-      Linklight: "This was provisioned through the linklight provisioner"
-      Students: "{{student_total}}"
+        Linklight: "This was provisioned through the linklight provisioner"
+        Students: "{{student_total}}"
   register: create_vpc
   when: azure_vpc_id is undefined
   until: create_vpc is not failed
