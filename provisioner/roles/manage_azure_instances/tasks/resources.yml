@@ -144,9 +144,8 @@
           - restore
 
 - name: Create ssh key pair for workshop "{{ azure_name_prefix }}"
-  azure_rm_keyvaultsecret:
-    secret_name: "{{ azure_name_prefix }}-key"
-    secret_value: RedHat123
+  azure_rm_keyvaultkey:
+    key_name: "{{ azure_name_prefix }}-key"
     keyvault_uri: "https://{{azure_name_prefix}}.vault.azure.net/"
   register: create_key
 
