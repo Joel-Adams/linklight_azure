@@ -33,6 +33,7 @@ azure_subscription_id:
 azure_client_id:
 azure_client_secret:
 azure_tenant_id:
+azure_object_id:                       # can be found on Azure command line "az ad sp show --id <azure_client_id>"
 #OPTIONAL VARIABLES
 admin_password: ansible                # password for Ansible control node, defaults to ansible
 networking: true                       # Set this if you want the workshop in networking mode
