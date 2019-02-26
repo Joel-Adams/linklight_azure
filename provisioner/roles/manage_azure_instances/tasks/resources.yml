@@ -162,7 +162,7 @@
   debug:
     msg:
       - "azure_name_prefix: {{azure_name_prefix}}"
-      - "azure_vpc_id: {{ azure_vpc_id }}"
+      # - "azure_vpc_id: {{ azure_vpc_id }}"
       - "{{ azure_name_prefix }}-key: {{ azure_name_prefix }}-key"
       - "azure_security_group: {{ azure_security_group }}"
-      - "azure_vpc_subnet_id: {{ azure_vpc_subnet_id }}"
+      # - "azure_vpc_subnet_id: {{ azure_vpc_subnet_id }}"
