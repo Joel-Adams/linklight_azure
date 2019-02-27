@@ -45,6 +45,7 @@
         public_ip_allocation_method: Static
   with_sequence: start=0 end="{{ student_total }}"
   register: network_interface
+  when: resource_group.changed
 
 - name: Create Azure instances for ansible node (control node)
   azure_rm_virtualmachine:

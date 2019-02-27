@@ -119,13 +119,13 @@
     state: directory
     mode: 0755
 
-- name: ensure SSH key is removed
-  file:
-    path: "~/.ssh/ansible/{{ item }}"
-    state: absent
-  with_items:
-    - id_rsa
-    - id_rsa.pub
+# - name: ensure SSH key is removed
+#   file:
+#     path: "~/.ssh/ansible/{{ item }}"
+#     state: absent
+#   with_items:
+#     - id_rsa
+#     - id_rsa.pub
 
 - name: ensure SSH key is generated
   command: ssh-keygen -b 2048 -t rsa -f ~/.ssh/ansible/id_rsa -N ''
@@ -137,16 +137,20 @@
   file:
     state: absent
     path: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
+    path: "{{ playbook_dir }}/{{azure_name_prefix}}-key"
+  when: azure_key.changed
 
 - name: Create ssh keypair private
   copy: src=~/.ssh/ansible/id_rsa
         dest="{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
         mode=0400
+  when: azure_key.changed
 
 - name: Create ssh keypair public
   copy: src=~/.ssh/ansible/id_rsa.pub
         dest="{{ playbook_dir }}/{{azure_name_prefix}}-key"
         mode=0400
+  when: azure_key.changed
 
 # - name: save private key
 #   copy:
