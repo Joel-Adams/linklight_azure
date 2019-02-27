@@ -60,14 +60,14 @@
     name: "{{azure_name_prefix}}.rtr1.student{{ item }}"
     public_ip_allocation_method: Static
     vm_size: "{{ azure_instance_types[rtr1_node].vm_size }}"
-    admin_username: rtr1_login
+    admin_username: "{{ rtr1_login }}"
     image:
       offer: "{{ azure_instance_types[rtr1_node].offer }}"
       publisher: "{{ azure_instance_types[rtr1_node].publisher }}"
       sku: "{{ azure_instance_types[rtr1_node].sku }}"
       version: "{{ azure_instance_types[rtr1_node].version }}"
     ssh_public_keys:
-      - path: /home/azure-user/.ssh/authorized_keys
+      - path: "/home/{{ rtr1_login }}/.ssh/authorized_keys"
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
     append_tags: yes
     tags:
