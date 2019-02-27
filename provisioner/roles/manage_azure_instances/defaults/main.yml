@@ -38,32 +38,29 @@ multivendor:
 azure_instance_types:
   junos-byol:
     vm_size: Standard_D4s_v3
-    image:
-      offer: 'vmx-services-gateway-byol'
-      publisher: 'juniper-networks'
-      sku: 'vmx-services-gateway-byol'
-      version: '17.4.3'
+    offer: 'vmx-services-gateway-byol'
+    publisher: 'juniper-networks'
+    sku: 'vmx-services-gateway-byol'
+    version: '17.4.3'
     os_disk_size: 32
     os: junos
 
   csr-byol:
     vm_size: Standard_B2s
-    image:
-      offer: 'cisco-csr-1000v'
-      publisher: cisco
-      sku: '16_10-byol'
-      version: '16.10.120190108'
+    offer: 'cisco-csr-1000v'
+    publisher: cisco
+    sku: '16_10-byol'
+    version: '16.10.120190108'
     os_disk_size: 20
     os: ios
 
   # Look for owner 309956199498 to find official Red Hat AMIs
   rhel7:
     vm_size: Standard_B1s
-    image:
-      offer: RHEL
-      publisher: RedHat
-      sku: '7-RAW'
-      version: latest
+    offer: RHEL
+    publisher: RedHat
+    sku: '7-RAW'
+    version: latest
     os_disk_size: 10
 
   rhel7-tower:
@@ -76,11 +73,10 @@ azure_instance_types:
 
   f5node:
     vm_size: Standard_D2s_v3
-    image:
-      offer: 'f5-big-ip-byol'
-      publisher: 'f5-networks'
-      sku: 'f5-big-all-1slot-byol'
-      version: '14.1.001000'
+    offer: 'f5-big-ip-byol'
+    publisher: 'f5-networks'
+    sku: 'f5-big-all-1slot-byol'
+    version: '14.1.001000'
     os_disk_size: 40
 
 # Login names used for SSH connections. These are baked in to the AMIs.
