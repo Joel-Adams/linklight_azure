@@ -211,67 +211,67 @@
 #     set_fact:
 #       rtr3_ami: >
 #         {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
-    - name: Create a network interface for rtr3 using existing security group and public IP
-      azure_rm_networkinterface:
-        name: "{{azure_name_prefix}}.rtr3.student{{ item }}"
-        resource_group: "{{azure_name_prefix}}"
-        virtual_network: "{{ azure_name_prefix }}-vpc"
-        subnet_name: "{{ azure_name_prefix }}-subnet"
-        security_group: "{{ azure_name_prefix }}-insecure_all"
-        ip_configurations:
-          - name: ipconfig1
-            public_ip_address_name: "rtr3.student{{ item }}"
-            primary: True
-            public_ip_allocation_method: Static
-      with_sequence: start=0 end="{{ student_total }}"
-      register: network_interface
-      when: resource_group.changed
+  - name: Create a network interface for rtr3 using existing security group and public IP
+    azure_rm_networkinterface:
+      name: "{{azure_name_prefix}}.rtr3.student{{ item }}"
+      resource_group: "{{azure_name_prefix}}"
+      virtual_network: "{{ azure_name_prefix }}-vpc"
+      subnet_name: "{{ azure_name_prefix }}-subnet"
+      security_group: "{{ azure_name_prefix }}-insecure_all"
+      ip_configurations:
+        - name: ipconfig1
+          public_ip_address_name: "rtr3.student{{ item }}"
+          primary: True
+          public_ip_allocation_method: Static
+    with_sequence: start=0 end="{{ student_total }}"
+    register: network_interface
+    when: resource_group.changed
 
-    - name: Create Azure instances for rtr3 node (NETWORKING MODE)
-      azure_rm_virtualmachine:
-        resource_group: "{{azure_name_prefix}}"
-        name: "{{azure_name_prefix}}rtr3.student{{ item }}"
-        vm_size: "{{ azure_instance_types[rtr3_node].vm_size }}"
-        admin_username: "{{ rtr3_login }}"
-        ssh_password_enabled: false
-        network_interface_names: "{{azure_name_prefix}}.rtr3.student{{ item }}"
-        image:
-          offer: "{{ azure_instance_types[rtr3_node].offer }}"
-          publisher: "{{ azure_instance_types[rtr3_node].publisher }}"
-          sku: "{{ azure_instance_types[rtr3_node].sku }}"
-          version: "{{ azure_instance_types[rtr3_node].version }}"
-        plan:
-          name: "{{ azure_instance_types[rtr3_node].sku }}"
-          product: "{{ azure_instance_types[rtr3_node].offer }}"
-          publisher: "{{ azure_instance_types[rtr3_node].publisher }}"
-        ssh_public_keys:
-          - path: "/home/{{ rtr3_login }}/.ssh/authorized_keys"
-            key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
-        append_tags: yes
-        tags:
-          Workshop_rtr3: "{{azure_name_prefix}}-rtr3"
-      with_sequence: start=0 end="{{ student_total }}"
-      register: rtr3_output
+  - name: Create Azure instances for rtr3 node (NETWORKING MODE)
+    azure_rm_virtualmachine:
+      resource_group: "{{azure_name_prefix}}"
+      name: "{{azure_name_prefix}}rtr3.student{{ item }}"
+      vm_size: "{{ azure_instance_types[rtr3_node].vm_size }}"
+      admin_username: "{{ rtr3_login }}"
+      ssh_password_enabled: false
+      network_interface_names: "{{azure_name_prefix}}.rtr3.student{{ item }}"
+      image:
+        offer: "{{ azure_instance_types[rtr3_node].offer }}"
+        publisher: "{{ azure_instance_types[rtr3_node].publisher }}"
+        sku: "{{ azure_instance_types[rtr3_node].sku }}"
+        version: "{{ azure_instance_types[rtr3_node].version }}"
+      plan:
+        name: "{{ azure_instance_types[rtr3_node].sku }}"
+        product: "{{ azure_instance_types[rtr3_node].offer }}"
+        publisher: "{{ azure_instance_types[rtr3_node].publisher }}"
+      ssh_public_keys:
+        - path: "/home/{{ rtr3_login }}/.ssh/authorized_keys"
+          key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
+      append_tags: yes
+      tags:
+        Workshop_rtr3: "{{azure_name_prefix}}-rtr3"
+    with_sequence: start=0 end="{{ student_total }}"
+    register: rtr3_output
 
-    - name: Ensure tags are present for rtr3 node (NETWORKING MODE)
-      azure_rm_virtualmachine:
-        resource_group: "{{azure_name_prefix}}"
-        name: "{{azure_name_prefix}}.rtr3.student{{ item }}"
-        state: present
-        append_tags: yes
-        tags:
-          Name: "{{ azure_name_prefix }}-student{{ item }}-rtr3"
-          Workshop_rtr3: "{{azure_name_prefix}}-rtr3"
-          Workshop: "{{azure_name_prefix}}"
-          Index: "{{ item[0] }}"
-          Student: "student{{ item }}"
-          # AWS_USERNAME: "{{ linklight_user }}"
-          # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
-          Linklight: "This was provisioned through the linklight provisioner"
-          Students: "Student Count {{student_total}}"
-          short_name: "rtr3"
-          ansible_network_os: "{{azure_instance_types[rtr3_node].os}}"
-      with_sequence: start=0 end="{{ student_total }}"
+  - name: Ensure tags are present for rtr3 node (NETWORKING MODE)
+    azure_rm_virtualmachine:
+      resource_group: "{{azure_name_prefix}}"
+      name: "{{azure_name_prefix}}.rtr3.student{{ item }}"
+      state: present
+      append_tags: yes
+      tags:
+        Name: "{{ azure_name_prefix }}-student{{ item }}-rtr3"
+        Workshop_rtr3: "{{azure_name_prefix}}-rtr3"
+        Workshop: "{{azure_name_prefix}}"
+        Index: "{{ item[0] }}"
+        Student: "student{{ item }}"
+        # AWS_USERNAME: "{{ linklight_user }}"
+        # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
+        Linklight: "This was provisioned through the linklight provisioner"
+        Students: "Student Count {{student_total}}"
+        short_name: "rtr3"
+        ansible_network_os: "{{azure_instance_types[rtr3_node].os}}"
+    with_sequence: start=0 end="{{ student_total }}"
 
     ##############Router 4##############
 
@@ -290,66 +290,66 @@
     #     rtr4_ami: >
     #       {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
 
-    - name: Create a network interface for rtr4 using existing security group and public IP
-      azure_rm_networkinterface:
-        name: "{{azure_name_prefix}}.rtr4.student{{ item }}"
-        resource_group: "{{azure_name_prefix}}"
-        virtual_network: "{{ azure_name_prefix }}-vpc"
-        subnet_name: "{{ azure_name_prefix }}-subnet"
-        security_group: "{{ azure_name_prefix }}-insecure_all"
-        ip_configurations:
-          - name: ipconfig1
-            public_ip_address_name: "rtr4.student{{ item }}"
-            primary: True
-            public_ip_allocation_method: Static
-      with_sequence: start=0 end="{{ student_total }}"
-      register: network_interface
-      when: resource_group.changed
+  - name: Create a network interface for rtr4 using existing security group and public IP
+    azure_rm_networkinterface:
+      name: "{{azure_name_prefix}}.rtr4.student{{ item }}"
+      resource_group: "{{azure_name_prefix}}"
+      virtual_network: "{{ azure_name_prefix }}-vpc"
+      subnet_name: "{{ azure_name_prefix }}-subnet"
+      security_group: "{{ azure_name_prefix }}-insecure_all"
+      ip_configurations:
+        - name: ipconfig1
+          public_ip_address_name: "rtr4.student{{ item }}"
+          primary: True
+          public_ip_allocation_method: Static
+    with_sequence: start=0 end="{{ student_total }}"
+    register: network_interface
+    when: resource_group.changed
 
-    - name: Create Azure instances for rtr4 node (NETWORKING MODE)
-      azure_rm_virtualmachine:
-        resource_group: "{{azure_name_prefix}}"
-        name: "{{azure_name_prefix}}rtr4.student{{ item }}"
-        vm_size: "{{ azure_instance_types[rtr4_node].vm_size }}"
-        admin_username: "{{ rtr4_login }}"
-        ssh_password_enabled: false
-        network_interface_names: "{{azure_name_prefix}}.rtr4.student{{ item }}"
-        image:
-          offer: "{{ azure_instance_types[rtr4_node].offer }}"
-          publisher: "{{ azure_instance_types[rtr4_node].publisher }}"
-          sku: "{{ azure_instance_types[rtr4_node].sku }}"
-          version: "{{ azure_instance_types[rtr4_node].version }}"
-        plan:
-          name: "{{ azure_instance_types[rtr4_node].sku }}"
-          product: "{{ azure_instance_types[rtr4_node].offer }}"
-          publisher: "{{ azure_instance_types[rtr4_node].publisher }}"
-        ssh_public_keys:
-          - path: "/home/{{ rtr4_login }}/.ssh/authorized_keys"
-            key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
-        append_tags: yes
-        tags:
-          Workshop_rtr4: "{{azure_name_prefix}}-rtr4"
-      with_sequence: start=0 end="{{ student_total }}"
-      register: rtr4_output
-
-    - name: Ensure tags are present for rtr4 node (NETWORKING MODE)
+  - name: Create Azure instances for rtr4 node (NETWORKING MODE)
     azure_rm_virtualmachine:
       resource_group: "{{azure_name_prefix}}"
-      name: "{{azure_name_prefix}}.rtr4.student{{ item }}"
-      state: present
+      name: "{{azure_name_prefix}}rtr4.student{{ item }}"
+      vm_size: "{{ azure_instance_types[rtr4_node].vm_size }}"
+      admin_username: "{{ rtr4_login }}"
+      ssh_password_enabled: false
+      network_interface_names: "{{azure_name_prefix}}.rtr4.student{{ item }}"
+      image:
+        offer: "{{ azure_instance_types[rtr4_node].offer }}"
+        publisher: "{{ azure_instance_types[rtr4_node].publisher }}"
+        sku: "{{ azure_instance_types[rtr4_node].sku }}"
+        version: "{{ azure_instance_types[rtr4_node].version }}"
+      plan:
+        name: "{{ azure_instance_types[rtr4_node].sku }}"
+        product: "{{ azure_instance_types[rtr4_node].offer }}"
+        publisher: "{{ azure_instance_types[rtr4_node].publisher }}"
+      ssh_public_keys:
+        - path: "/home/{{ rtr4_login }}/.ssh/authorized_keys"
+          key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
       append_tags: yes
       tags:
-        Name: "{{ azure_name_prefix }}-student{{ item }}-rtr4"
         Workshop_rtr4: "{{azure_name_prefix}}-rtr4"
-        Workshop: "{{azure_name_prefix}}"
-        Index: "{{ item[0] }}"
-        Student: "student{{ item }}"
-        # AWS_USERNAME: "{{ linklight_user }}"
-        # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
-        Linklight: "This was provisioned through the linklight provisioner"
-        Students: "Student Count {{student_total}}"
-        short_name: "rtr4"
-        ansible_network_os: "{{azure_instance_types[rtr4_node].os}}"
+    with_sequence: start=0 end="{{ student_total }}"
+    register: rtr4_output
+
+  - name: Ensure tags are present for rtr4 node (NETWORKING MODE)
+  azure_rm_virtualmachine:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{azure_name_prefix}}.rtr4.student{{ item }}"
+    state: present
+    append_tags: yes
+    tags:
+      Name: "{{ azure_name_prefix }}-student{{ item }}-rtr4"
+      Workshop_rtr4: "{{azure_name_prefix}}-rtr4"
+      Workshop: "{{azure_name_prefix}}"
+      Index: "{{ item[0] }}"
+      Student: "student{{ item }}"
+      # AWS_USERNAME: "{{ linklight_user }}"
+      # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
+      Linklight: "This was provisioned through the linklight provisioner"
+      Students: "Student Count {{student_total}}"
+      short_name: "rtr4"
+      ansible_network_os: "{{azure_instance_types[rtr4_node].os}}"
     with_sequence: start=0 end="{{ student_total }}"
   when: special is defined
 
