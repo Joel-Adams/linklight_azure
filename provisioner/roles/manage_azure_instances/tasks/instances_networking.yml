@@ -306,7 +306,7 @@
     security_group: "{{ azure_name_prefix }}-insecure_all"
     ip_configurations:
       - name: ipconfig1
-        public_ip_address_name: "student{{ item }}"
+        public_ip_address_name: "host1.student{{ item }}"
         primary: True
         public_ip_allocation_method: Static
   with_sequence: start=0 end="{{ student_total }}"
