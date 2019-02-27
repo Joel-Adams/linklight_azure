@@ -132,7 +132,7 @@
   register: azure_key
   args:
     creates: ~/.ssh/asnible/id_rsa
-  when: ssh_keys.changed
+  when: not ssh_keys.stat.exists
 
 - name: Remove old keypair
   file:
