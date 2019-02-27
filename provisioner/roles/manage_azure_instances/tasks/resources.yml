@@ -118,7 +118,7 @@
     path: "~/.ssh/ansible/"
     state: directory
     mode: 0755
-
+.
 - name: check if ssh keys exists
   stat:
     path: "~/.ssh/ansible/{{ item }}"
