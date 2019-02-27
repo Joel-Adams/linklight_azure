@@ -69,7 +69,7 @@
   register: azure_vm
 
 - debug:
-    var: azure_vm
+    var: azure_vm.azure_vm
 
 - name: Ensure tags are present
   azure_rm_virtualmachine:
