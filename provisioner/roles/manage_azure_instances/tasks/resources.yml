@@ -125,7 +125,7 @@
   loop:
     - id_rsa
     - id_rsa.pub
-  register: ssh_keys.stat.exists
+  register: ssh_keys
 
 - debug:
     var: ssh_keys
@@ -135,7 +135,7 @@
   register: azure_key
   args:
     creates: ~/.ssh/asnible/id_rsa
-  when: ssh_keys.stat.exists == False
+  when: ssh_keys.changed ==False
 
 - name: Remove old keypair
   file:
