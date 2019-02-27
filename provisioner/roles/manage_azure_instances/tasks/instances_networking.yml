@@ -67,6 +67,10 @@
       publisher: "{{ azure_instance_types[rtr1_node].publisher }}"
       sku: "{{ azure_instance_types[rtr1_node].sku }}"
       version: "{{ azure_instance_types[rtr1_node].version }}"
+    plan:
+      name: "{{ azure_instance_types[rtr1_node].sku }}"
+      product: "{{ azure_instance_types[rtr1_node].offer }}"
+      publisher: "{{ azure_instance_types[rtr1_node].publisher }}"
     ssh_public_keys:
       - path: "/home/{{ rtr1_login }}/.ssh/authorized_keys"
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
@@ -127,6 +131,10 @@
       publisher: "{{ azure_instance_types[rtr2_node].publisher }}"
       sku: "{{ azure_instance_types[rtr2_node].sku }}"
       version: "{{ azure_instance_types[rtr2_node].version }}"
+    plan:
+      name: "{{ azure_instance_types[rtr2_node].sku }}"
+      product: "{{ azure_instance_types[rtr2_node].offer }}"
+      publisher: "{{ azure_instance_types[rtr2_node].publisher }}"
     ssh_public_keys:
       - path: "/home/{{ rtr2_login }}/.ssh/authorized_keys"
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
@@ -186,6 +194,10 @@
       publisher: "{{ azure_instance_types[rtr3_node].publisher }}"
       sku: "{{ azure_instance_types[rtr3_node].sku }}"
       version: "{{ azure_instance_types[rtr3_node].version }}"
+    plan:
+      name: "{{ azure_instance_types[rtr3_node].sku }}"
+      product: "{{ azure_instance_types[rtr3_node].offer }}"
+      publisher: "{{ azure_instance_types[rtr3_node].publisher }}"
     ssh_public_keys:
       - path: "/home/{{ rtr3_login }}/.ssh/authorized_keys"
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
@@ -245,6 +257,10 @@
       publisher: "{{ azure_instance_types[rtr4_node].publisher }}"
       sku: "{{ azure_instance_types[rtr4_node].sku }}"
       version: "{{ azure_instance_types[rtr4_node].version }}"
+    plan:
+      name: "{{ azure_instance_types[rtr4_node].sku }}"
+      product: "{{ azure_instance_types[rtr4_node].offer }}"
+      publisher: "{{ azure_instance_types[rtr4_node].publisher }}"
     ssh_public_keys:
       - path: "/home/{{ rtr4_login }}/.ssh/authorized_keys"
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
