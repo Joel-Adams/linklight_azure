@@ -323,6 +323,7 @@
       short_name: "rtr4"
       ansible_network_os: "{{azure_instance_types[rtr4_node].os}}"
     with_sequence: start=0 end="{{ student_total }}"
+
 when: special is defined
 
 - name: Create a network interface using existing security group and public IP
