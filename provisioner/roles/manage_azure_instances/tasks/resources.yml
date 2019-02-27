@@ -125,7 +125,7 @@
   loop:
     - id_rsa
     - id_rsa.pub
-  register: ssh_keys
+  register: ssh_keys.stat.exists
 
 - debug:
     var: ssh_keys
