@@ -69,7 +69,7 @@
   register: control_output
 
 - debug:
-    var: control_output.msg
+    var: control_output.results.ansible_facts.azure_vm.id
 
 - name: Ensure tags are present
   azure_rm_virtualmachine:
