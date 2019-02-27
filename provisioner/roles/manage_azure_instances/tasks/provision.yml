@@ -91,7 +91,7 @@
       short_name: "ansible"
       private_ip_address: "{{ item.private_ip_adresses }}"
   with_indexed_items:
-    - "{{ network_interface.azure_networkinterfaces }}"
+    - "{{ network_interface.state }}"
   # with_sequence: start=0 end="{{ student_total }}"
   # when: control_output.azure_vm.id is not none
 
