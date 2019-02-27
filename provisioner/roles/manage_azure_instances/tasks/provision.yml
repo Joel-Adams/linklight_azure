@@ -86,8 +86,8 @@
       Students: "Student Count {{student_total}}"
       short_name: "ansible"
   with_indexed_items:
-    - "{{ control_output.instance_ids }}"
-  when: control_output.instance_ids is not none
+    - "{{ control_output.vmId }}"
+  when: control_output.vmId is not none
 
 ## Instance creation
 - name: provision ansible engine (essentials) instances
