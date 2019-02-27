@@ -69,7 +69,7 @@
   register: control_output
 
 - debug:
-    var: control_output.id
+    var: control_output.powerstate_change
 
 - name: Ensure tags are present
   azure_rm_virtualmachine:
