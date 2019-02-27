@@ -198,19 +198,6 @@
 ##############Router 3##############
 - name: turn on rtr3 and rtr4 if special is configured
   block:
-#   - name: find ami for rtr3 (NETWORKING MODE)
-#     ec2_ami_facts:
-#       region: "{{ ec2_region }}"
-#       owners: "{{ ec2_instance_types[rtr3_node].owners }}"
-#       filters:
-#         name: "{{ ec2_instance_types[rtr3_node].filter }}"
-#         architecture: "{{ ec2_instance_types[rtr3_node].architecture }}"
-#     register: amis
-#
-#   - name: save ami for rtr3 (NETWORKING MODE)
-#     set_fact:
-#       rtr3_ami: >
-#         {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
   - name: Create a network interface for rtr3 using existing security group and public IP
     azure_rm_networkinterface:
       name: "{{azure_name_prefix}}.rtr3.student{{ item }}"
@@ -275,21 +262,6 @@
 
     ##############Router 4##############
 
-    # - name: find ami for rtr4 (NETWORKING MODE)
-    #   ec2_ami_facts:
-    #     region: "{{ ec2_region }}"
-    #     owners: "{{ ec2_instance_types[rtr4_node].owners }}"
-    #     filters:
-    #       name: "{{ ec2_instance_types[rtr4_node].filter }}"
-    #       architecture: "{{ ec2_instance_types[rtr4_node].architecture }}"
-    #   register: amis
-    #   when: networking
-    #
-    # - name: save ami for rtr4 (NETWORKING MODE)
-    #   set_fact:
-    #     rtr4_ami: >
-    #       {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
-
   - name: Create a network interface for rtr4 using existing security group and public IP
     azure_rm_networkinterface:
       name: "{{azure_name_prefix}}.rtr4.student{{ item }}"
@@ -351,21 +323,7 @@
       short_name: "rtr4"
       ansible_network_os: "{{azure_instance_types[rtr4_node].os}}"
     with_sequence: start=0 end="{{ student_total }}"
-  when: special is defined
-
-# - name: find ami for host1 (NETWORKING MODE)
-#   ec2_ami_facts:
-#     region: "{{ ec2_region }}"
-#     owners: "{{ ec2_instance_types[host1_node].owners }}"
-#     filters:
-#       name: "{{ ec2_instance_types[host1_node].filter }}"
-#       architecture: "{{ ec2_instance_types[host1_node].architecture }}"
-#   register: amis
-#
-# - name: save ami for host1 (NETWORKING MODE)
-#   set_fact:
-#     host1_ami: >
-#       {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
+when: special is defined
 
 - name: Create a network interface using existing security group and public IP
   azure_rm_networkinterface:
