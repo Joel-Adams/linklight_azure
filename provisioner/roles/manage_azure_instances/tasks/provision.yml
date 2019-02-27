@@ -51,7 +51,6 @@
     append_tags: yes
     tags:
       Workshop_ansible: "{{azure_name_prefix}}-ansible"
-    os_disk_size_gb: "{{ azure_instance_types[ansible_node].os_disk_size }}"
   with_sequence: start=0 end="{{ student_total }}"
   register: control_output
 
