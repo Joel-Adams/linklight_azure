@@ -127,15 +127,12 @@
     - id_rsa.pub
   register: ssh_keys
 
-- debug:
-    var: ssh_keys
-
 - name: ensure SSH key is generated
   command: ssh-keygen -b 2048 -t rsa -f ~/.ssh/ansible/id_rsa -N ''
   register: azure_key
   args:
     creates: ~/.ssh/asnible/id_rsa
-  when: ssh_keys.changed ==False
+  when: ssh_keys.changed
 
 - name: Remove old keypair
   file:
