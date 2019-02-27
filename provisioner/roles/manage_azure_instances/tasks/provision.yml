@@ -48,7 +48,7 @@
   when: resource_group.changed
 
 - debug:
-    var: network_interface.state
+    var: network_interface.results
 
 - name: Create Azure instances for ansible node (control node)
   azure_rm_virtualmachine:
