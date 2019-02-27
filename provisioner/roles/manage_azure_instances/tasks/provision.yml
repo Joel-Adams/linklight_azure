@@ -47,6 +47,9 @@
   register: network_interface
   when: resource_group.changed
 
+- debug:
+    var: network_interface
+
 - name: Create Azure instances for ansible node (control node)
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"

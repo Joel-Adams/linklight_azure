@@ -22,7 +22,7 @@
     groups:
       - managed_nodes
       - control_nodes
-  with_items: "{{ ansible_node_facts.instances }}"
+  with_items: "{{ ansible_node_facts.vm }}"
 
 - name: engine (essentials) mode - setup inventory
   include_tasks: "addhost_engine.yml"
