@@ -119,19 +119,20 @@
     state: directory
     mode: 0755
 
-# - name: ensure SSH key is removed
-#   file:
-#     path: "~/.ssh/ansible/{{ item }}"
-#     state: absent
-#   with_items:
-#     - id_rsa
-#     - id_rsa.pub
+- name: check if ssh keys exists
+  stat:
+    path: "~/.ssh/ansible/{{ item }}"
+  loop:
+    - id_rsa
+    - id_rsa.pub
+  register: ssh_keys
 
 - name: ensure SSH key is generated
   command: ssh-keygen -b 2048 -t rsa -f ~/.ssh/ansible/id_rsa -N ''
   register: azure_key
   args:
     creates: ~/.ssh/asnible/id_rsa
+  when: ssh_keys.stat.exists == False
 
 - name: Remove old keypair
   file:
