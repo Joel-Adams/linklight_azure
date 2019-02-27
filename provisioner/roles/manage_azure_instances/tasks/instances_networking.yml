@@ -3,6 +3,8 @@
     rtr1_node: "{{ azure_lab_node_types_networking['rtr1'] }}"
     rtr2_node: "{{ azure_lab_node_types_networking['rtr2'] }}"
     host1_node: "{{ azure_lab_node_types_networking['host1'] }}"
+    rtr1_login: "{{ azure_login_names['csr-byol'] }}"
+    rtr2_login: "{{ azure_login_names['csr-byol'] }}"
 
 - name: set node types (NETWORKING MODE all_cisco)
   set_fact:
@@ -12,10 +14,26 @@
     - special is defined
     - special is match("all_cisco")
 
+- name: set login names (NETWORKING MODE all_cisco)
+  set_fact:
+    rtr3_login: "{{ azure_login_names['csr-byol'] }}"
+    rtr4_login: "{{ azure_login_names['csr-byol'] }}"
+  when:
+    - special is defined
+    - special is match("all_cisco")
+
 - name: set node types (NETWORKING MODE SPECIAL)
   set_fact:
     rtr3_node: "{{ multivendor['rtr3'] }}"
     rtr4_node: "{{ multivendor['rtr4'] }}"
+  when:
+    - special is defined
+    - special is match("multivendor")
+
+- name: set login names (NETWORKING MODE SPECIAL)
+  set_fact:
+    rtr3_login: "{{ azure_login_names['junos-byol'] }}"
+    rtr4_login: "{{ azure_login_names['junos-byol'] }}"
   when:
     - special is defined
     - special is match("multivendor")
@@ -42,6 +60,7 @@
     name: "{{azure_name_prefix}}.rtr1.student{{ item }}"
     public_ip_allocation_method: Static
     vm_size: "{{ azure_instance_types[rtr1_node].vm_size }}"
+    admin_username: "{{ azure_login_names['rtr1_login'] }}"
     image:
       offer: "{{ azure_instance_types[rtr1_node].offer }}"
       publisher: "{{ azure_instance_types[rtr1_node].publisher }}"
@@ -100,6 +119,7 @@
     name: "{{azure_name_prefix}}rtr2.student{{ item }}"
     public_ip_allocation_method: Static
     vm_size: "{{ azure_instance_types[rtr2_node].vm_size }}"
+    admin_username: "{{ azure_login_names['rtr2_login'] }}"
     image:
       offer: "{{ azure_instance_types[rtr2_node].offer }}"
       publisher: "{{ azure_instance_types[rtr2_node].publisher }}"
@@ -157,6 +177,7 @@
     name: "{{azure_name_prefix}}.rtr3.student{{ item }}"
     public_ip_allocation_method: Static
     vm_size: "{{ azure_instance_types[rtr3_node].vm_size }}"
+    admin_username: "{{ azure_login_names['rtr3_login'] }}"
     image:
       offer: "{{ azure_instance_types[rtr3_node].offer }}"
       publisher: "{{ azure_instance_types[rtr3_node].publisher }}"
@@ -214,6 +235,7 @@
     name: "{{azure_name_prefix}}.rtr4.student{{ item }}"
     public_ip_allocation_method: Static
     vm_size: "{{ azure_instance_types[rtr4_node].vm_size }}"
+    admin_username: "{{ azure_login_names['rtr4_login'] }}"
     image:
       offer: "{{ azure_instance_types[rtr4_node].offer }}"
       publisher: "{{ azure_instance_types[rtr4_node].publisher }}"
