@@ -317,17 +317,16 @@
   register: vpc_facts_1
 
 - name: grab all network interfaces for VPC 2 (NETWORKING MODE)
-  ec2_eni_facts:
   azure_rm_networkinterface_facts:
     resource_group: "{{azure_name_prefix}}"
     name: "{{azure_vpc_id2}}"
   register: vcp_facts_2
 
 - name: Disable Source/Dest check on instance {{ec2_vpc_id1}} (NETWORKING MODE)
-  azure_rm_networkinterface_facts:
-    eni_id: "{{ item['network_interface_id'] }}"
+  azure_rm_networkinterface:
+    name: "{{ item['network_interface_id'] }}"
     resource_group: "{{azure_name_prefix}}"
     cert_validation_mode: ignore
   with_items:
-    - "{{eni_facts_1['network_interfaces']}}"
-    - "{{eni_facts_2['network_interfaces']}}"
+    - "{{vpc_facts_1['network_interfaces']}}"
+    - "{{vpc_facts_2['network_interfaces']}}"
