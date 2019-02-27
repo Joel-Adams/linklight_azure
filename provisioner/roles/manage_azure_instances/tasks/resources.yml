@@ -145,7 +145,7 @@
 
 - name: Create ssh keypair public
   copy: src=~/.ssh/ansible/id_rsa.pub
-        dest="{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-key"
+        dest="{{ playbook_dir }}/{{azure_name_prefix}}-key"
         mode=0400
 
 # - name: save private key
