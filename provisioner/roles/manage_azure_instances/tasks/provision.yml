@@ -48,7 +48,7 @@
   when: resource_group.changed
 
 - debug:
-    var: list_network_interface.results | map(attribute='private_ip_address') | list
+    var: network_interface.results | map(attribute='private_ip_address') | list
 
 - name: Create Azure instances for ansible node (control node)
   azure_rm_virtualmachine:
