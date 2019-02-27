@@ -31,6 +31,19 @@
 #   set_fact:
 #     ansible_control_node_ami: >
 #       {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
+- name: Create a network interface using existing security group and public IP
+  azure_rm_networkinterface:
+    name: "{{azure_name_prefix}}.student{{ item }}"
+    resource_group: "{{azure_name_prefix}}"
+    virtual_network: "{{ azure_name_prefix }}-vpc"
+    subnet_name: "{{ azure_name_prefix }}-subnet"
+    security_group: "{{ azure_name_prefix }}-insecure_all"
+    ip_configurations:
+      - name: ipconfig1
+        public_ip_address_name: "student{{ item }}"
+        primary: True
+  with_sequence: start=0 end="{{ student_total }}"
+  register: network_interface
 
 - name: Create Azure instances for ansible node (control node)
   azure_rm_virtualmachine:
@@ -40,6 +53,7 @@
     vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
     admin_username: "{{ azure_login_names['rhel7'] }}"
     ssh_password_enabled: false
+    network_interface_names: "{{azure_name_prefix}}.student{{ item }}"
     image:
       offer: "{{ azure_instance_types[ansible_node].offer }}"
       publisher: "{{ azure_instance_types[ansible_node].publisher }}"
