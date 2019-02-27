@@ -354,26 +354,26 @@
       short_name: "host1"
   with_sequence: start=0 end="{{ student_total }}"
 
-- name: grab all network interfaces for VPC 1 (NETWORKING MODE)
-  azure_rm_virtualnetwork_facts:
-    resource_group: "{{azure_name_prefix}}"
-    name: "{{ azure_name_prefix }}-vpc"
-  register: vpc_facts_1
-
-- debug:
-    var: vpc_facts_1
-
-- name: grab all network interfaces for VPC 2 (NETWORKING MODE)
-  azure_rm_virtualnetwork_facts:
-    resource_group: "{{azure_name_prefix}}"
-    name: "{{ azure_name_prefix }}-vpc2"
-  register: vcp_facts_2
-
-- name: Disable Source/Dest check on VPC instances (NETWORKING MODE)
-  azure_rm_networkinterface:
-    name: "{{ item['network_interface_id'] }}"
-    resource_group: "{{azure_name_prefix}}"
-    cert_validation_mode: ignore
-  with_items:
-    - "{{vpc_facts_1['network_interfaces']}}"
-    - "{{vpc_facts_2['network_interfaces']}}"
+# - name: grab all network interfaces for VPC 1 (NETWORKING MODE)
+#   azure_rm_virtualnetwork_facts:
+#     resource_group: "{{azure_name_prefix}}"
+#     name: "{{ azure_name_prefix }}-vpc"
+#   register: vpc_facts_1
+#
+# - debug:
+#     var: vpc_facts_1
+#
+# - name: grab all network interfaces for VPC 2 (NETWORKING MODE)
+#   azure_rm_virtualnetwork_facts:
+#     resource_group: "{{azure_name_prefix}}"
+#     name: "{{ azure_name_prefix }}-vpc2"
+#   register: vcp_facts_2
+#
+# - name: Disable Source/Dest check on VPC instances (NETWORKING MODE)
+#   azure_rm_networkinterface:
+#     name: "{{ item['network_interface_id'] }}"
+#     resource_group: "{{azure_name_prefix}}"
+#     cert_validation_mode: ignore
+#   with_items:
+#     - "{{vpc_facts_1['network_interfaces']}}"
+#     - "{{vpc_facts_2['network_interfaces']}}"
