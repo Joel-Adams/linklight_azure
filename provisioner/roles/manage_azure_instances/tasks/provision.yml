@@ -68,6 +68,9 @@
   with_sequence: start=0 end="{{ student_total }}"
   register: control_output
 
+- debug:
+    var: control_output
+
 - name: Ensure tags are present
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
