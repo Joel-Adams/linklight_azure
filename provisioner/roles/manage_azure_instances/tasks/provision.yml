@@ -90,9 +90,9 @@
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "Student Count {{student_total}}"
       short_name: "ansible"
-      private_ip_address: "{{ item.private_ip_adresses }}"
+      private_ip_address: "{{ item[0].ip_configuration.private_ip_address }}"
   with_indexed_items:
-    - "{{ network_interface.state }}"
+    - "{{ network_interface.ansible_facts }}"
   # with_sequence: start=0 end="{{ student_total }}"
   # when: control_output.azure_vm.id is not none
 
