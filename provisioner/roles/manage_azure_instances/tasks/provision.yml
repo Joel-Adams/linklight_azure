@@ -33,7 +33,7 @@
 #       {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
 - name: Create a network interface using existing security group and public IP
   azure_rm_networkinterface:
-    name: "{{azure_name_prefix}}.student{{ item }}"
+    name: "{{azure_name_prefix}}.CN.student{{ item }}"
     resource_group: "{{azure_name_prefix}}"
     virtual_network: "{{ azure_name_prefix }}-vpc"
     subnet_name: "{{ azure_name_prefix }}-subnet"
@@ -49,11 +49,11 @@
 - name: Create Azure instances for ansible node (control node)
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix}}.student{{ item }}"
+    name: "{{azure_name_prefix}}.CN.student{{ item }}"
     vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
     admin_username: "{{ azure_login_names['rhel7'] }}"
     ssh_password_enabled: false
-    network_interface_names: "{{azure_name_prefix}}.student{{ item }}"
+    network_interface_names: "{{azure_name_prefix}}.CN.student{{ item }}"
     image:
       offer: "{{ azure_instance_types[ansible_node].offer }}"
       publisher: "{{ azure_instance_types[ansible_node].publisher }}"
@@ -71,7 +71,7 @@
 - name: Ensure tags are present
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix}}.student{{ item }}"
+    name: "{{azure_name_prefix}}.CN.student{{ item }}"
     state: present
     append_tags: yes
     tags:
