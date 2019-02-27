@@ -42,7 +42,7 @@ azure_instance_types:
       offer: 'vmx-services-gateway-byol'
       publisher: 'juniper-networks'
       sku: 'vmx-services-gateway-byol'
-      version: '17.4.3'    
+      version: '17.4.3'
     os_disk_size: 32
     os: junos
 
@@ -68,11 +68,10 @@ azure_instance_types:
 
   rhel7-tower:
     vm_size: Standard_B2s
-    image:
-      offer: RHEL
-      publisher: RedHat
-      sku: '7-RAW'
-      version: latest
+    offer: RHEL
+    publisher: RedHat
+    sku: '7-RAW'
+    version: latest
     os_disk_size: 20
 
   f5node:

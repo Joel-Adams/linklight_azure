@@ -39,10 +39,10 @@
     public_ip_allocation_method: Static
     instance_type: "{{ azure_instance_types[ansible_node].vm_size }}"
     image:
-      offer: "{{ azure_instance_types[rhel7-tower].offer }}"
-      publisher: "{{ azure_instance_types[rhel7-tower].publisher }}"
-      sku: "{{ azure_instance_types[rhel7-tower].sku }}"
-      version: "{{ azure_instance_types[rhel7-tower].version }}"
+      offer: "{{ azure_instance_types[ansible_node].offer }}"
+      publisher: "{{ azure_instance_types[ansible_node].publisher }}"
+      sku: "{{ azure_instance_types[ansible_node].sku }}"
+      version: "{{ azure_instance_types[ansible_node].version }}"
     ssh_public_keys:
       - path: /home/azure-user/.ssh/authorized_keys
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
