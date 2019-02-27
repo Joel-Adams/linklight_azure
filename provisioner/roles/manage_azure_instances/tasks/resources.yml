@@ -138,9 +138,14 @@
     state: absent
     path: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
 
-- name: Create ssh keypair
+- name: Create ssh keypair private
   copy: src=~/.ssh/ansible/id_rsa
         dest="{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
+        mode=0400
+
+- name: Create ssh keypair public
+  copy: src=~/.ssh/ansible/id_rsa.pub
+        dest="{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-key"
         mode=0400
 
 # - name: save private key
