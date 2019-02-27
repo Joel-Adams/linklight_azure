@@ -60,7 +60,7 @@
     name: "{{azure_name_prefix}}.rtr1.student{{ item }}"
     public_ip_allocation_method: Static
     vm_size: "{{ azure_instance_types[rtr1_node].vm_size }}"
-    admin_username: "{{ azure_login_names['rtr1_login'] }}"
+    admin_username: rtr1_login
     image:
       offer: "{{ azure_instance_types[rtr1_node].offer }}"
       publisher: "{{ azure_instance_types[rtr1_node].publisher }}"
