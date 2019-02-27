@@ -69,7 +69,7 @@
   register: control_output
 
 - debug:
-    var: control_output
+    var: control_output.msg
 
 - name: Ensure tags are present
   azure_rm_virtualmachine:
