@@ -35,6 +35,7 @@ azure_client_secret:
 azure_tenant_id:
 azure_object_id:                       # can be found on Azure command line "az ad sp show --id <azure_client_id>"
 #OPTIONAL VARIABLES
+admin_username: RedHat                 # username for Virtual Machines
 admin_password: ansible                # password for Ansible control node, defaults to ansible
 networking: true                       # Set this if you want the workshop in networking mode
 create_login_page: true                # creates Azure website for azure_name_prefix.workshop_dns_zone
