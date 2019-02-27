@@ -38,7 +38,7 @@
     name: "{{azure_name_prefix}}.student{{ item }}"
     public_ip_allocation_method: Static
     vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
-    admin_username: "{{admin_username}}"
+    admin_username: azure-user
     ssh_password_enabled: false
     image:
       offer: "{{ azure_instance_types[ansible_node].offer }}"
