@@ -42,6 +42,7 @@
       - name: ipconfig1
         public_ip_address_name: "student{{ item }}"
         primary: True
+        public_ip_allocation_method: Static
   with_sequence: start=0 end="{{ student_total }}"
   register: network_interface
 
@@ -49,7 +50,6 @@
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
     name: "{{azure_name_prefix}}.student{{ item }}"
-    public_ip_allocation_method: Static
     vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
     admin_username: "{{ azure_login_names['rhel7'] }}"
     ssh_password_enabled: false
