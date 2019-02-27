@@ -35,9 +35,9 @@
 - name: Create Azure instances for ansible node (control node)
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix}}.{{ item }}"
+    name: "{{azure_name_prefix}}.student{{ item }}"
     public_ip_allocation_method: Static
-    instance_type: "{{ azure_instance_types[ansible_node].vm_size }}"
+    vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
     image:
       offer: "{{ azure_instance_types[ansible_node].offer }}"
       publisher: "{{ azure_instance_types[ansible_node].publisher }}"
