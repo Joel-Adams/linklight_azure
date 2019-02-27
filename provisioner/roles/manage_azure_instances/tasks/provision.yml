@@ -42,7 +42,7 @@
       - name: ipconfig1
         public_ip_address_name: "student{{ item }}"
         primary: True
-        public_ip_allocation_method: Static
+        public_ip_allocation_method: Dynamic
   with_sequence: start=0 end="{{ student_total }}"
   register: network_interface
   when: resource_group.changed
@@ -79,7 +79,7 @@
     state: present
     append_tags: yes
     tags:
-      Name: "{{ azure_name_prefix }}-student{{ item }}-ansible"
+      Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-ansible"
       Workshop_ansible: "{{azure_name_prefix}}-ansible"
       Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
@@ -89,7 +89,10 @@
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "Student Count {{student_total}}"
       short_name: "ansible"
-  with_sequence: start=0 end="{{ student_total }}"
+      private_ip_address: "{{ item.private_ip_adresses }}"
+  with_indexed_items:
+    - "{{ network_interface.azure_networkinterfaces }}"
+  # with_sequence: start=0 end="{{ student_total }}"
   # when: control_output.azure_vm.id is not none
 
 ## Instance creation
