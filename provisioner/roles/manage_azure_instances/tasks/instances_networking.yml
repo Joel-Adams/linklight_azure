@@ -262,7 +262,7 @@
 #     host1_ami: >
 #       {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
 
- - name: Create a network interface using existing security group and public IP
+- name: Create a network interface using existing security group and public IP
   azure_rm_networkinterface:
     name: "{{azure_name_prefix}}.host1.student{{ item }}"
     resource_group: "{{azure_name_prefix}}"
@@ -276,6 +276,7 @@
         public_ip_allocation_method: Static
   with_sequence: start=0 end="{{ student_total }}"
   register: network_interface
+  when: rtr1_output.changed
 
 - name: Create Azure instances for host1 node in VPC-2 (NETWORKING MODE)
   azure_rm_virtualmachine:
