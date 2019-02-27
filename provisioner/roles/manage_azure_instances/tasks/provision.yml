@@ -48,7 +48,8 @@
   when: resource_group.changed
 
 - debug:
-    var: network_interface.results | map(attribute='private_ip_address') | list
+    msg: "private ip address:'{{network_interface.item[0].private_ip_address}}'"
+    # "vpc id:'{{vpc_net_facts.vpcs[0].id}}'"
 
 - name: Create Azure instances for ansible node (control node)
   azure_rm_virtualmachine:
