@@ -13,7 +13,7 @@
 
 - name: DEBUG ansible_node_facts subelements
   debug: var=ansible_node_facts
-  loop: "{{ ansible_node_facts.results }}"
+  loop: "{{ ansible_node_facts.results.find('private_ip_address') }}"
 
 
 
