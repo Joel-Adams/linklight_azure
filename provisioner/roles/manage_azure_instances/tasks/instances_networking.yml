@@ -334,7 +334,15 @@
         public_ip_address: "{{ azure_name_prefix|lower }}-student{{ item }}rtr4.cloudapp.azure.com"
         private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.5.{{ item }}"
     with_sequence: start=1 end="{{ student_total }}"
-when: special is defined
+  when: special is defined
+
+- name: Create a public ip address
+  azure_rm_publicipaddress:
+    resource_group: "{{azure_name_prefix}}"
+    name: "student{{ item }}.host1"
+    allocation_method: Dynamic
+    domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}host1"
+  with_sequence: start=1 end="{{ student_total }}"
 
 - name: Create a network interface using existing security group and public IP
   azure_rm_networkinterface:
@@ -344,10 +352,10 @@ when: special is defined
     subnet_name: "{{ azure_name_prefix }}-subnet"
     security_group: "{{ azure_name_prefix }}-insecure_all"
     ip_configurations:
-      - name: ipconfig1
-        public_ip_address_name: "host1.student{{ item }}"
-        primary: True
-        public_ip_allocation_method: Static
+      - name: "host1.student{{ item }}.ipconfig1"
+        private_ip_allocation_method: Static
+        private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.6.{{ item }}"
+        public_ip_address_name: "student{{ item }}.host1"
   with_sequence: start=1 end="{{ student_total }}"
   register: network_interface
   when: rtr1_output.changed
@@ -391,6 +399,8 @@ when: special is defined
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "Student Count {{student_total}}"
       short_name: "host1"
+      public_ip_address: "{{ azure_name_prefix|lower }}-student{{ item }}host1.cloudapp.azure.com"
+      private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.6.{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
 
 # - name: grab all network interfaces for VPC 1 (NETWORKING MODE)
