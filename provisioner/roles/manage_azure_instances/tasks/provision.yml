@@ -64,7 +64,7 @@
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
     append_tags: yes
     tags:
-      Workshop_ansible: "{{azure_name_prefix}}-ansible"
+      Workshop_ansible:"{{azure_name_prefix}}-ansible"
   with_sequence: start=1 end="{{ student_total }}"
   register: azure_vm
 
