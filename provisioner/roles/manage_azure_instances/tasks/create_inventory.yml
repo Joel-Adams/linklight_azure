@@ -12,8 +12,8 @@
     var: ansible_node_facts
 
 - name: DEBUG ansible_node_facts subelements
-  debug: var=ansible_node_facts 
-  loop: "{{lookup('subelements', results, 'vms')}}"
+  debug: var=ansible_node_facts
+  loop: "{{ ansible_node_facts.results }}"
 
 
 
