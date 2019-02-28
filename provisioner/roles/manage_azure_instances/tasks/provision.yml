@@ -37,7 +37,7 @@
       - name: "CN.student{{ item }}.ipconfig1"
         private_ip_allocation_method: Static
         # private_ip_address: "172.16.1.{{ item }}"
-        private_ip_address: "{{ azure_subnet.split('.')[2] }}.1.{{ item }}"
+        private_ip_address: "{{ azure_subnet.split('.')[0].[1] }}.1.{{ item }}"
         public_ip_address_name: "student{{ item }}"
       # - name: "CN.student{{ item }}.ipconfig2"
       #   private_ip_allocation_method: Static
