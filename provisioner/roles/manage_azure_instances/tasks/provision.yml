@@ -44,7 +44,7 @@
       #   private_ip_address: "{{ azure_subnet[:-2] }}.{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
   register: network_interface
-  # when: resource_group.changed
+  when: resource_group.changed
 
 - name: Create Azure instances for ansible node (control node)
   azure_rm_virtualmachine:
