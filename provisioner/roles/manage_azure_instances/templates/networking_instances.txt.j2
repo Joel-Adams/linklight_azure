@@ -9,23 +9,23 @@ juniper
 {% endif %}
 
 [cisco]
-{% for vm in rtr1_node_facts.instances %}
+{% for vm in rtr1_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
 {{ vm.tags.short_name }} ansible_host={{ vm.public_ip_address }} private_ip={{ vm.private_ip_address }}
 {% endif %}
 {% endfor %}
-{% for vm in rtr2_node_facts.instances %}
+{% for vm in rtr2_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
 {{ vm.tags.short_name }} ansible_host={{ vm.public_ip_address }} private_ip={{ vm.private_ip_address }}
 {% endif %}
 {% endfor %}
 {% if special is defined and special == "all_cisco" %}
-{% for vm in rtr3_node_facts.instances %}
+{% for vm in rtr3_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
 {{ vm.tags.short_name }} ansible_host={{ vm.public_ip_address }} private_ip={{ vm.private_ip_address }}
 {% endif %}
 {% endfor %}
-{% for vm in rtr4_node_facts.instances %}
+{% for vm in rtr4_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
 {{ vm.tags.short_name }} ansible_host={{ vm.public_ip_address }} private_ip={{ vm.private_ip_address }}
 {% endif %}
@@ -34,12 +34,12 @@ juniper
 
 {% if special is defined and special == "multivendor" %}
 [juniper]
-{% for vm in rtr3_node_facts.instances %}
+{% for vm in rtr3_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
 {{ vm.tags.short_name }} ansible_host={{ vm.public_ip_address }} private_ip={{ vm.private_ip_address }}
 {% endif %}
 {% endfor %}
-{% for vm in rtr4_node_facts.instances %}
+{% for vm in rtr4_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
 {{ vm.tags.short_name }} ansible_host={{ vm.public_ip_address }} private_ip={{ vm.private_ip_address }}
 {% endif %}
@@ -71,14 +71,14 @@ rtr4
 {% endif %}
 
 [hosts]
-{% for vm in host1_node_facts.instances %}
+{% for vm in host1_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
 {{ vm.tags.short_name }} ansible_host={{ vm.public_ip_address }} ansible_user={{ azure_login_names[host1_node] }} private_ip={{ vm.private_ip_address }}
 {% endif %}
 {% endfor %}
 
 [control]
-{% for vm in ansible_node_facts.instances %}
+{% for vm in ansible_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
 {{ vm.tags.short_name }} ansible_host={{ vm.public_ip_address }} ansible_user={{ vm.tags.Student }} private_ip={{ vm.private_ip_address }}
 {% endif %}
