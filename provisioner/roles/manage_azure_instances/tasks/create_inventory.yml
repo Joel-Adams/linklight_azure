@@ -11,15 +11,15 @@
 
 - name: add ansible node to control_nodes and managed_nodes group
   add_host:
-    name: "{{ item.vms.tags.Name }}"
-    username: "{{ item.vms.tags.Student }}"
-    student: "{{ item.vms.tags.Student }}"
+    name: "{{ item..vms.Name }}"
+    username: "{{ item..vms.Student }}"
+    student: "{{ item..vms.Student }}"
     short_name: "ansible"
-    ansible_host: "{{ item.vms.tags.public_ip_address }}"
+    ansible_host: "{{ item..vms.public_ip_address }}"
     ansible_user: "{{ azure_login_names[ansible_node] }}"
     ansible_port: "{{ ssh_port }}"
     ansible_ssh_private_key_file: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
-    private_ip: "{{item.vms.tags.private_ip_address}}"
+    private_ip: "{{item..vms.private_ip_address}}"
     groups:
       - managed_nodes
       - control_nodes
