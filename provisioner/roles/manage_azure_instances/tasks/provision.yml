@@ -51,7 +51,7 @@
     resource_group: "{{azure_name_prefix}}"
     name: "{{azure_name_prefix}}.CN.student{{ item }}"
     vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
-    admin_username: "student{{ item }}"
+    admin_username: azure-user
     admin_password: "{{ admin_password }}"
     network_interface_names: "{{azure_name_prefix}}.CN.student{{ item }}"
     image:
