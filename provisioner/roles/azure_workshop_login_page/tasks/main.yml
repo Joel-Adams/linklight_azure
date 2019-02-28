@@ -17,6 +17,7 @@
     storage_account_name: "{{azure_name_prefix|lower}}"
     container: "{{azure_name_prefix}}"
     public_access: container
+    blob: "{{ azure_name_prefix|lower }}-index.html"
     src: "{{ playbook_dir }}/{{ azure_name_prefix }}/{{ azure_name_prefix|lower }}-index.html"
     state: "{{ storage_state }}"
     force: yes
