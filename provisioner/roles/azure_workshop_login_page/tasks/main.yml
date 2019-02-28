@@ -15,7 +15,7 @@
   azure_rm_storageblob:
     resource_group: "{{azure_name_prefix}}"
     storage_account_name: "{{azure_name_prefix|lower}}"
-    container: "{{azure_name_prefix}}"
+    container: "{{azure_name_prefix|lower}}"
     public_access: container
     blob: index.html
     src: "{{ playbook_dir }}/{{ azure_name_prefix }}/{{ azure_name_prefix|lower }}-index.html"
