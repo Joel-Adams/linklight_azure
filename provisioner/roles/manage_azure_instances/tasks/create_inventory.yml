@@ -25,10 +25,10 @@
   with_sequence: start=1 end="{{ student_total }}"
 
 - debug: var=item
-  loop: "{{lookup('subelements', host_vars, 'groups', {'skip_missing': True})}}"  
+  loop: "{{lookup('subelements', host_vars, 'groups', {'skip_missing': True})}}"
 
 - name: engine (essentials) mode - setup inventory
-  include_tasks: "addhost_engine.yml"
+  include_tasks: "addhost_engine123.yml"
   when:
     - not networking
     - not f5workshop
