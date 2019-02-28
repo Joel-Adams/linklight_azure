@@ -341,7 +341,7 @@ $("document").ready(function(){
       <p class="studentinfo">student{{number}} - Click to see login details</p>
     </div>
     <div class="content">
-{% for host in ansible_node_facts.instances %}
+{% for host in ansible_node_facts.vms %}
 {% if 'student' ~ number == host.tags.Student %}
 To login to the <code>ansible</code> control node use the following for SSH access:<br>
 username:   student{{number}}<br>
