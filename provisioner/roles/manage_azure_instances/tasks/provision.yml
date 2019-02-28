@@ -23,7 +23,7 @@
     resource_group: "{{azure_name_prefix}}"
     name: "student{{ item }}"
     allocation_method: Dynamic
-    domain_name: "{{ azure_name_prefix|lower }}.student{{ item }}cn"
+    domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}cn"
   with_sequence: start=1 end="{{ student_total }}"
 
 - name: Create a network interface using existing security group and public IP
