@@ -1,8 +1,10 @@
 - name: grab facts for control_nodes
   azure_rm_virtualmachine_facts:
     resource_group: "{{azure_name_prefix}}"
-    tags:
-      - Workshop_ansible:"{{azure_name_prefix}}-ansible"
+    # tags:
+    #   - Workshop_ansible:"{{azure_name_prefix}}-ansible"
+    name: "{{azure_name_prefix}}.CN.student{{ item }}"
+  with_sequence: start=1 end="{{ student_total }}"
   register: ansible_node_facts
 
 - name: DEBUG ansible_node_facts
