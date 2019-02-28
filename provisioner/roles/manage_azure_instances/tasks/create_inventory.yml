@@ -1,7 +1,7 @@
 - name: grab facts for control_nodes
   azure_rm_virtualmachine_facts:
     resource_group: "{{azure_name_prefix}}"
-#    tags: "{{azure_name_prefix}}-ansible"
+    tags: "{{azure_name_prefix}}-ansible"
   register: ansible_node_facts
 
 - name: DEBUG ansible_node_facts
@@ -14,15 +14,15 @@
     username: "{{ item.tags.Student }}"
     student: "{{ item.tags.Student }}"
     short_name: "{{ item.tags.short_name }}"
-    ansible_host: "{{ item.public_ip_address }}"
+    ansible_host: "{{ item.tags.public_ip_address }}"
     ansible_user: "{{ azure_login_names[ansible_node] }}"
     ansible_port: "{{ ssh_port }}"
     ansible_ssh_private_key_file: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
-    private_ip: "{{item.private_ip_address}}"
+    private_ip: "{{item.tags.private_ip_address}}"
     groups:
       - managed_nodes
       - control_nodes
-  with_items: "{{ ansible_node_facts.vm }}"
+  with_items: "{{ ansible_node_facts.vms }}"
 
 - name: engine (essentials) mode - setup inventory
   include_tasks: "addhost_engine.yml"
