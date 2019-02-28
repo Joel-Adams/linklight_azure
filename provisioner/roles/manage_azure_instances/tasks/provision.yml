@@ -75,18 +75,18 @@
     state: present
     append_tags: yes
     tags:
-      Name: "{{ azure_name_prefix }}-student{{ item }}-ansible"
-      Workshop_ansible: "{{azure_name_prefix}}-ansible"
-      Workshop: "{{azure_name_prefix}}"
-      Index: "{{ item[0] }}"
-      Student: "student{{ item }}"
-      Username: "{{ azure_login_names['rhel7'] }}"
+      Name:"{{ azure_name_prefix }}-student{{ item }}-ansible"
+      Workshop_ansible:"{{azure_name_prefix}}-ansible"
+      Workshop:"{{azure_name_prefix}}"
+      Index:"{{ item[0] }}"
+      Student:"student{{ item }}"
+      Username:"{{ azure_login_names['rhel7'] }}"
       # Info: "Username that provisioned this-> {{ linklight_user }}"
-      Linklight: "This was provisioned through the linklight provisioner"
-      Students: "Student Count {{student_total}}"
-      short_name: "ansible"
-      public_ip_address: "{{ azure_name_prefix|lower }}-student{{ item }}cn.cloudapp.azure.com"
-      private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.1.{{ item }}"
+      Linklight:"This was provisioned through the linklight provisioner"
+      Students:"Student Count {{student_total}}"
+      short_name:"ansible"
+      public_ip_address:"{{ azure_name_prefix|lower }}-student{{ item }}cn.cloudapp.azure.com"
+      private_ip_address:"{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.1.{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
   # when: control_output.azure_vm.id is not none
 
