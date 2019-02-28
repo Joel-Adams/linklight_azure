@@ -8,7 +8,7 @@
   register: ansible_node_facts
 
 - debug:
-    var: ansible_node_facts
+    var: ansible_node_facts.vms
     # msg: "Blah is {{ ansible_node_facts.results.{{item.0 + 1}} }}"
     # msg: "Blah is {{ ansible_node_facts.results }}"
 
