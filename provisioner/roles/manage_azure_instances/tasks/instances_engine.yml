@@ -38,7 +38,7 @@
     append_tags: yes
     tags:
       'Workshop_node1': "{{azure_name_prefix}}-node1"
-  with_sequence: start=0 end="{{ student_total }}"
+  with_sequence: start=1 end="{{ student_total }}"
   register: node1_output
 
 - name: Ensure tags are present for node1
@@ -95,7 +95,7 @@
     append_tags: yes
     tags:
       'Workshop_node2': "{{azure_name_prefix}}-node2"
-  with_sequence: start=0 end="{{ student_total }}"
+  with_sequence: start=1 end="{{ student_total }}"
   register: node2_output
 
 - name: Ensure tags are present for node2
@@ -152,7 +152,7 @@
     append_tags: yes
     tags:
       'Workshop_node3': "{{azure_name_prefix}}-node3"
-  with_sequence: start=0 end="{{ student_total }}"
+  with_sequence: start=1 end="{{ student_total }}"
   register: node3_output
 
 - name: Ensure tags are present for node3

@@ -39,137 +39,164 @@
     - special is match("multivendor")
 
 ##############Router 1##############
-
-- name: Create a network interface for rtr1 using existing security group and public IP
-  azure_rm_networkinterface:
-    name: "{{azure_name_prefix}}.rtr1.student{{ item }}"
-    resource_group: "{{azure_name_prefix}}"
-    virtual_network: "{{ azure_name_prefix }}-vpc"
-    subnet_name: "{{ azure_name_prefix }}-subnet"
-    security_group: "{{ azure_name_prefix }}-insecure_all"
-    ip_configurations:
-      - name: ipconfig1
-        public_ip_address_name: "rtr1.student{{ item }}"
-        primary: True
-        public_ip_allocation_method: Static
-  with_sequence: start=0 end="{{ student_total }}"
-  register: network_interface
-  when: resource_group.changed
-
-- name: Create Azure instances for rtr1 node (NETWORKING MODE)
-  azure_rm_virtualmachine:
-    resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix}}.rtr1.student{{ item }}"
-    vm_size: "{{ azure_instance_types[rtr1_node].vm_size }}"
-    admin_username: "{{ rtr1_login }}"
-    ssh_password_enabled: false
-    network_interface_names: "{{azure_name_prefix}}.rtr1.student{{ item }}"
-    image:
-      offer: "{{ azure_instance_types[rtr1_node].offer }}"
-      publisher: "{{ azure_instance_types[rtr1_node].publisher }}"
-      sku: "{{ azure_instance_types[rtr1_node].sku }}"
-      version: "{{ azure_instance_types[rtr1_node].version }}"
-    plan:
-      name: "{{ azure_instance_types[rtr1_node].sku }}"
-      product: "{{ azure_instance_types[rtr1_node].offer }}"
-      publisher: "{{ azure_instance_types[rtr1_node].publisher }}"
-    ssh_public_keys:
-      - path: "/home/{{ rtr1_login }}/.ssh/authorized_keys"
-        key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
-    append_tags: yes
-    tags:
-      Workshop_rtr1: "{{azure_name_prefix}}-rtr1"
-  with_sequence: start=0 end="{{ student_total }}"
-  register: rtr1_output
-
-- name: Ensure tags are present for rtr1 node (NETWORKING MODE)
-  azure_rm_virtualmachine:
-    resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix}}.rtr1.student{{ item }}"
-    state: present
-    append_tags: yes
-    tags:
-      Name: "{{ azure_name_prefix }}-student{{ item }}-rtr1"
-      Workshop_rtr1: "{{azure_name_prefix}}-rtr1"
-      Workshop: "{{azure_name_prefix}}"
-      Index: "{{ item[0] }}"
-      Student: "student{{ item }}"
-      # AWS_USERNAME: "{{ linklight_user }}"
-      # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
-      Linklight: "This was provisioned through the linklight provisioner"
-      Students: "Student Count {{student_total}}"
-      short_name: "rtr1"
-      ansible_network_os: "{{azure_instance_types[rtr1_node].os}}"
-  with_sequence: start=0 end="{{ student_total }}"
-
-
-##############Router 2##############
-
-- name: Create a network interface for rtr2 using existing security group and public IP
-  azure_rm_networkinterface:
-    name: "{{azure_name_prefix}}.rtr2.student{{ item }}"
-    resource_group: "{{azure_name_prefix}}"
-    virtual_network: "{{ azure_name_prefix }}-vpc"
-    subnet_name: "{{ azure_name_prefix }}-subnet"
-    security_group: "{{ azure_name_prefix }}-insecure_all"
-    ip_configurations:
-      - name: ipconfig1
-        public_ip_address_name: "rtr2.student{{ item }}"
-        primary: True
-        public_ip_allocation_method: Static
-  with_sequence: start=0 end="{{ student_total }}"
-  register: network_interface
-  when: resource_group.changed
-
-- name: Create Azure instances for rtr2 node (NETWORKING MODE)
-  azure_rm_virtualmachine:
-    resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix}}rtr2.student{{ item }}"
-    vm_size: "{{ azure_instance_types[rtr2_node].vm_size }}"
-    admin_username: "{{ rtr2_login }}"
-    ssh_password_enabled: false
-    network_interface_names: "{{azure_name_prefix}}.rtr2.student{{ item }}"
-    image:
-      offer: "{{ azure_instance_types[rtr2_node].offer }}"
-      publisher: "{{ azure_instance_types[rtr2_node].publisher }}"
-      sku: "{{ azure_instance_types[rtr2_node].sku }}"
-      version: "{{ azure_instance_types[rtr2_node].version }}"
-    plan:
-      name: "{{ azure_instance_types[rtr2_node].sku }}"
-      product: "{{ azure_instance_types[rtr2_node].offer }}"
-      publisher: "{{ azure_instance_types[rtr2_node].publisher }}"
-    ssh_public_keys:
-      - path: "/home/{{ rtr2_login }}/.ssh/authorized_keys"
-        key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
-    append_tags: yes
-    tags:
-      Workshop_rtr2: "{{azure_name_prefix}}-rtr2"
-  with_sequence: start=0 end="{{ student_total }}"
-  register: rtr2_output
-
-- name: Ensure tags are present for rtr2 node (NETWORKING MODE)
-  azure_rm_virtualmachine:
-    resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix}}rtr2.student{{ item }}"
-    state: present
-    append_tags: yes
-    tags:
-      Name: "{{ azure_name_prefix }}-student{{ item }}-rtr2"
-      Workshop_rtr2: "{{azure_name_prefix}}-rtr2"
-      Workshop: "{{azure_name_prefix}}"
-      Index: "{{ item[0] }}"
-      Student: "student{{ item }}"
-      # AWS_USERNAME: "{{ linklight_user }}"
-      # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
-      Linklight: "This was provisioned through the linklight provisioner"
-      Students: "Student Count {{student_total}}"
-      short_name: "rtr2"
-      ansible_network_os: "{{azure_instance_types[rtr2_node].os}}"
-  with_sequence: start=0 end="{{ student_total }}"
-
-##############Router 3##############
 - name: turn on rtr3 and rtr4 if special is configured
   block:
+  - name: Create a public ip address
+    azure_rm_publicipaddress:
+      resource_group: "{{azure_name_prefix}}"
+      name: "student{{ item }}.rtr1"
+      allocation_method: Dynamic
+      domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}rtr1"
+    with_sequence: start=1 end="{{ student_total }}"
+
+  - name: Create a network interface for rtr1 using existing security group and public IP
+    azure_rm_networkinterface:
+      name: "{{azure_name_prefix}}.rtr1.student{{ item }}"
+      resource_group: "{{azure_name_prefix}}"
+      virtual_network: "{{ azure_name_prefix }}-vpc"
+      subnet_name: "{{ azure_name_prefix }}-subnet"
+      security_group: "{{ azure_name_prefix }}-insecure_all"
+      ip_configurations:
+        - name: "rtr1.student{{ item }}.ipconfig1"
+          private_ip_allocation_method: Static
+          private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.2.{{ item }}"
+          public_ip_address_name: "student{{ item }}.rtr1"
+    with_sequence: start=1 end="{{ student_total }}"
+    register: network_interface
+    when: resource_group.changed
+
+  - name: Create Azure instances for rtr1 node (NETWORKING MODE)
+    azure_rm_virtualmachine:
+      resource_group: "{{azure_name_prefix}}"
+      name: "{{azure_name_prefix}}.rtr1.student{{ item }}"
+      vm_size: "{{ azure_instance_types[rtr1_node].vm_size }}"
+      admin_username: "{{ rtr1_login }}"
+      ssh_password_enabled: false
+      network_interface_names: "{{azure_name_prefix}}.rtr1.student{{ item }}"
+      image:
+        offer: "{{ azure_instance_types[rtr1_node].offer }}"
+        publisher: "{{ azure_instance_types[rtr1_node].publisher }}"
+        sku: "{{ azure_instance_types[rtr1_node].sku }}"
+        version: "{{ azure_instance_types[rtr1_node].version }}"
+      plan:
+        name: "{{ azure_instance_types[rtr1_node].sku }}"
+        product: "{{ azure_instance_types[rtr1_node].offer }}"
+        publisher: "{{ azure_instance_types[rtr1_node].publisher }}"
+      ssh_public_keys:
+        - path: "/home/{{ rtr1_login }}/.ssh/authorized_keys"
+          key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
+      append_tags: yes
+      tags:
+        Workshop_rtr1: "{{azure_name_prefix}}-rtr1"
+    with_sequence: start=1 end="{{ student_total }}"
+    register: rtr1_output
+
+  - name: Ensure tags are present for rtr1 node (NETWORKING MODE)
+    azure_rm_virtualmachine:
+      resource_group: "{{azure_name_prefix}}"
+      name: "{{azure_name_prefix}}.rtr1.student{{ item }}"
+      state: present
+      append_tags: yes
+      tags:
+        Name: "{{ azure_name_prefix }}-student{{ item }}-rtr1"
+        Workshop_rtr1: "{{azure_name_prefix}}-rtr1"
+        Workshop: "{{azure_name_prefix}}"
+        Index: "{{ item[0] }}"
+        Student: "student{{ item }}"
+        # AWS_USERNAME: "{{ linklight_user }}"
+        # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
+        Linklight: "This was provisioned through the linklight provisioner"
+        Students: "Student Count {{student_total}}"
+        short_name: "rtr1"
+        ansible_network_os: "{{azure_instance_types[rtr1_node].os}}"
+        public_ip_address: "{{ azure_name_prefix|lower }}-student{{ item }}rtr1.cloudapp.azure.com"
+        private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.2.{{ item }}"
+    with_sequence: start=1 end="{{ student_total }}"
+
+
+  ##############Router 2##############
+
+  - name: Create a public ip address
+    azure_rm_publicipaddress:
+      resource_group: "{{azure_name_prefix}}"
+      name: "student{{ item }}.rtr2"
+      allocation_method: Dynamic
+      domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}rtr2"
+    with_sequence: start=1 end="{{ student_total }}"
+
+  - name: Create a network interface for rtr2 using existing security group and public IP
+    azure_rm_networkinterface:
+      name: "{{azure_name_prefix}}.rtr2.student{{ item }}"
+      resource_group: "{{azure_name_prefix}}"
+      virtual_network: "{{ azure_name_prefix }}-vpc"
+      subnet_name: "{{ azure_name_prefix }}-subnet"
+      security_group: "{{ azure_name_prefix }}-insecure_all"
+      ip_configurations:
+        - name: "rtr2.student{{ item }}.ipconfig1"
+          private_ip_allocation_method: Static
+          private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.3.{{ item }}"
+          public_ip_address_name: "student{{ item }}.rtr2"
+    with_sequence: start=1 end="{{ student_total }}"
+    register: network_interface
+    when: resource_group.changed
+
+  - name: Create Azure instances for rtr2 node (NETWORKING MODE)
+    azure_rm_virtualmachine:
+      resource_group: "{{azure_name_prefix}}"
+      name: "{{azure_name_prefix}}.rtr2.student{{ item }}"
+      vm_size: "{{ azure_instance_types[rtr2_node].vm_size }}"
+      admin_username: "{{ rtr2_login }}"
+      ssh_password_enabled: false
+      network_interface_names: "{{azure_name_prefix}}.rtr2.student{{ item }}"
+      image:
+        offer: "{{ azure_instance_types[rtr2_node].offer }}"
+        publisher: "{{ azure_instance_types[rtr2_node].publisher }}"
+        sku: "{{ azure_instance_types[rtr2_node].sku }}"
+        version: "{{ azure_instance_types[rtr2_node].version }}"
+      plan:
+        name: "{{ azure_instance_types[rtr2_node].sku }}"
+        product: "{{ azure_instance_types[rtr2_node].offer }}"
+        publisher: "{{ azure_instance_types[rtr2_node].publisher }}"
+      ssh_public_keys:
+        - path: "/home/{{ rtr2_login }}/.ssh/authorized_keys"
+          key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
+      append_tags: yes
+      tags:
+        Workshop_rtr2: "{{azure_name_prefix}}-rtr2"
+    with_sequence: start=1 end="{{ student_total }}"
+    register: rtr2_output
+
+  - name: Ensure tags are present for rtr2 node (NETWORKING MODE)
+    azure_rm_virtualmachine:
+      resource_group: "{{azure_name_prefix}}"
+      name: "{{azure_name_prefix}}.rtr2.student{{ item }}"
+      state: present
+      append_tags: yes
+      tags:
+        Name: "{{ azure_name_prefix }}-student{{ item }}-rtr2"
+        Workshop_rtr2: "{{azure_name_prefix}}-rtr2"
+        Workshop: "{{azure_name_prefix}}"
+        Index: "{{ item[0] }}"
+        Student: "student{{ item }}"
+        # AWS_USERNAME: "{{ linklight_user }}"
+        # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
+        Linklight: "This was provisioned through the linklight provisioner"
+        Students: "Student Count {{student_total}}"
+        short_name: "rtr2"
+        ansible_network_os: "{{azure_instance_types[rtr2_node].os}}"
+        public_ip_address: "{{ azure_name_prefix|lower }}-student{{ item }}rtr2.cloudapp.azure.com"
+        private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.3.{{ item }}"
+    with_sequence: start=1 end="{{ student_total }}"
+
+  ##############Router 3##############
+  - name: Create a public ip address
+    azure_rm_publicipaddress:
+      resource_group: "{{azure_name_prefix}}"
+      name: "student{{ item }}.rtr3"
+      allocation_method: Dynamic
+      domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}rtr3"
+    with_sequence: start=1 end="{{ student_total }}"
+
   - name: Create a network interface for rtr3 using existing security group and public IP
     azure_rm_networkinterface:
       name: "{{azure_name_prefix}}.rtr3.student{{ item }}"
@@ -178,18 +205,18 @@
       subnet_name: "{{ azure_name_prefix }}-subnet"
       security_group: "{{ azure_name_prefix }}-insecure_all"
       ip_configurations:
-        - name: ipconfig1
-          public_ip_address_name: "rtr3.student{{ item }}"
-          primary: True
-          public_ip_allocation_method: Static
-    with_sequence: start=0 end="{{ student_total }}"
+        - name: "rtr3.student{{ item }}.ipconfig1"
+          private_ip_allocation_method: Static
+          private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.4.{{ item }}"
+          public_ip_address_name: "student{{ item }}.rtr3"
+    with_sequence: start=1 end="{{ student_total }}"
     register: network_interface
     when: resource_group.changed
 
   - name: Create Azure instances for rtr3 node (NETWORKING MODE)
     azure_rm_virtualmachine:
       resource_group: "{{azure_name_prefix}}"
-      name: "{{azure_name_prefix}}rtr3.student{{ item }}"
+      name: "{{azure_name_prefix}}.rtr3.student{{ item }}"
       vm_size: "{{ azure_instance_types[rtr3_node].vm_size }}"
       admin_username: "{{ rtr3_login }}"
       ssh_password_enabled: false
@@ -209,7 +236,7 @@
       append_tags: yes
       tags:
         Workshop_rtr3: "{{azure_name_prefix}}-rtr3"
-    with_sequence: start=0 end="{{ student_total }}"
+    with_sequence: start=1 end="{{ student_total }}"
     register: rtr3_output
 
   - name: Ensure tags are present for rtr3 node (NETWORKING MODE)
@@ -230,9 +257,19 @@
         Students: "Student Count {{student_total}}"
         short_name: "rtr3"
         ansible_network_os: "{{azure_instance_types[rtr3_node].os}}"
-    with_sequence: start=0 end="{{ student_total }}"
+        public_ip_address: "{{ azure_name_prefix|lower }}-student{{ item }}rtr3.cloudapp.azure.com"
+        private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.4.{{ item }}"
+    with_sequence: start=1 end="{{ student_total }}"
 
-    ##############Router 4##############
+      ##############Router 4##############
+
+  - name: Create a public ip address
+    azure_rm_publicipaddress:
+      resource_group: "{{azure_name_prefix}}"
+      name: "student{{ item }}.rtr4"
+      allocation_method: Dynamic
+      domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}rtr4"
+    with_sequence: start=1 end="{{ student_total }}"
 
   - name: Create a network interface for rtr4 using existing security group and public IP
     azure_rm_networkinterface:
@@ -242,18 +279,18 @@
       subnet_name: "{{ azure_name_prefix }}-subnet"
       security_group: "{{ azure_name_prefix }}-insecure_all"
       ip_configurations:
-        - name: ipconfig1
-          public_ip_address_name: "rtr4.student{{ item }}"
-          primary: True
-          public_ip_allocation_method: Static
-    with_sequence: start=0 end="{{ student_total }}"
+        - name: "rtr4.student{{ item }}.ipconfig1"
+          private_ip_allocation_method: Static
+          private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.5.{{ item }}"
+          public_ip_address_name: "student{{ item }}.rtr4"
+    with_sequence: start=1 end="{{ student_total }}"
     register: network_interface
     when: resource_group.changed
 
   - name: Create Azure instances for rtr4 node (NETWORKING MODE)
     azure_rm_virtualmachine:
       resource_group: "{{azure_name_prefix}}"
-      name: "{{azure_name_prefix}}rtr4.student{{ item }}"
+      name: "{{azure_name_prefix}}.rtr4.student{{ item }}"
       vm_size: "{{ azure_instance_types[rtr4_node].vm_size }}"
       admin_username: "{{ rtr4_login }}"
       ssh_password_enabled: false
@@ -273,7 +310,7 @@
       append_tags: yes
       tags:
         Workshop_rtr4: "{{azure_name_prefix}}-rtr4"
-    with_sequence: start=0 end="{{ student_total }}"
+    with_sequence: start=1 end="{{ student_total }}"
     register: rtr4_output
 
   - name: Ensure tags are present for rtr4 node (NETWORKING MODE)
@@ -294,8 +331,10 @@
         Students: "Student Count {{student_total}}"
         short_name: "rtr4"
         ansible_network_os: "{{azure_instance_types[rtr4_node].os}}"
-    with_sequence: start=0 end="{{ student_total }}"
-  when: special is defined
+        public_ip_address: "{{ azure_name_prefix|lower }}-student{{ item }}rtr4.cloudapp.azure.com"
+        private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.5.{{ item }}"
+    with_sequence: start=1 end="{{ student_total }}"
+when: special is defined
 
 - name: Create a network interface using existing security group and public IP
   azure_rm_networkinterface:
@@ -309,7 +348,7 @@
         public_ip_address_name: "host1.student{{ item }}"
         primary: True
         public_ip_allocation_method: Static
-  with_sequence: start=0 end="{{ student_total }}"
+  with_sequence: start=1 end="{{ student_total }}"
   register: network_interface
   when: rtr1_output.changed
 
@@ -332,7 +371,7 @@
     append_tags: yes
     tags:
       Workshop_host1: "{{azure_name_prefix}}-host1"
-  with_sequence: start=0 end="{{ student_total }}"
+  with_sequence: start=1 end="{{ student_total }}"
   register: host1_output
 
 - name: Ensure tags are present for host1 node (NETWORKING MODE)
@@ -352,7 +391,7 @@
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "Student Count {{student_total}}"
       short_name: "host1"
-  with_sequence: start=0 end="{{ student_total }}"
+  with_sequence: start=1 end="{{ student_total }}"
 
 # - name: grab all network interfaces for VPC 1 (NETWORKING MODE)
 #   azure_rm_virtualnetwork_facts:
