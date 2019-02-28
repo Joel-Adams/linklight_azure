@@ -32,6 +32,12 @@
 #   register: s3_site
 #   when: storage_state == 'present'
 
+- name: Create a DNS zone
+  azure_rm_dnszone:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{workshop_dns_zone}}"
+    state: present
+
 - name: DNS FOR STUDENT WEBPAGE FOR EASTUS
   azure_rm_dnsrecordset:
     resource_group: "{{azure_name_prefix}}"
