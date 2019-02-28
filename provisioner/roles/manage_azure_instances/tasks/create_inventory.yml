@@ -13,8 +13,7 @@
 
 - name: DEBUG ansible_node_facts subelements
   debug:
-    msg: "Item {{ item.key }} is {{ item.value.id }} ({{ item.value.location }})"
-  loop: "{{ lookup('dict', results) }}"
+    var: ansible_node_facts.name
 
 
 - name: add ansible node to control_nodes and managed_nodes group
