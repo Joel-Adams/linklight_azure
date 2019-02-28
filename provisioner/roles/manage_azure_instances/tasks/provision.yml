@@ -51,8 +51,8 @@
     resource_group: "{{azure_name_prefix}}"
     name: "{{azure_name_prefix}}.CN.student{{ item }}"
     vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
-    admin_username: "{{ azure_login_names['rhel7'] }}"
-    ssh_password_enabled: false
+    admin_username: "student{{ item }}"
+    admin_password: "{{ admin_password }}"
     network_interface_names: "{{azure_name_prefix}}.CN.student{{ item }}"
     image:
       offer: "{{ azure_instance_types[ansible_node].offer }}"
