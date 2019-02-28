@@ -21,7 +21,11 @@
     groups:
       - managed_nodes
       - control_nodes
+  register: ansible_control_node_facts
   with_sequence: start=1 end="{{ student_total }}"
+
+- debug:
+    var: ansible_control_node_facts
 
 - name: engine (essentials) mode - setup inventory
   include_tasks: "addhost_engine.yml"
