@@ -1,7 +1,8 @@
 - name: Wait 400 seconds (using wait_for_connection)
   wait_for_connection:
     delay: 0
-    timeout: 400
+    timeout: 60
+    # timeout: 400
 
 # This wait_for_connection task can't be part of manage_ec2_instances
 # because you can't use groups with delegate_to, see:

@@ -346,8 +346,8 @@ $("document").ready(function(){
 To login to the <code>ansible</code> control node use the following for SSH access:<br>
 username:   student{{number}}<br>
 password:   {{admin_password}}<br>
-IP Address: {{ host.public_ip_address }}<br>
-<pre><code>ssh student{{number}}@{{ host.public_ip_address }}</code></pre>
+IP Address: {{ host.tags.public_ip_address }}<br>
+<pre><code>ssh student{{number}}@{{ host.tags.public_ip_address }}</code></pre>
 DNS: student{{number}}.{{azure_name_prefix}}.{{workshop_dns_zone}}<br>
 <pre><code>ssh student{{number}}@student{{number}}.{{azure_name_prefix}}.{{workshop_dns_zone}}</code></pre>
 {% if towerinstall %}Tower Link: <a href="https://student{{number}}.{{azure_name_prefix}}.{{workshop_dns_zone}}">https://student{{number}}.{{azure_name_prefix}}.{{workshop_dns_zone}}</a><br>{% endif %}
