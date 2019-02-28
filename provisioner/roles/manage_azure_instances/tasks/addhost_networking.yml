@@ -4,20 +4,24 @@
     tags: "{{azure_name_prefix}}-host1"
   register: host1_node_facts
 
+- name: DEBUG host1_node_facts
+  debug:
+    var: host1_node_facts
+
 - name: add host1 to groups (NETWORKING MODE)
   add_host:
     name: "{{ item.tags.Name }}"
     short_name: "{{ item.tags.short_name }}"
-    ansible_host: "{{ item.public_ip_address }}"
+    ansible_host: "{{ item.tags.public_ip_address }}"
     username: "{{ item.tags.Student }}"
     ansible_user: "{{ azure_login_names[host1_node] }}"
     ansible_port: "{{ ssh_port }}"
     ansible_ssh_private_key_file: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
-    private_ip: "{{item.private_ip_address}}"
+    private_ip: "{{item.tags.private_ip_address}}"
     groups:
       - lab_hosts
       - managed_nodes
-  with_items: "{{ host1_node_facts.instances }}"
+  with_items: "{{ host1_node_facts.vms }}"
 
 - name: grab facts for rtr1 node (NETWORKING MODE)
   azure_rm_virtualmachine_facts:
