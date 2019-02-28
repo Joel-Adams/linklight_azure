@@ -8,7 +8,8 @@
   register: ansible_node_facts
 
 - debug:
-    msg: "Blah is {{ ansible_node_facts.results.{{item.0 + 1}} }}"
+    var: ansible_node_facts.vms
+    # msg: "Blah is {{ ansible_node_facts.results.{{item.0 + 1}} }}"
     # msg: "Blah is {{ ansible_node_facts.results }}"
 
 - name: add ansible node to control_nodes and managed_nodes group
