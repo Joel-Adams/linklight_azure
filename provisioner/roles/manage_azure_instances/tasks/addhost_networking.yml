@@ -57,45 +57,45 @@
   add_host:
     name: "{{ item.tags.Name }}"
     short_name: "{{ item.tags.short_name }}"
-    ansible_host: "{{ item.public_ip_address }}"
+    ansible_host: "{{ item.tags.public_ip_address }}"
     username: "{{ item.tags.Student }}"
     ansible_user: azure-user
     ansible_port: "{{ ssh_port }}"
     ansible_ssh_private_key_file: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
-    private_ip: "{{item.private_ip_address}}"
+    private_ip: "{{item.tags.private_ip_address}}"
     ansible_network_os: ios
     groups:
       - routers
       - core
   with_items:
-    - "{{ rtr1_node_facts.instances }}"
-    - "{{ rtr2_node_facts.instances }}"
+    - "{{ rtr1_node_facts.vms }}"
+    - "{{ rtr2_node_facts.vms }}"
   when: special is defined
 
 - name: ADD ACCESS ROUTERS TO INVENTORY
   add_host:
     name: "{{ item.tags.Name }}"
     short_name: "{{ item.tags.short_name }}"
-    ansible_host: "{{ item.public_ip_address }}"
+    ansible_host: "{{ item.tags.public_ip_address }}"
     username: "{{ item.tags.Student }}"
     ansible_user: "{{ 'azure-user' if special is match('all_cisco') else 'jnpr' }}"
     ansible_port: "{{ ssh_port }}"
     ansible_ssh_private_key_file: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
-    private_ip: "{{item.private_ip_address}}"
+    private_ip: "{{item.tags.private_ip_address}}"
     ansible_network_os: "{{ 'ios' if special is match('all_cisco') else 'junos' }}"
     groups:
       - routers
       - access
   with_items:
-    - "{{ rtr3_node_facts.instances }}"
-    - "{{ rtr4_node_facts.instances }}"
+    - "{{ rtr3_node_facts.vms }}"
+    - "{{ rtr4_node_facts.vms }}"
   when: special is defined
 
 - name: ADD DMVPN HUB ROUTER TO SEPARATE GROUP
   add_host:
     name: "{{ item.tags.Name }}"
     short_name: "{{ item.tags.short_name }}"
-    ansible_host: "{{ item.public_ip_address }}"
+    ansible_host: "{{ item.tags.public_ip_address }}"
     username: "{{ item.tags.Student }}"
     ansible_user: azure-user
     ansible_port: "{{ ssh_port }}"
@@ -105,7 +105,7 @@
     groups:
       - dmvpn
   with_items:
-    - "{{ rtr1_node_facts.instances }}"
+    - "{{ rtr1_node_facts.vms }}"
   when: special is defined
 
 - name: Generate student inventories
