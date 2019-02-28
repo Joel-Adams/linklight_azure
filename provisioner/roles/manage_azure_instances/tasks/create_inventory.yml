@@ -11,6 +11,12 @@
   debug:
     var: ansible_node_facts
 
+- name: DEBUG ansible_node_facts subelements
+  debug: var=ansible_node_facts 
+  loop: "{{lookup('subelements', results, 'vms')}}"
+
+
+
 - name: add ansible node to control_nodes and managed_nodes group
   add_host:
     name: "{{ item.tags.Name }}"
