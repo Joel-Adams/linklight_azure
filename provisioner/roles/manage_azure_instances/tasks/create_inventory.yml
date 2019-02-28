@@ -3,16 +3,7 @@
     resource_group: "{{azure_name_prefix}}"
     tags:
       - Workshop_ansible
-    # tags:
-    #   - Workshop_ansible:"{{azure_name_prefix}}-ansible"
-    # name: "{{azure_name_prefix}}.CN.student1"
-  # with_sequence: start=1 end="{{ student_total }}"
   register: ansible_node_facts
-
-- debug:
-    var: ansible_node_facts.vms.items
-    # msg: "Blah is {{ ansible_node_facts.results.{{item.0 + 1}} }}"
-    # msg: "Blah is {{ ansible_node_facts.results }}"
 
 - name: add ansible node to control_nodes and managed_nodes group
   add_host:
@@ -29,11 +20,8 @@
       - managed_nodes
       - control_nodes
   with_items: "{{ ansible_node_facts.vms }}"
-  # register: ansible_control_node_facts
-  # with_sequence: start=1 end="{{ student_total }}"
 
 - debug: var=groups.managed_nodes
-
 
 - name: engine (essentials) mode - setup inventory
   include_tasks: "addhost_engine.yml"
