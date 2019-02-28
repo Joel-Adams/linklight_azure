@@ -24,8 +24,8 @@
   register: ansible_control_node_facts
   with_sequence: start=1 end="{{ student_total }}"
 
-- debug:
-    var: ansible_control_node_facts
+- debug: var=item
+  loop: "{{lookup('subelements', host_vars, 'groups', {'skip_missing': True})}}"  
 
 - name: engine (essentials) mode - setup inventory
   include_tasks: "addhost_engine.yml"
