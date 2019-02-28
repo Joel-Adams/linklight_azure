@@ -101,7 +101,7 @@
   roles:
     - { role: azure_dns, when: create_login_page is defined and create_login_page }
 
-- name: Setup Amazon S3 Website for Student Login
+- name: Setup Azure Website for Student Login
   hosts: localhost
   connection: local
   become: no

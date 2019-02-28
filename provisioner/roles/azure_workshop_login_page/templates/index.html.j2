@@ -219,7 +219,7 @@ $("document").ready(function(){
 
                 <a href="https://github.com/network-automation/linklight" class="btn btn-ghost">View on GitHub</a><br><br>
 
-              <h1>Workshop Name: {{ec2_name_prefix}}</h1>
+              <h1>Workshop Name: {{azure_name_prefix}}</h1>
 
             </div>
         </div>
@@ -348,9 +348,9 @@ username:   student{{number}}<br>
 password:   {{admin_password}}<br>
 IP Address: {{ host.public_ip_address }}<br>
 <pre><code>ssh student{{number}}@{{ host.public_ip_address }}</code></pre>
-DNS: student{{number}}.{{ec2_name_prefix}}.{{workshop_dns_zone}}<br>
-<pre><code>ssh student{{number}}@student{{number}}.{{ec2_name_prefix}}.{{workshop_dns_zone}}</code></pre>
-{% if towerinstall %}Tower Link: <a href="https://student{{number}}.{{ec2_name_prefix}}.{{workshop_dns_zone}}">https://student{{number}}.{{ec2_name_prefix}}.{{workshop_dns_zone}}</a><br>{% endif %}
+DNS: student{{number}}.{{azure_name_prefix}}.{{workshop_dns_zone}}<br>
+<pre><code>ssh student{{number}}@student{{number}}.{{azure_name_prefix}}.{{workshop_dns_zone}}</code></pre>
+{% if towerinstall %}Tower Link: <a href="https://student{{number}}.{{azure_name_prefix}}.{{workshop_dns_zone}}">https://student{{number}}.{{azure_name_prefix}}.{{workshop_dns_zone}}</a><br>{% endif %}
 {% endif %}
 {% endfor %}
     </div>
