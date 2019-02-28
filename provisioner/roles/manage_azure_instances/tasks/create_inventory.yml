@@ -24,9 +24,8 @@
   register: ansible_control_node_facts
   with_sequence: start=1 end="{{ student_total }}"
 
-- debug:
-    msg: "User {{ item.key }} is {{ item.value.host_name }} ({{ item.value.groups }})"
-  loop: "{{ lookup('dict', add_host) }}"
+- debug: var=managed_nodes
+
 
 - name: engine (essentials) mode - setup inventory
   include_tasks: "addhost_engine123.yml"
