@@ -36,7 +36,7 @@
     ip_configurations:
       - name: "CN.student{{ item }}.ipconfig1"
         private_ip_allocation_method: Static
-        private_ip_address: "172.16.0.{{ item }}"
+        private_ip_address: "172.16.1.{{ item }}"
         # private_ip_address: "{{ azure_subnet }}[:-2].{{ item }}"
         public_ip_address_name: "student{{ item }}"
       # - name: "CN.student{{ item }}.ipconfig2"
