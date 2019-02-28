@@ -2,7 +2,7 @@
   azure_rm_virtualmachine_facts:
     resource_group: "{{azure_name_prefix}}"
     tags:
-      - "tag:Workshop_ansible": "{{azure_name_prefix}}-ansible"
+      - Workshop_ansible: "{{azure_name_prefix}}-ansible"
     # tags:
     #   - Workshop_ansible:"{{azure_name_prefix}}-ansible"
     # name: "{{azure_name_prefix}}.CN.student1"
