@@ -35,10 +35,10 @@
 - name: Create a linux web app for Login Page
   azure_rm_webapp:
     resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix|lower}}workshop"
+    name: "{{azure_name_prefix|lower}}"
     plan:
     resource_group: "{{azure_name_prefix}}"
-      name: "{{azure_name_prefix|lower}}plan"
+      name: "{{azure_name_prefix|lower}}"
       is_linux: true
       sku: B1
       number_of_workers: 1
