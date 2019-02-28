@@ -24,7 +24,7 @@
   register: ansible_control_node_facts
   with_sequence: start=1 end="{{ student_total }}"
 
-- debug: var=groups
+- debug: var=groups.managed_nodes
 
 
 - name: engine (essentials) mode - setup inventory
