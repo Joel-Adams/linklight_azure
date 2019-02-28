@@ -2,7 +2,7 @@
   azure_rm_virtualmachine_facts:
     resource_group: "{{azure_name_prefix}}"
     tags:
-      - Workshop_ansible:"{{azure_name_prefix}}-ansible"
+      - Workshop_ansible
     # tags:
     #   - Workshop_ansible:"{{azure_name_prefix}}-ansible"
     # name: "{{azure_name_prefix}}.CN.student1"
@@ -10,7 +10,7 @@
   register: ansible_node_facts
 
 - debug:
-    var: ansible_node_facts.vms
+    var: ansible_node_facts.vms.items
     # msg: "Blah is {{ ansible_node_facts.results.{{item.0 + 1}} }}"
     # msg: "Blah is {{ ansible_node_facts.results }}"
 
