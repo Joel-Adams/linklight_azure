@@ -7,14 +7,14 @@
 - name: CREATE AZURE STORAGE ACCOUNT
   azure_rm_storageaccount:
     resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix|lower}}
+    name: "{{azure_name_prefix|lower}}"
     type: Standard_RAGRS
     kind: StorageV2
 
 - name: CREATE AZURE STORAGE BLOB
   azure_rm_storageblob:
     resource_group: "{{azure_name_prefix}}"
-    storage_account_name: "{{azure_name_prefix|lower}}
+    storage_account_name: "{{azure_name_prefix|lower}}"
     container: "{{azure_name_prefix}}"
     pubic_access: container
     src: "{{ playbook_dir }}/{{ azure_name_prefix }}/{{ azure_name_prefix|lower }}-index.html"
