@@ -11,20 +11,21 @@
 
 - name: add ansible node to control_nodes and managed_nodes group
   add_host:
-    name: "{{azure_name_prefix}}.CN.student{{ item }}"
-    username: "{{ azure_login_names['rhel7'] }}"
-    student: "Student{{ item }}"
+    name: "{{ item.tags.Name }}"
+    username: "{{ item.tags.Student }}"
+    student: "{{ item.tags.Student }}"
     short_name: "ansible"
-    ansible_host: "{{ azure_name_prefix|lower }}-student{{ item }}cn.cloudapp.azure.com"
+    ansible_host: "{{ item.tags.public_ip_address }}"
     ansible_user: "{{ azure_login_names[ansible_node] }}"
     ansible_port: "{{ ssh_port }}"
     ansible_ssh_private_key_file: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
-    private_ip: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.1.{{ item }}"
+    private_ip: "{{item.tags.private_ip_address}}"
     groups:
       - managed_nodes
       - control_nodes
-  register: ansible_control_node_facts
-  with_sequence: start=1 end="{{ student_total }}"
+  with_items: "{{ ansible_node_facts.results }}"
+  # register: ansible_control_node_facts
+  # with_sequence: start=1 end="{{ student_total }}"
 
 - debug: var=groups.managed_nodes
 
