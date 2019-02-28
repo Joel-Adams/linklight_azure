@@ -24,7 +24,7 @@
     name: "student{{ item }}"
     allocation_method: Dynamic
     domain_name: "student{{ item }}cn"
-  with_sequence: start=0 end="{{ student_total }}"
+  with_sequence: start=1 end="{{ student_total }}"
 
 - name: Create a network interface using existing security group and public IP
   azure_rm_networkinterface:
@@ -41,7 +41,7 @@
       # - name: "CN.student{{ item }}.ipconfig2"
       #   private_ip_allocation_method: Static
       #   private_ip_address: "{{ azure_subnet[:-2] }}.{{ item }}"
-  with_sequence: start=0 end="{{ student_total }}"
+  with_sequence: start=1 end="{{ student_total }}"
   register: network_interface
   when: resource_group.changed
 
@@ -64,7 +64,7 @@
     append_tags: yes
     tags:
       Workshop_ansible: "{{azure_name_prefix}}-ansible"
-  with_sequence: start=0 end="{{ student_total }}"
+  with_sequence: start=1 end="{{ student_total }}"
   register: azure_vm
 
 - name: Ensure tags are present
@@ -87,7 +87,7 @@
       private_ip_address: "{{ item[0].ip_configuration.private_ip_address }}"
   with_indexed_items:
     - "{{ network_interface.ansible_facts }}"
-  # with_sequence: start=0 end="{{ student_total }}"
+  # with_sequence: start=1 end="{{ student_total }}"
   # when: control_output.azure_vm.id is not none
 
 ## Instance creation
