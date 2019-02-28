@@ -12,9 +12,9 @@
     var: ansible_node_facts
 
 - name: DEBUG ansible_node_facts subelements
-  debug: var=ansible_node_facts
-  loop: "{{lookup('subelements', results, 'vms', {'skip_missing': True})}}"
-
+  debug:
+    msg: "Item {{ item.key }} is {{ item.value.id }} ({{ item.value.location }})"
+  loop: "{{ lookup('dict', results) }}"
 
 
 - name: add ansible node to control_nodes and managed_nodes group
