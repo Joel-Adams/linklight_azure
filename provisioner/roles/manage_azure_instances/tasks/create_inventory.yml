@@ -3,12 +3,12 @@
     resource_group: "{{azure_name_prefix}}"
     # tags:
     #   - Workshop_ansible:"{{azure_name_prefix}}-ansible"
-    name: "{{azure_name_prefix}}.CN.student{{ item }}"
-  with_sequence: start=1 end="{{ student_total }}"
+    name: "{{azure_name_prefix}}.CN.student1"
+  # with_sequence: start=1 end="{{ student_total }}"
   register: ansible_node_facts
 
 - debug:
-    var: ansible_node_facts.vms
+    var: ansible_node_facts
     # msg: "Blah is {{ ansible_node_facts.results.{{item.0 + 1}} }}"
     # msg: "Blah is {{ ansible_node_facts.results }}"
 
