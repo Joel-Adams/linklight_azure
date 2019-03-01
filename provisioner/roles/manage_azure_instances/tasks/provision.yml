@@ -77,6 +77,7 @@
       Index: "{{ item[0] }}"
       Student: "student{{ item }}"
       Username: "{{ azure_login_names['rhel7'] }}"
+      admin_password: "{{ admin_password }}"
       # Info: "Username that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "Student Count {{student_total}}"
