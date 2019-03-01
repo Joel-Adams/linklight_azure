@@ -86,6 +86,64 @@
   with_sequence: start=1 end="{{ student_total }}"
   # when: control_output.azure_vm.id is not none
 
+- name: Create a public ip address for login page
+  azure_rm_publicipaddress:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{ azure_name_prefix|lower }}"
+    allocation_method: Dynamic
+    domain_name: "{{ azure_name_prefix|lower }}"
+
+- name: Create a network interface using existing security group and public IP for login page
+  azure_rm_networkinterface:
+    name: "{{azure_name_prefix}}.loginpage"
+    resource_group: "{{azure_name_prefix}}"
+    virtual_network: "{{ azure_name_prefix }}-vpc"
+    subnet_name: "{{ azure_name_prefix }}-subnet"
+    security_group: "{{ azure_name_prefix }}-insecure_all"
+    ip_configurations:
+      - name: "CN.student{{ item }}.ipconfig1"
+        private_ip_allocation_method: Dynamic
+        public_ip_address_name: "{{ azure_name_prefix|lower }}"
+  register: loginpage_interface
+  when: resource_group.changed
+
+- name: Create Azure instances for ansible node (login page)
+  azure_rm_virtualmachine:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{azure_name_prefix}}.loginpage"
+    vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
+    admin_username: azure-user
+    admin_password: RedHat!@#123
+    network_interface_names: "{{azure_name_prefix}}.loginpage"
+    image:
+      offer: "{{ azure_instance_types[ansible_node].offer }}"
+      publisher: "{{ azure_instance_types[ansible_node].publisher }}"
+      sku: "{{ azure_instance_types[ansible_node].sku }}"
+      version: "{{ azure_instance_types[ansible_node].version }}"
+    ssh_public_keys:
+      - path: /home/azure-user/.ssh/authorized_keys
+        key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
+    append_tags: yes
+    tags:
+      Workshop_ansible: "{{azure_name_prefix}}-loginpage"
+  register: azure_loginpage
+
+- name: Ensure tags are present
+  azure_rm_virtualmachine:
+    resource_group: "{{azure_name_prefix}}"
+    name: "{{azure_name_prefix}}.loginpage"
+    state: present
+    append_tags: yes
+    tags:
+      Name: "{{ azure_name_prefix }}-loginpage"
+      Workshop_ansible: "{{azure_name_prefix}}-ansible"
+      Workshop: "{{azure_name_prefix}}"
+      Username: azure-user
+      Linklight: "This was provisioned through the linklight provisioner"
+      Students: "Student Count {{student_total}}"
+      short_name: "ansible"
+      public_ip_address: "{{ azure_name_prefix|lower }}.eastus.cloudapp.azure.com"
+
 ## Instance creation
 - name: provision ansible engine (essentials) instances
   include_tasks: instances_engine.yml
