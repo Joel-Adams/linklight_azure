@@ -68,7 +68,7 @@
 - name: wait for all nodes to have SSH reachability
   hosts: "managed_nodes:control_nodes"
   become: yes
-  gather_facts: yes
+  gather_facts: no
   roles:
     - connectivity_test
 
