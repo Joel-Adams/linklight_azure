@@ -4,7 +4,7 @@ ansible_port={{ ssh_port }}
 ansible_sudo_pass=RedHat!@#123
 {% endif %}
 
-[lab_nodes]
+[login_nodes]
 {% for host in ansible_loginpage_facts.instances %}
 {{ host.tags.Name | regex_replace(azure_name_prefix ~ '-','') }} ansible_host={{ host.public_ip_address }} ansible_user={{azure_login_names[ansible_node] }}
 {% endfor %}
