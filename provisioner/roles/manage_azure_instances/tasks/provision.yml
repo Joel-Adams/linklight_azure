@@ -47,7 +47,7 @@
     resource_group: "{{azure_name_prefix}}"
     name: "{{azure_name_prefix}}.CN.student{{ item }}"
     vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
-    admin_username: azure-user
+    admin_username: "student{{ item }}"
     admin_password: "{{ admin_password }}"
     network_interface_names: "{{azure_name_prefix}}.CN.student{{ item }}"
     image:
@@ -56,7 +56,7 @@
       sku: "{{ azure_instance_types[ansible_node].sku }}"
       version: "{{ azure_instance_types[ansible_node].version }}"
     ssh_public_keys:
-      - path: /home/azure-user/.ssh/authorized_keys
+      - path: "/home/student{{ item }}/.ssh/authorized_keys"
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
     append_tags: yes
     tags:
