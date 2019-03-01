@@ -9,7 +9,7 @@
   add_host:
     name: "{{ item.tags.Name }}"
     username: "{{ item.tags.Student }}"
-    admin_password: "{{ item.tags.admin_password }}"
+    ansible_password: "{{ item.tags.admin_password }}"
     student: "{{ item.tags.Student }}"
     short_name: "ansible"
     ansible_host: "{{ item.tags.public_ip_address }}"
