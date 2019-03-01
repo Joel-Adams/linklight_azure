@@ -47,8 +47,7 @@
     resource_group: "{{azure_name_prefix}}"
     name: "{{azure_name_prefix}}.CN.student{{ item }}"
     vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
-    admin_username: "{{ username }}"
-    ssh_password_enabled: no
+    admin_username: "student{{ item }}"
     network_interface_names: "{{azure_name_prefix}}.CN.student{{ item }}"
     image:
       offer: "{{ azure_instance_types[ansible_node].offer }}"
@@ -56,7 +55,7 @@
       sku: "{{ azure_instance_types[ansible_node].sku }}"
       version: "{{ azure_instance_types[ansible_node].version }}"
     ssh_public_keys:
-      - path: "/home/{{ username }}/.ssh/authorized_keys"
+      - path: "/home/student{{ item }}/.ssh/authorized_keys"
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
     append_tags: yes
     tags:
@@ -76,7 +75,7 @@
       Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
       Student: "student{{ item }}"
-      Username: "{{ username }}"
+      Username: "student{{ item }}"
       admin_password: "{{ admin_password }}"
       # Info: "Username that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
