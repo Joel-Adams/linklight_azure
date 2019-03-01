@@ -95,7 +95,7 @@
 
 - name: Create a network interface using existing security group and public IP for login page
   azure_rm_networkinterface:
-    name: "{{azure_name_prefix}}.loginnode"
+    name: "{{azure_name_prefix}}.lgn"
     resource_group: "{{azure_name_prefix}}"
     virtual_network: "{{ azure_name_prefix }}-vpc"
     subnet_name: "{{ azure_name_prefix }}-subnet"
@@ -110,11 +110,11 @@
 - name: Create Azure instances for ansible node (login page)
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix}}.loginnode"
+    name: "{{azure_name_prefix}}.lgn"
     vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
     admin_username: azure-user
     admin_password: RedHat!@#123
-    network_interface_names: "{{azure_name_prefix}}.loginnode"
+    network_interface_names: "{{azure_name_prefix}}.lgn"
     image:
       offer: "{{ azure_instance_types[ansible_node].offer }}"
       publisher: "{{ azure_instance_types[ansible_node].publisher }}"
