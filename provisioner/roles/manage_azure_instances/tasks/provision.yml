@@ -131,7 +131,7 @@
 - name: Ensure tags are present
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix}}.loginpage"
+    name: "{{azure_name_prefix}}.lgn"
     state: present
     append_tags: yes
     tags:
