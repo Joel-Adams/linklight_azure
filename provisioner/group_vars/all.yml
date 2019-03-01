@@ -1,6 +1,6 @@
 networking: false
 f5workshop: false
-admin_password: ansible
+admin_password: RedHat123!
 workshop_dns_zone: "rhdemo.io"
 storage_state: "present"
 teardown: false
