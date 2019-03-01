@@ -110,7 +110,7 @@
 - name: Create Azure instances for ansible node (login page)
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix}}.loginpage"
+    name: "{{azure_name_prefix}}.loginnode"
     vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
     admin_username: azure-user
     admin_password: RedHat!@#123
