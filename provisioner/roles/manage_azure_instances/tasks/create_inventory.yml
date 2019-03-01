@@ -5,6 +5,8 @@
       - Workshop_ansible
   register: ansible_node_facts
 
+- debug: var=ansible_node_facts
+
 - name: add ansible node to control_nodes and managed_nodes group
   add_host:
     name: "{{ item.tags.Name }}"
