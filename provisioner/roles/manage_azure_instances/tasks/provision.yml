@@ -92,6 +92,7 @@
     name: "{{ azure_name_prefix|lower }}"
     allocation_method: Dynamic
     domain_name: "{{ azure_name_prefix|lower }}workshop"
+  when: "{{ towerinstall }}" == "true"
 
 - name: Create a network interface using existing security group and public IP for login page
   azure_rm_networkinterface:
@@ -105,7 +106,9 @@
         private_ip_allocation_method: Dynamic
         public_ip_address_name: "{{ azure_name_prefix|lower }}"
   register: loginpage_interface
-  when: resource_group.changed
+  when:
+    - resource_group.changed
+    - "{{ towerinstall }}" == "true"
 
 - name: Create Azure instances for ansible node (login page)
   azure_rm_virtualmachine:
@@ -127,6 +130,7 @@
     tags:
       Workshop_loginpage: "{{azure_name_prefix}}-loginpage"
   register: azure_loginpage
+  when: "{{ towerinstall }}" == "true"
 
 - name: Ensure tags are present
   azure_rm_virtualmachine:
@@ -143,6 +147,7 @@
       Students: "Student Count {{student_total}}"
       short_name: "ansible"
       public_ip_address: "{{ azure_name_prefix|lower }}workshop.eastus.cloudapp.azure.com"
+  when: "{{ towerinstall }}" == "true"
 
 ## Instance creation
 - name: provision ansible engine (essentials) instances
