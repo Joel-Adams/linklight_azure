@@ -91,7 +91,7 @@
     resource_group: "{{azure_name_prefix}}"
     name: "{{ azure_name_prefix|lower }}"
     allocation_method: Dynamic
-    domain_name: "{{ azure_name_prefix|lower }}"
+    domain_name: "{{ azure_name_prefix|lower }}workshop"
 
 - name: Create a network interface using existing security group and public IP for login page
   azure_rm_networkinterface:
