@@ -14,10 +14,10 @@
     student: "{{ item.tags.Student }}"
     short_name: "ansible"
     ansible_host: "{{ item.tags.public_ip_address }}"
-    ansible_user: "{{ item.tags.Student }}"
+    ansible_user: "{{ username }}"
     ansible_port: "{{ ssh_port }}"
     ansible_ssh_pass: "{{ item.tags.admin_password }}"
-    # ansible_ssh_private_key_file: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
+    ansible_ssh_private_key_file: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
     private_ip: "{{item.tags.private_ip_address}}"
     groups:
       - managed_nodes
@@ -40,7 +40,7 @@
     name: "{{ item.tags.Name }}"
     short_name: "ansible"
     ansible_host: "{{ item.tags.public_ip_address }}"
-    ansible_user: "{{ azure_login_names[ansible_node] }}"
+    ansible_user: "{{ username }}"
     ansible_port: "{{ ssh_port }}"
     ansible_ssh_private_key_file: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
     groups:
