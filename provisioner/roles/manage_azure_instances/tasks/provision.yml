@@ -135,7 +135,7 @@
     state: present
     append_tags: yes
     tags:
-      Name: "{{ azure_name_prefix }}-loginpage"
+      Name: "{{azure_name_prefix}}.lgn"
       Workshop_loginpage: "{{azure_name_prefix}}-ansible"
       Workshop: "{{azure_name_prefix}}"
       Username: azure-user
