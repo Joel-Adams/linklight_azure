@@ -5,8 +5,8 @@ ansible_sudo_pass=RedHat!@#123
 {% endif %}
 
 [login_nodes]
-{% for host in ansible_loginpage_facts.instances %}
-{{ host.tags.Name | regex_replace(azure_name_prefix ~ '-','') }} ansible_host={{ host.public_ip_address }} ansible_user={{azure_login_names[ansible_node] }}
+{% for host in ansible_loginpage_facts.vms %}
+{{ host.tags.Name | regex_replace(azure_name_prefix ~ '-','') }} ansible_host={{ host.tags.public_ip_address }} ansible_user={{azure_login_names[ansible_node] }}
 {% endfor %}
 {% for number in range(1,student_total + 1) %}
 [student{{ number }}]
