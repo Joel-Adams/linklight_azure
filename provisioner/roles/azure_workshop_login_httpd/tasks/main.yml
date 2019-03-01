@@ -37,15 +37,13 @@
     name: firewalld
     state: restarted
 
-- name: remove default index.html
-  file:
-    path: /var/www/html/index.html
-    state: absent
-
 - name: Copy index.html to server
   copy:
     src: "{{ playbook_dir }}/{{ azure_name_prefix }}/{{ azure_name_prefix|lower }}-index.html"
-    dest: /var/www/html
+    dest: /var/www/html/index.html
+
+# - name: Rename index file
+#   command: mv /var/www/html/{{ azure_name_prefix|lower }}-index.html /var/www/html/index.html
 
 - name: Restart the HTTPD
   service:
