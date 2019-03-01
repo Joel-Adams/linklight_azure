@@ -112,7 +112,7 @@
 - name: Install HTTPD
   hosts: login_nodes
   become: yes
-  gather_facts: no
+  gather_facts: yes
   roles:
     - { role: azure_workshop_login_httpd, when: create_login_page is defined and create_login_page }
 
