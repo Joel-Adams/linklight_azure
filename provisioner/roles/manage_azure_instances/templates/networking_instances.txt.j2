@@ -81,6 +81,6 @@ rtr4
 [control]
 {% for vm in ansible_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
-{{ vm.tags.short_name }} ansible_host={{ vm.tags.public_ip_address }} ansible_user={{ vm.tags.Student }} private_ip={{ vm.tags.private_ip_address }}
+{{ vm.tags.short_name }} ansible_host={{ vm.tags.public_ip_address }} ansible_user={{ vm.tags.Student }} private_ip={{ vm.tags.private_ip_address }} ansible_password={{ admin_password }}
 {% endif %}
 {% endfor %}
