@@ -1,7 +1,7 @@
 [all:vars]
 {% if ssh_port is defined %}
 ansible_ssh_private_key_file=/home/student{{item}}/.ssh/aws-private.pem{% endif %}
-ansible_password={{ admin_password }}
+ansible_ssh_pass={{ admin_password }}
 
 [routers:children]
 cisco
@@ -81,6 +81,6 @@ rtr4
 [control]
 {% for vm in ansible_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
-{{ vm.tags.short_name }} ansible_host={{ vm.tags.public_ip_address }} ansible_user={{ vm.tags.Student }} private_ip={{ vm.tags.private_ip_address }} ansible_password={{ admin_password }}
+{{ vm.tags.short_name }} ansible_host={{ vm.tags.public_ip_address }} ansible_user={{ vm.tags.Student }} private_ip={{ vm.tags.private_ip_address }} ansible_ssh_pass={{ admin_password }}
 {% endif %}
 {% endfor %}

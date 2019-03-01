@@ -1,7 +1,7 @@
 [all:vars]
 {% if ssh_port is defined %}
 ansible_port={{ ssh_port }}
-ansible_password={{ admin_password }}
+ansible_ssh_pass={{ admin_password }}
 {% endif %}
 
 [login_nodes]
