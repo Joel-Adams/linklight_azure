@@ -1,7 +1,7 @@
 [all:vars]
 {% if ssh_port is defined %}
 ansible_port={{ ssh_port }}
-ansible_sudo_pass=RedHat!@#123
+ansible_sudo_pass={{ admin_password }}
 {% endif %}
 
 [login_nodes]
@@ -12,7 +12,7 @@ ansible_sudo_pass=RedHat!@#123
 [student{{ number }}]
 {% for host in ansible_node_facts.vms %}
 {% if 'student' ~ number == host.tags.Student %}
-{{ host.tags.Name | regex_replace(azure_name_prefix ~ '-','') }} ansible_host={{ host.tags.public_ip_address }} ansible_user={{azure_login_names[ansible_node] }}
+{{ host.tags.Name | regex_replace(azure_name_prefix ~ '-','') }} ansible_host={{ host.tags.public_ip_address }} ansible_user=student{{ number }} }}
 {% endif %}
 {% endfor %}
 {% for host in rtr1_node_facts.vms %}
