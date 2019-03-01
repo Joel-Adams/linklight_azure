@@ -113,7 +113,7 @@
     name: "{{azure_name_prefix}}.lgn"
     vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
     admin_username: azure-user
-    admin_password: RedHat!@#123
+    ssh_password_enabled: no
     network_interface_names: "{{azure_name_prefix}}.lgn"
     image:
       offer: "{{ azure_instance_types[ansible_node].offer }}"

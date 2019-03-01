@@ -1,7 +1,6 @@
 [all:vars]
 {% if ssh_port is defined %}
 ansible_port={{ ssh_port }}
-ansible_sudo_pass=RedHat!@#123
 {% endif %}
 
 [login_nodes]
