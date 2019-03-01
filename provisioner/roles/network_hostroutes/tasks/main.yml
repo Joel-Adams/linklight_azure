@@ -8,7 +8,7 @@
 
 - name: Debug rtr1 facts
   debug: var=rtr1_facts
-  
+
 - name: grab facts for rtr2
   azure_rm_virtualmachine_facts:
     resource_group: "{{azure_name_prefix}}"
@@ -20,17 +20,19 @@
 - name: add route to 172.17.0.0/16 subnet on ansible node
   lineinfile:
     path: /etc/sysconfig/network-scripts/route-eth0
-    line: "172.17.0.0/16 via {{rtr1_facts.vms.tags.private_ip_address}}"
+    line: "172.17.0.0/16 via {{item.tags.private_ip_address}}"
     create: yes
   notify: restart network
   become: yes
   when: "'control_nodes' in group_names"
+  with_items: "{{ rtr1_facts.vms }}"
 
 - name: add route to 172.16.0.0/16 subnet on host1 node
   lineinfile:
     path: /etc/sysconfig/network-scripts/route-eth0
-    line: "172.16.0.0/16 via {{rtr2_facts.vms.tags.private_ip_address}}"
+    line: "172.16.0.0/16 via {{item.tags.private_ip_address}}"
     create: yes
   notify: restart network
   become: yes
   when: "'managed_nodes' in group_names"
+  with_items: "{{ rtr2_facts.vms }}"
