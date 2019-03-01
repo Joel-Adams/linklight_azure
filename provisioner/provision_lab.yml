@@ -109,6 +109,13 @@
   roles:
     - { role: azure_workshop_login_page, when: create_login_page is defined and create_login_page }
 
+- name: Install HTTPD
+  hosts: login_nodes
+  become: yes
+  gather_facts: no
+  roles:
+    - { role: azure_workshop_login_httpd, when: create_login_page is defined and create_login_page }
+
 - name: Setup Host routes for ansible control node and host1 when in networking mode
   hosts: "managed_nodes:control_nodes"
   become: no

@@ -1,0 +1,52 @@
+- name: Install EPEL
+  yum:
+    name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+    state: present
+
+- name: Install apache packages
+  yum:
+    name:
+      - httpd
+      - vim
+      - git
+      - wget
+      - nano
+      - tree
+      - sshpass
+      - tmux
+      - python-pip
+      - https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/ansible-2.7.0-1.el7.ans.noarch.rpm
+    state: present
+  retries: 10
+  delay: 5
+
+- name: ensure httpd is running
+  service:
+    name: httpd
+    state: started
+
+- name: Open port 80 for http access
+  firewalld:
+    service: http
+    permanent: true
+    state: enabled
+
+- name: Restart the firewalld service to load in the firewall changes
+  service:
+    name: firewalld
+    state: restarted
+
+- name: remove default index.html
+  file:
+    path: /var/www/html/index.html
+    state: absent
+
+- name: Copy index.html to server
+  copy:
+    src: "{{ playbook_dir }}/{{ azure_name_prefix }}/{{ azure_name_prefix|lower }}-index.html"
+    dest: /var/www/html
+
+- name: Restart the HTTPD
+  service:
+    name: httpd
+    state: restarted

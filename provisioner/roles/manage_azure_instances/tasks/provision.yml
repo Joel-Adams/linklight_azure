@@ -125,7 +125,7 @@
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
     append_tags: yes
     tags:
-      Workshop_ansible: "{{azure_name_prefix}}-loginpage"
+      Workshop_loginpage: "{{azure_name_prefix}}-loginpage"
   register: azure_loginpage
 
 - name: Ensure tags are present
@@ -136,7 +136,7 @@
     append_tags: yes
     tags:
       Name: "{{ azure_name_prefix }}-loginpage"
-      Workshop_ansible: "{{azure_name_prefix}}-ansible"
+      Workshop_loginpage: "{{azure_name_prefix}}-ansible"
       Workshop: "{{azure_name_prefix}}"
       Username: azure-user
       Linklight: "This was provisioned through the linklight provisioner"

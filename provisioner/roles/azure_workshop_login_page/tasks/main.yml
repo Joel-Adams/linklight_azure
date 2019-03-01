@@ -1,8 +1,8 @@
-# - name: CREATE STUDENT WEBPAGE
-#   template:
-#     src: ./templates/index.html.j2
-#     dest: "{{ playbook_dir }}/{{ azure_name_prefix }}/{{ azure_name_prefix|lower }}-index.html"
-#   when: storage_state == 'present'
+- name: CREATE STUDENT WEBPAGE
+  template:
+    src: ./templates/index.html.j2
+    dest: "{{ playbook_dir }}/{{ azure_name_prefix }}/{{ azure_name_prefix|lower }}-index.html"
+  when: storage_state == 'present'
 #
 # - name: CREATE AZURE STORAGE ACCOUNT
 #   azure_rm_storageaccount:
@@ -32,20 +32,20 @@
 #   register: s3_site
 #   when: storage_state == 'present'
 
-- name: Create a linux web app for Login Page
-  azure_rm_webapp:
-    resource_group: "{{azure_name_prefix}}"
-    name: "{{ azure_name_prefix|lower }}workshop"
-    plan:
-      resource_group: "{{azure_name_prefix}}"
-      name: "{{ azure_name_prefix|lower }}plan"
-      is_linux: true
-      sku: B1
-      number_of_workers: 1
-    frameworks:
-      - name: "php"
-        version: "7.0"
-    startup_file: "{{ playbook_dir }}/{{ azure_name_prefix }}/{{ azure_name_prefix|lower }}-index.html"
+# - name: Create a linux web app for Login Page
+#   azure_rm_webapp:
+#     resource_group: "{{azure_name_prefix}}"
+#     name: "{{ azure_name_prefix|lower }}workshop"
+#     plan:
+#       resource_group: "{{azure_name_prefix}}"
+#       name: "{{ azure_name_prefix|lower }}plan"
+#       is_linux: true
+#       sku: B1
+#       number_of_workers: 1
+#     frameworks:
+#       - name: "php"
+#         version: "7.0"
+#     startup_file: "{{ playbook_dir }}/{{ azure_name_prefix }}/{{ azure_name_prefix|lower }}-index.html"
 
 - name: Create a DNS zone
   azure_rm_dnszone:

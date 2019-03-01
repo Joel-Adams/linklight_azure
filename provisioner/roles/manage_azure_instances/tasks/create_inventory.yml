@@ -23,6 +23,27 @@
 
 - debug: var=groups.managed_nodes
 
+- name: grab facts for control_nodes
+  azure_rm_virtualmachine_facts:
+    resource_group: "{{azure_name_prefix}}"
+    tags:
+      - Workshop_loginpage
+  register: ansible_loginpage_facts
+
+- name: add ansible node to login_nodes
+  add_host:
+    name: "{{ item.tags.Name }}"
+    username: "{{ item.tags.Student }}"
+    student: "{{ item.tags.Student }}"
+    short_name: "ansible"
+    ansible_host: "{{ item.tags.public_ip_address }}"
+    ansible_user: "{{ azure_login_names[ansible_node] }}"
+    ansible_port: "{{ ssh_port }}"
+    ansible_ssh_private_key_file: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
+    groups:
+      - login_nodes
+  with_items: "{{ ansible_loginpage_facts.vms }}"
+
 - name: engine (essentials) mode - setup inventory
   include_tasks: "addhost_engine.yml"
   when:
