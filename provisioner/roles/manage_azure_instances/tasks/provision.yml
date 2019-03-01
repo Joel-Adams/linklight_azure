@@ -142,7 +142,7 @@
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "Student Count {{student_total}}"
       short_name: "ansible"
-      public_ip_address: "{{ azure_name_prefix|lower }}.eastus.cloudapp.azure.com"
+      public_ip_address: "{{ azure_name_prefix|lower }}workshop.eastus.cloudapp.azure.com"
 
 ## Instance creation
 - name: provision ansible engine (essentials) instances
