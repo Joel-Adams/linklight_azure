@@ -1,8 +1,13 @@
 [all:vars]
 {% if ssh_port is defined %}
 ansible_port={{ ssh_port }}
+ansible_sudo_pass=RedHat!@#123
 {% endif %}
 
+[login_nodes]
+{% for host in ansible_loginpage_facts.instances %}
+{{ host.tags.Name | regex_replace(azure_name_prefix ~ '-','') }} ansible_host={{ host.public_ip_address }} ansible_user={{azure_login_names[ansible_node] }}
+{% endfor %}
 {% for number in range(1,student_total + 1) %}
 [student{{ number }}]
 {% for host in ansible_node_facts.vms %}
