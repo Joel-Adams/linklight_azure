@@ -48,7 +48,7 @@
     name: "{{azure_name_prefix}}.CN.student{{ item }}"
     vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
     admin_username: "student{{ item }}"
-    ssh_password_enabled: no
+    admin_password: "{{ admin_password }}"
     network_interface_names: "{{azure_name_prefix}}.CN.student{{ item }}"
     image:
       offer: "{{ azure_instance_types[ansible_node].offer }}"
