@@ -2,13 +2,14 @@
   become: False
   azure_rm_dnsrecordset:
     resource_group: "{{azure_name_prefix}}"
-    relative_name: student1
+    relative_name: "student{{ item }}"
     state: "{{ storage_state }}"
     zone_name: "{{workshop_dns_zone}}"
     record_type: CNAME
-    records: jatest1a-student1cn.eastus.cloudapp.azure.com
+    records:
+    - entry: "{{ azure_name_prefix|lower }}-student{{ item }}cn.eastus.cloudapp.azure.com"
   delegate_to: localhost
-  # with_sequence: start=1 end="{{ student_total }}"
+  with_sequence: start=1 end="{{ student_total }}"
 
 - name: CERTBOT FOR TOWER
   include_tasks: "tower.yml"
