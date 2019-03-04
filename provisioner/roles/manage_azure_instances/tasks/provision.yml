@@ -116,7 +116,7 @@
     resource_group: "{{azure_name_prefix}}"
     name: "{{ azure_name_prefix|lower }}.lgn"
     vm_size: "{{ azure_instance_types[ansible_node].vm_size }}"
-    admin_username: "{{ username }}"
+    admin_username: "{{ admin_username }}"
     ssh_password_enabled: no
     network_interface_names: "{{azure_name_prefix}}.lgn"
     image:
@@ -125,7 +125,7 @@
       sku: "{{ azure_instance_types[ansible_node].sku }}"
       version: "{{ azure_instance_types[ansible_node].version }}"
     ssh_public_keys:
-      - path: "/home/{{ username }}/.ssh/authorized_keys"
+      - path: "/home/{{ admin_username }}/.ssh/authorized_keys"
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
     append_tags: yes
     tags:
@@ -143,7 +143,7 @@
       Name: "{{azure_name_prefix}}.lgn"
       Workshop_loginpage: "{{azure_name_prefix}}-ansible"
       Workshop: "{{azure_name_prefix}}"
-      Username: "{{ username }}"
+      Username: "{{ admin_username }}"
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "Student Count {{student_total}}"
       short_name: "ansible"
