@@ -1,6 +1,6 @@
 [all:vars]
 {% if ssh_port is defined %}
-ansible_ssh_private_key_file=/home/student{{item}}/.ssh/aws-private.pem
+ansible_ssh_private_key_file=/home/student{{item}}/.ssh/azure-private.pem
 ansible_ssh_pass={{ admin_password }}
 {% endif %}
 

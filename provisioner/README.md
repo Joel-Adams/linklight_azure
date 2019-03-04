@@ -33,9 +33,8 @@ azure_subscription_id:
 azure_client_id:
 azure_client_secret:
 azure_tenant_id:
-azure_object_id:                       # can be found on Azure command line "az ad sp show --id <azure_client_id>"
 #OPTIONAL VARIABLES
-admin_password: ansible                # password for Ansible control node, defaults to ansible
+admin_password: RedHat123!             # password for Ansible control node, defaults to ansible
 networking: true                       # Set this if you want the workshop in networking mode
 create_login_page: true                # creates Azure website for azure_name_prefix.workshop_dns_zone
 workshop_dns_zone: rhdemo.io           # Sets the DNS zone to use for the website
@@ -54,7 +53,9 @@ For more extra_vars examples, look at the following:
 
 2. Run the playbook:
 
-        ansible-playbook provision_lab.yml -e @extra_vars.yml
+        ansible-playbook provision_lab.yml -e @extra_vars.yml --ask-become-pass
+
+        (The become-pass will be the admin_password in the extra_vars.yml)
 
 3. Login to the Azure console and you should see instances being created like:
 

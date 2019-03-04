@@ -80,7 +80,7 @@
 - name: Put ssh-key in proper spot for student
   copy:
     src: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
-    dest: "/home/{{username}}/.ssh/aws-private.pem"
+    dest: "/home/{{username}}/.ssh/azure-private.pem"
     owner: "{{ username }}"
     group: "{{ username }}"
     mode: 0400
@@ -88,7 +88,7 @@
 - name: Put ssh-key in proper for {{ansible_user}}
   copy:
     src: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
-    dest: "/home/{{ansible_user}}/.ssh/aws-private.pem"
+    dest: "/home/{{ansible_user}}/.ssh/azure-private.pem"
     owner: "{{ansible_user}}"
     group: "{{ansible_user}}"
     mode: 0400
@@ -103,7 +103,7 @@
 
 - name: copy over ssh config file for {{ansible_user}}
   template:
-    src: sshconfig_ec2.j2
+    src: sshconfig_azure.j2
     dest: /home/{{ansible_user}}/.ssh/config
     owner: "{{ansible_user}}"
     group: "{{ansible_user}}"

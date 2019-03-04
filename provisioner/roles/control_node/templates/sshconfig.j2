@@ -3,10 +3,10 @@
 Host rtr3 rtr4
      StrictHostKeyChecking no
      User jnpr
-     IdentityFile /home/{{username}}/.ssh/aws-private.pem
+     IdentityFile /home/{{username}}/.ssh/azure-private.pem
 {% endif %}
 {% endif %}
 Host *
      StrictHostKeyChecking no
      User {{ansible_user}}
-     IdentityFile /home/{{username}}/.ssh/aws-private.pem
+     IdentityFile /home/{{username}}/.ssh/azure-private.pem
