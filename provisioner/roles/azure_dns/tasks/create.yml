@@ -2,7 +2,7 @@
   become: False
   azure_rm_dnsrecordset:
     resource_group: "{{azure_name_prefix}}"
-    relative_name: "student{{ item }}"
+    relative_name: "student{{ item }}.{{ azure_name_prefix|lower }}"
     state: "{{ storage_state }}"
     zone_name: "{{workshop_dns_zone}}"
     record_type: CNAME
