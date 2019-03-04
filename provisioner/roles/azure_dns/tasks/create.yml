@@ -6,7 +6,7 @@
     state: "{{ storage_state }}"
     zone_name: "{{workshop_dns_zone}}"
     record_type: CNAME
-    records: "{{ azure_name_prefix|lower }}-student{{ item }}cn.eastus.cloudapp.azure.com"
+    records: jatest1a-student1cn.eastus.cloudapp.azure.com"
   delegate_to: localhost
   with_sequence: start=1 end="{{ student_total }}"
 
