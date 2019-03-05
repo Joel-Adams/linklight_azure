@@ -1,2 +1,14 @@
 control_node_inventory_path: ~{{ username }}/lightbulb/lessons/lab_inventory/{{ username }}-instances.txt
 xrdp: false
+
+azure_login_names:
+  rhel7-tower: azure-user
+  rhel7: azure-user
+  centos7-tower: centos
+  centos7: centos
+  ubuntu14: ubuntu
+  ubuntu16: ubuntu
+  csr-byol: azure-user
+  junos-byol: jnpr
+  f5-prelicensed: admin
+  f5_hosts: azure-user

@@ -3,29 +3,29 @@
 
 {% for vm in rtr1_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
-{{ vm.tags.public_ip_address }} {{ vm.tags.short_name }}
+{{ vm.tags.private_ip_address }} {{ vm.tags.public_ip_address }} {{ vm.tags.short_name }}
 {% endif %}
 {% endfor %}
 {% for vm in rtr2_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
-{{ vm.tags.public_ip_address }} {{ vm.tags.short_name }}
+{{ vm.tags.private_ip_address }} {{ vm.tags.public_ip_address }} {{ vm.tags.short_name }}
 {% endif %}
 {% endfor %}
 {% if special is defined %}
 {% for vm in rtr3_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
-{{ vm.tags.public_ip_address }} {{ vm.tags.short_name }}
+{{ vm.tags.private_ip_address }} {{ vm.tags.public_ip_address }} {{ vm.tags.short_name }}
 {% endif %}
 {% endfor %}
 {% for vm in rtr4_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
-{{ vm.tags.public_ip_address }} {{ vm.tags.short_name }}
+{{ vm.tags.private_ip_address }} {{ vm.tags.public_ip_address }} {{ vm.tags.short_name }}
 {% endif %}
 {% endfor %}
 {% endif %}
 {% for vm in host1_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
-{{ vm.tags.public_ip_address }} {{ vm.tags.short_name }}
+{{ vm.tags.private_ip_address }} {{ vm.tags.public_ip_address }} {{ vm.tags.short_name }}
 {% endif %}
 {% endfor %}
 {% for vm in ansible_node_facts.vms %}

@@ -8,5 +8,5 @@ Host rtr3 rtr4
 {% endif %}
 Host *
      StrictHostKeyChecking no
-     User {{ansible_user}}
+     User {{ azure_login_names[ansible_node] }}
      IdentityFile /home/{{username}}/.ssh/azure-private.pem
