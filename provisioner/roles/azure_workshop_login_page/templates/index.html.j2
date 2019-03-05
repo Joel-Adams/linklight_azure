@@ -350,6 +350,9 @@ password:   {{admin_password}}<br>
 <!-- <pre><code>ssh student{{number}}@{{ host.tags.public_ip_address }}</code></pre> -->
 DNS: {{ host.tags.public_ip_address }}<br>
 <pre><code>ssh student{{number}}@{{ host.tags.public_ip_address }}</code></pre>
+To login to the <code>Ansible Tower</code> node use the following:<br>
+username:   admin<br>
+password:   {{admin_password}}<br>
 {% if towerinstall %}Tower Link: <a href="https://{{ host.tags.public_ip_address }}">https://{{ host.tags.public_ip_address }}</a><br>{% endif %}
 {% endif %}
 {% endfor %}
