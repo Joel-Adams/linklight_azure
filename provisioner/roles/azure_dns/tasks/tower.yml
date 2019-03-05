@@ -46,8 +46,8 @@
 
 - name: CHANGE TOWER BASE URL
   tower_settings:
-    name: TOWER_URL_BASE
-    value: "https://{{ azure_name_prefix|lower }}-{{username}}cn.eastus.cloudapp.azure.com"
+    # name: TOWER_URL_BASE
+    # value: "https://{{ azure_name_prefix|lower }}-{{username}}cn.eastus.cloudapp.azure.com"
     tower_verify_ssl: no
     tower_host: localhost
     tower_username: admin
