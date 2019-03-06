@@ -6,6 +6,9 @@
   register: rtr1_facts
   delegate_to: localhost
 
+- name: Debug rtr1 facts
+  debug: var=rtr1_facts
+
 - name: grab facts for rtr2
   azure_rm_virtualmachine_facts:
     resource_group: "{{azure_name_prefix}}"
