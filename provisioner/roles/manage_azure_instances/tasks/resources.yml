@@ -13,8 +13,6 @@
     address_prefixes_cidr: "{{ azure_subnet }}"
     resource_group: "{{azure_name_prefix}}"
     tags:
-      # Username: "{{ linklight_user }}"
-      # Info: "Username that provisioned this-> {{ linklight_user }}"
         Linklight: "This was provisioned through the linklight provisioner"
         Students: "Student Count {{student_total}}"
   register: create_vpc
@@ -27,8 +25,6 @@
     name: "{{ azure_name_prefix }}-insecure_all"
     resource_group: "{{azure_name_prefix}}"
     tags:
-      # Username: "{{ linklight_user }}"
-      # Info: "Username that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "Student Count {{student_total}}"
     rules:
@@ -64,54 +60,12 @@
     address_prefix_cidr: "{{azure_subnet}}"
     tags:
       Name: "{{ azure_name_prefix }}-subnet"
-      # Username: "{{ linklight_user }}"
-      # Info: "Username that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "Student Count {{student_total}}"
   register: create_subnet
   when: azure_vpc_id is undefined
   until: create_subnet is not failed
   retries: 15
-
-# - name: vpc internet gateway is present for {{ create_vpc.vpc.id }}
-#   ec2_vpc_igw:
-#     region: "{{ ec2_region }}"
-#     vpc_id: "{{ create_vpc.vpc.id }}"
-#     tags:
-#       Username: "{{ linklight_user }}"
-#       Info: "Username that provisioned this-> {{ linklight_user }}"
-#       Linklight: "This was provisioned through the linklight provisioner"
-#       Students: "Total {{student_total}}"
-#   register: igw
-#   until: igw is not failed
-#   retries: 15
-#   when: ec2_vpc_id is undefined
-#
-# - name: vpc public subnet route table is present for {{ create_vpc.vpc.id }}
-#   ec2_vpc_route_table:
-#     region: "{{ ec2_region }}"
-#     vpc_id: "{{ create_vpc.vpc.id }}"
-#     subnets:
-#       - "{{ create_subnet.subnet.id }}"
-#     routes:
-#       - dest: 0.0.0.0/0
-#         gateway_id: "{{ igw.gateway_id }}"
-#     tags:
-#       Username: "{{ linklight_user }}"
-#       Info: "Username that provisioned this-> {{ linklight_user }}"
-#       Linklight: "This was provisioned through the linklight provisioner"
-#       Students: "Student Count {{student_total}}"
-#   register: routetable
-#   until: routetable is not failed
-#   retries: 5
-#   when: ec2_vpc_id is undefined
-
-# - name: set variables for instance creation dynamically since VPC was not supplied by user
-#   set_fact:
-#     azure_vpc_id: "{{ create_vpc.vpc.id }}"
-#     azure_security_group: "{{ azure_name_prefix }}-insecure_all"
-#     azure_vpc_subnet_id: "{{ create_subnet.subnet.id }}"
-#   when: azure_vpc_id is undefined
 
 - name: Create directory for SSH keys
   file:
@@ -150,19 +104,3 @@
   copy: src=~/.ssh/ansible/id_rsa.pub
         dest="{{ playbook_dir }}/{{azure_name_prefix}}-key"
         mode=0400
-
-# - name: save private key
-#   copy:
-#     content: "{{ lookup('azure_keyvault_secret','{{ azure_name_prefix }}-key') }}"
-#     dest: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
-#     mode: '0400'
-#   when: create_key.changed
-
-# - name: debugging all variables for azure instance creation VPC-1
-#   debug:
-#     msg:
-#       - "azure_name_prefix: {{azure_name_prefix}}"
-#       - "azure_vpc_id: {{ azure_vpc_id }}"
-#       - "{{ azure_name_prefix }}-key: {{ azure_name_prefix }}-key"
-#       - "azure_security_group: {{ azure_security_group }}"
-#       - "azure_vpc_subnet_id: {{ azure_vpc_subnet_id }}"

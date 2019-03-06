@@ -4,8 +4,6 @@
     address_prefixes_cidr: "{{ azure_subnet2 }}"
     resource_group: "{{azure_name_prefix}}"
     tags:
-      # Username: "{{ linklight_user }}"
-      # Info: "Username that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "Student Count {{student_total}}"
   register: create_vpc2
@@ -18,8 +16,6 @@
     name: "{{ azure_name_prefix }}-insecure_all2"
     resource_group: "{{azure_name_prefix}}"
     tags:
-      # Username: "{{ linklight_user }}"
-      # Info: "Username that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "Student Count {{student_total}}"
     rules:
@@ -52,58 +48,9 @@
     address_prefix_cidr: "{{azure_subnet2}}"
     tags:
       Name: "{{ azure_name_prefix }}-subnet2"
-      # Username: "{{ linklight_user }}"
-      # Info: "Username that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "Student Count {{student_total}}"
   register: create_subnet2
   until: create_subnet2 is not failed
   retries: 15
   when: azure_vpc_id2 is undefined
-
-# - name: vpc internet gateway is present for {{ create_vpc2.vpc.id }} (NETWORKING MODE)
-#   ec2_vpc_igw:
-#     region: "{{ ec2_region }}"
-#     vpc_id: "{{ create_vpc2.vpc.id }}"
-#     tags:
-#       Username: "{{ linklight_user }}"
-#       Info: "Username that provisioned this-> {{ linklight_user }}"
-#       Linklight: "This was provisioned through the linklight provisioner"
-#       Students: "Total {{student_total}}"
-#   register: igw2
-#   until: igw2 is not failed
-#   retries: 15
-#   when: ec2_vpc_id2 is undefined
-#
-# - name: vpc public subnet route table is present for {{ create_vpc2.vpc.id }} (NETWORKING MODE)
-#   ec2_vpc_route_table:
-#     region: "{{ ec2_region }}"
-#     vpc_id: "{{ create_vpc2.vpc.id }}"
-#     subnets:
-#       - "{{ create_subnet2.subnet.id }}"
-#     routes:
-#       - dest: 0.0.0.0/0
-#         gateway_id: "{{ igw2.gateway_id }}"
-#     tags:
-#       Username: "{{ linklight_user }}"
-#       Info: "Username that provisioned this-> {{ linklight_user }}"
-#       Linklight: "This was provisioned through the linklight provisioner"
-#       Students: "Student Count {{student_total}}"
-#   register: routetablenetworking
-#   until: routetablenetworking is not failed
-#   retries: 5
-#   when: ec2_vpc_id2 is undefined
-
-# - name: set variables for instance creation dynamically since VPC was not supplied by user (NETWORKING MODE)
-#   set_fact:
-#     azure_vpc_id2: "{{ create_vpc2.vpc.id }}"
-#     azure_vpc_subnet_id2: "{{ create_subnet2.subnet.id }}"
-#     azure_security_group2: "{{ azure_name_prefix }}-insecure_all2"
-#   when: azure_vpc_id2 is undefined
-
-# - name: debugging all variables for azure instance creation VPC-2 (NETWORKING MODE)
-#   debug:
-#     msg:
-#       - "azure_name_prefix: {{azure_name_prefix}}"
-#       - "azure_vpc_id2: {{ azure_vpc_id2 }}"
-#       - "azure_vpc_subnet_id2: {{ azure_vpc_subnet_id2 }}"
