@@ -89,4 +89,4 @@
 - name: SET WEBSITE INFORMATION VARIABLE
   set_fact:
     website_information: |
-      - Website created at http://{{azure_name_prefix|lower}}.{{workshop_dns_zone|lower}}
+      - Website created at http://{{ azure_name_prefix|lower }}workshop.eastus.cloudapp.azure.com
