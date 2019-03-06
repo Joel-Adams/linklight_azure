@@ -54,6 +54,7 @@
     virtual_network: "{{ azure_name_prefix }}-vpc"
     subnet_name: "{{ azure_name_prefix }}-subnet"
     security_group: "{{ azure_name_prefix }}-insecure_all"
+    cert_validation_mode: ignore
     ip_configurations:
       - name: "rtr1.student{{ item }}.ipconfig1"
         private_ip_allocation_method: Static
@@ -129,6 +130,7 @@
     virtual_network: "{{ azure_name_prefix }}-vpc"
     subnet_name: "{{ azure_name_prefix }}-subnet"
     security_group: "{{ azure_name_prefix }}-insecure_all"
+    cert_validation_mode: ignore
     ip_configurations:
       - name: "rtr2.student{{ item }}.ipconfig1"
         private_ip_allocation_method: Static
@@ -204,6 +206,7 @@
       virtual_network: "{{ azure_name_prefix }}-vpc"
       subnet_name: "{{ azure_name_prefix }}-subnet"
       security_group: "{{ azure_name_prefix }}-insecure_all"
+      cert_validation_mode: ignore
       ip_configurations:
         - name: "rtr3.student{{ item }}.ipconfig1"
           private_ip_allocation_method: Static
@@ -278,6 +281,7 @@
       virtual_network: "{{ azure_name_prefix }}-vpc"
       subnet_name: "{{ azure_name_prefix }}-subnet"
       security_group: "{{ azure_name_prefix }}-insecure_all"
+      cert_validation_mode: ignore
       ip_configurations:
         - name: "rtr4.student{{ item }}.ipconfig1"
           private_ip_allocation_method: Static
@@ -351,6 +355,7 @@
     virtual_network: "{{ azure_name_prefix }}-vpc"
     subnet_name: "{{ azure_name_prefix }}-subnet"
     security_group: "{{ azure_name_prefix }}-insecure_all"
+    cert_validation_mode: ignore
     ip_configurations:
       - name: "host1.student{{ item }}.ipconfig1"
         private_ip_allocation_method: Static
