@@ -18,7 +18,7 @@ azure_lab_node_types:
   node3: rhel7
 
 azure_lab_node_types_f5:
-  f5: f5-prelicensed
+  f5: f5node
   host1: rhel7
 
 azure_lab_node_types_networking:

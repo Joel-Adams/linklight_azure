@@ -12,68 +12,112 @@
 #   set_fact:
 #     f5_ami: >
 #       {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
+- name: Create a public ip address
+  azure_rm_publicipaddress:
+    resource_group: "{{azure_name_prefix}}"
+    name: "student{{ item }}.f5"
+    allocation_method: Dynamic
+    domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}f5"
+  with_sequence: start=1 end="{{ student_total }}"
+
+- name: Create a network interface for F5 node using existing security group and public IP
+  azure_rm_networkinterface:
+    name: "{{azure_name_prefix}}.f5.student{{ item }}"
+    resource_group: "{{azure_name_prefix}}"
+    virtual_network: "{{ azure_name_prefix }}-vpc"
+    subnet_name: "{{ azure_name_prefix }}-subnet"
+    security_group: "{{ azure_name_prefix }}-insecure_all"
+    cert_validation_mode: ignore
+    ip_configurations:
+      - name: "f5.student{{ item }}.ipconfig1"
+        private_ip_allocation_method: Static
+        private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.2.{{ item }}"
+        public_ip_address_name: "student{{ item }}.f5"
+  with_sequence: start=1 end="{{ student_total }}"
+  register: network_interface
+  when: resource_group.changed
 
 - name: Create Azure instances for f5 node (F5 MODE)
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix}}.{{ item }}"
-    public_ip_allocation_method: Static
-    instance_type: "{{ azure_instance_types.f5node.vm_size }}"
+    name: "{{azure_name_prefix}}.f5.student{{ item }}"
+    vm_size: "{{ azure_instance_types.f5node.vm_size }}"
+    admin_username: "{{ admin_username }}"
+    ssh_password_enabled: false
+    network_interface_names: "{{azure_name_prefix}}.f5.student{{ item }}"
     image:
-      offer: "{{ azure_instance_types[f5_node].offer }}"
-      publisher: "{{ azure_instance_types[f5_node].publisher }}"
-      sku: "{{ azure_instance_types[f5_node].sku }}"
-      version: "{{ azure_instance_types[f5_node].version }}"
+      offer: "{{ azure_instance_types[f5node].offer }}"
+      publisher: "{{ azure_instance_types[f5node].publisher }}"
+      sku: "{{ azure_instance_types[f5node].sku }}"
+      version: "{{ azure_instance_types[f5node].version }}"
+    plan:
+      name: "{{ azure_instance_types[f5node].sku }}"
+      product: "{{ azure_instance_types[f5node].offer }}"
+      publisher: "{{ azure_instance_types[f5node].publisher }}"
     ssh_public_keys:
-      - path: /home/azure-user/.ssh/authorized_keys
+      - path: "/home/{{ admin_username }}/.ssh/authorized_keys"
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
     append_tags: yes
     tags:
       'Workshop_f5': "{{azure_name_prefix}}-f5"
-  with_sequence: start=0 end="{{ student_total }}"
+  with_sequence: start=1 end="{{ student_total }}"
   register: f5_output
 
 - name: Ensure tags are present for f5 node (F5 MODE)
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
-    name: "{{item.1}}"
+    name: "{{azure_name_prefix}}.f5.student{{ item }}"
     state: present
     append_tags: yes
     tags:
-      Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-f5"
-      short_name: "f5"
+      Name: "{{ azure_name_prefix }}-student{{ item }}-f5"
       Workshop_f5: "{{azure_name_prefix}}-f5"
       Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
-      Student: "student{{item.0 + 1}}"
+      Student: "student{{ item }}"
       # AWS_USERNAME: "{{ linklight_user }}"
       # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "Student Count {{student_total}}"
-  with_indexed_items:
-    - "{{ f5_output.instance_ids }}"
-  when: f5_output.instance_ids is not none
+      short_name: "f5"
+      ansible_network_os: "{{azure_instance_types[f5node].os}}"
+      public_ip_address: "{{ azure_name_prefix|lower }}-student{{ item }}f5.eastus.cloudapp.azure.com"
+      private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.2.{{ item }}"
+  with_sequence: start=1 end="{{ student_total }}"
 
-# - name: find ami for host1 & host2 (F5 MODE)
-#   ec2_ami_facts:
-#     region: "{{ ec2_region }}"
-#     owners: "{{ azure_instance_types.rhel7.owners }}"
-#     filters:
-#       name: "{{ azure_instance_types.rhel7.filter }}"
-#       architecture: "{{ azure_instance_types.rhel7.architecture }}"
-#   register: amis
-#
-# - name: save ami for host1 & host2 (F5 MODE)
-#   set_fact:
-#     host1_ami: >
-#       {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
+- name: Create a public ip address
+  azure_rm_publicipaddress:
+    resource_group: "{{azure_name_prefix}}"
+    name: "student{{ item }}.host1"
+    allocation_method: Dynamic
+    domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}host1"
+  with_sequence: start=1 end="{{ student_total }}"
+
+- name: Create a network interface using existing security group and public IP
+  azure_rm_networkinterface:
+    name: "{{azure_name_prefix}}.host1.student{{ item }}"
+    resource_group: "{{azure_name_prefix}}"
+    virtual_network: "{{ azure_name_prefix }}-vpc"
+    subnet_name: "{{ azure_name_prefix }}-subnet"
+    security_group: "{{ azure_name_prefix }}-insecure_all"
+    cert_validation_mode: ignore
+    ip_configurations:
+      - name: "host1.student{{ item }}.ipconfig1"
+        private_ip_allocation_method: Static
+        private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.6.{{ item }}"
+        public_ip_address_name: "student{{ item }}.host1"
+  with_sequence: start=1 end="{{ student_total }}"
+  register: network_interface
+  when: f5_output.changed
 
 - name: Create Azure instances for host1 node in VPC (F5 MODE)
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix}}.{{ item }}"
-    public_ip_allocation_method: Static
-    instance_type: "{{ azure_instance_types.rhel7.vm_size }}"
+    name: "{{azure_name_prefix}}.host1.student{{ item }}"
+    vm_size: "{{ azure_instance_types.rhel7.vm_size }}"
+    admin_username: "{{ azure_login_names['rhel7'] }}"
+    ssh_password_enabled: false
+    network_interface_names: "{{azure_name_prefix}}.host1.student{{ item }}"
     image:
       offer: "{{ azure_instance_types.rehl7.offer }}"
       publisher: "{{ azure_instance_types.rehl7.publisher }}"
@@ -85,36 +129,63 @@
     append_tags: yes
     tags:
       Workshop_host1: "{{azure_name_prefix}}-host1"
-  with_sequence: start=0 end="{{ student_total }}"
+  with_sequence: start=1 end="{{ student_total }}"
   register: host1_output
 
 - name: Ensure tags are present for host1 node (F5 MODE)
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
-    name: "{{item.1}}"
+    name: "{{azure_name_prefix}}.host1.student{{ item }}"
     state: present
     append_tags: yes
     tags:
-      Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-host1"
+      Name: "{{ azure_name_prefix }}-student{{ item }}-host1"
       Workshop_host1: "{{azure_name_prefix}}-host1"
       Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
-      Student: "student{{item.0 + 1}}"
+      Student: "student{{ item }}"
       # AWS_USERNAME: "{{ linklight_user }}"
       # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner for F5 workshop"
       Students: "Student Count {{student_total}}"
-      short_name: host1
-  with_indexed_items:
-    - "{{ host1_output.instance_ids }}"
-  when: host1_output.instance_ids is not none
+      short_name: "host1"
+      public_ip_address: "{{ azure_name_prefix|lower }}-student{{ item }}host1.eastus.cloudapp.azure.com"
+      private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.6.{{ item }}"
+  with_sequence: start=1 end="{{ student_total }}"
+
+- name: Create a public ip address
+  azure_rm_publicipaddress:
+    resource_group: "{{azure_name_prefix}}"
+    name: "student{{ item }}.host2"
+    allocation_method: Dynamic
+    domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}host2"
+  with_sequence: start=1 end="{{ student_total }}"
+
+- name: Create a network interface using existing security group and public IP
+  azure_rm_networkinterface:
+    name: "{{azure_name_prefix}}.host2.student{{ item }}"
+    resource_group: "{{azure_name_prefix}}"
+    virtual_network: "{{ azure_name_prefix }}-vpc"
+    subnet_name: "{{ azure_name_prefix }}-subnet"
+    security_group: "{{ azure_name_prefix }}-insecure_all"
+    cert_validation_mode: ignore
+    ip_configurations:
+      - name: "host2.student{{ item }}.ipconfig1"
+        private_ip_allocation_method: Static
+        private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.6.{{ item }}"
+        public_ip_address_name: "student{{ item }}.host2"
+  with_sequence: start=1 end="{{ student_total }}"
+  register: network_interface
+  when: f5_output.changed
 
 - name: Create Azure instances for host2 node in VPC (F5 MODE)
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_name_prefix}}.{{ item }}"
-    public_ip_allocation_method: Static
-    instance_type: "{{ azure_instance_types.rhel7.vm_size }}"
+    name: "{{azure_name_prefix}}.host2.student{{ item }}"
+    vm_size: "{{ azure_instance_types.rhel7.vm_size }}"
+    admin_username: "{{ azure_login_names['rhel7'] }}"
+    ssh_password_enabled: false
+    network_interface_names: "{{azure_name_prefix}}.host2.student{{ item }}"
     image:
       offer: "{{ azure_instance_types.rehl7.offer }}"
       publisher: "{{ azure_instance_types.rehl7.publisher }}"
@@ -126,42 +197,42 @@
     append_tags: yes
     tags:
       Workshop_host2: "{{azure_name_prefix}}-host2"
-  with_sequence: start=0 end="{{ student_total }}"
+  with_sequence: start=1 end="{{ student_total }}"
   register: host2_output
 
 - name: Ensure tags are present for host2 node (F5 MODE)
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
-    name: "{{item.1}}"
+    name: "{{azure_name_prefix}}.host2.student{{ item }}"
     state: present
     append_tags: yes
     tags:
-      Name: "{{ azure_name_prefix }}-student{{item.0 + 1}}-host2"
+      Name: "{{ azure_name_prefix }}-student{{ item }}-host2"
       Workshop_host2: "{{azure_name_prefix}}-host2"
       Workshop: "{{azure_name_prefix}}"
       Index: "{{ item[0] }}"
-      Student: "student{{item.0 + 1}}"
+      Student: "student{{ item }}"
       # AWS_USERNAME: "{{ linklight_user }}"
       # Info: "AWS_USERNAME that provisioned this-> {{ linklight_user }}"
       Linklight: "This was provisioned through the linklight provisioner for F5 workshop"
       Students: "Student Count {{student_total}}"
-      short_name: host2
-  with_indexed_items:
-    - "{{ host2_output.instance_ids }}"
-  when: host2_output.instance_ids is not none
+      short_name: "host2"
+      public_ip_address: "{{ azure_name_prefix|lower }}-student{{ item }}host2.eastus.cloudapp.azure.com"
+      private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.6.{{ item }}"
+  with_sequence: start=1 end="{{ student_total }}"
 
 ############## eni check ##############
 
-- name: grab all network interfaces for VPC 1 (F5 MODE)
-  azure_rm_networkinterface_facts:
-    resource_group: "{{azure_name_prefix}}"
-    name: "{{azure_vpc_id}}"
-  register: vpc_facts_1
-
-- name: Disable Source/Dest check on instance {{azure_vpc_id}} (F5 MODE)
-  azure_rm_networkinterface_facts:
-    eni_id: "{{ item['network_interface_id'] }}"
-    resource_group: "{{azure_name_prefix}}"
-    cert_validation_mode: ignore
-  with_items:
-    - "{{vpc_facts_1['network_interfaces']}}"
+# - name: grab all network interfaces for VPC 1 (F5 MODE)
+#   azure_rm_networkinterface_facts:
+#     resource_group: "{{azure_name_prefix}}"
+#     name: "{{azure_vpc_id}}"
+#   register: vpc_facts_1
+#
+# - name: Disable Source/Dest check on instance {{azure_vpc_id}} (F5 MODE)
+#   azure_rm_networkinterface_facts:
+#     eni_id: "{{ item['network_interface_id'] }}"
+#     resource_group: "{{azure_name_prefix}}"
+#     cert_validation_mode: ignore
+#   with_items:
+#     - "{{vpc_facts_1['network_interfaces']}}"
