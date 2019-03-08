@@ -138,6 +138,19 @@
   roles:
     - { role: gather_router_facts }
 
+- name: CONFIGURE SCP ON NETWORKING ROUTERS
+  hosts: cisco
+  connection: local
+  gather_facts: no
+
+  roles:
+    - role: configure_routers
+      vars:
+        type: networking_access
+        router1_tunnel: 100
+        router2_tunnel: 101
+      when: networking
+
 - name: CONFIGURE ACCESS ROUTERS
   hosts: access
   connection: local
