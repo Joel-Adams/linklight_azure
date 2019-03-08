@@ -408,6 +408,13 @@
       private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.6.{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
 
+
+- name: Enable SCP for networking devices
+  ios_config:
+    lines: ip scp server enable
+    host: "{{ azure_name_prefix|lower }}-student{{ item }}rtr1.eastus.cloudapp.azure.com"
+  with_sequence: start=1 end="{{ student_total }}"
+  
 # - name: grab all network interfaces for VPC 1 (NETWORKING MODE)
 #   azure_rm_virtualnetwork_facts:
 #     resource_group: "{{azure_name_prefix}}"
