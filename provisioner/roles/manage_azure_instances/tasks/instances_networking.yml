@@ -412,7 +412,9 @@
 - name: Enable SCP for networking devices
   ios_config:
     lines: ip scp server enable
-    ssh_keyfile: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
+    # ssh_keyfile: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
+    username: student1
+    password: RedHat123!
     host: "{{ azure_name_prefix|lower }}-student{{ item }}rtr1.eastus.cloudapp.azure.com"
   with_sequence: start=1 end="{{ student_total }}"
 
