@@ -1,17 +1,13 @@
+- name: set node types (F5 MODE)
+  set_fact:
+    f5_node: "{{ azure_lab_node_types_f5['f5'] }}"
+
+- name: set login names (F5 MODE)
+  set_fact:
+    f5_login: "{{ azure_login_names['f5_hosts'] }}"
+
+
 ##############f5 node##############
-# - name: find ami for f5 (F5 MODE)
-#   ec2_ami_facts:
-#     region: "{{ ec2_region }}"
-#     owners: "{{ azure_instance_types.f5node.owners }}"
-#     filters:
-#       name: "{{ azure_instance_types.f5node.filter }}"
-#       architecture: "{{ azure_instance_types.f5node.architecture }}"
-#   register: amis
-#
-# - name: save ami for f5 (F5 MODE)
-#   set_fact:
-#     f5_ami: >
-#       {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
 - name: Create a public ip address
   azure_rm_publicipaddress:
     resource_group: "{{azure_name_prefix}}"
@@ -41,19 +37,19 @@
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
     name: "{{azure_name_prefix}}.f5.student{{ item }}"
-    vm_size: "{{ azure_instance_types.f5node.vm_size }}"
-    admin_username: "{{ admin_username }}"
+    vm_size: "{{ azure_instance_types.f5_node.vm_size }}"
+    admin_username: "{{ f5_login }}"
     ssh_password_enabled: false
     network_interface_names: "{{azure_name_prefix}}.f5.student{{ item }}"
     image:
-      offer: "{{ azure_instance_types[f5node].offer }}"
-      publisher: "{{ azure_instance_types[f5node].publisher }}"
-      sku: "{{ azure_instance_types[f5node].sku }}"
-      version: "{{ azure_instance_types[f5node].version }}"
+      offer: "{{ azure_instance_types[f5_node].offer }}"
+      publisher: "{{ azure_instance_types[f5_node].publisher }}"
+      sku: "{{ azure_instance_types[f5_node].sku }}"
+      version: "{{ azure_instance_types[f5_node].version }}"
     plan:
-      name: "{{ azure_instance_types[f5node].sku }}"
-      product: "{{ azure_instance_types[f5node].offer }}"
-      publisher: "{{ azure_instance_types[f5node].publisher }}"
+      name: "{{ azure_instance_types[f5_node].sku }}"
+      product: "{{ azure_instance_types[f5_node].offer }}"
+      publisher: "{{ azure_instance_types[f5_node].publisher }}"
     ssh_public_keys:
       - path: "/home/{{ admin_username }}/.ssh/authorized_keys"
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
@@ -80,7 +76,7 @@
       Linklight: "This was provisioned through the linklight provisioner"
       Students: "Student Count {{student_total}}"
       short_name: "f5"
-      ansible_network_os: "{{azure_instance_types[f5node].os}}"
+      ansible_network_os: "{{azure_instance_types[f5_node].os}}"
       public_ip_address: "{{ azure_name_prefix|lower }}-student{{ item }}f5.eastus.cloudapp.azure.com"
       private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.2.{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
