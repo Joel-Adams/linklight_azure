@@ -75,7 +75,7 @@ azure_instance_types:
     vm_size: Standard_D2s_v3
     offer: 'f5-big-ip-byol'
     publisher: 'f5-networks'
-    sku: 'f5-big-all-1slot-byol'
+    sku: 'f5-big-all-2slot-byol'
     version: '14.1.001000'
     os_disk_size: 40
 
