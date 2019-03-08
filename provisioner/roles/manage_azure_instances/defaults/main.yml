@@ -78,6 +78,7 @@ azure_instance_types:
     sku: 'f5-big-all-2slot-byol'
     version: '14.1.001000'
     os_disk_size: 40
+    os: f5
 
 # Login names used for SSH connections. These are baked in to the AMIs.
 azure_login_names:
