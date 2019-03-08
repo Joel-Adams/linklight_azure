@@ -412,9 +412,10 @@
 - name: Enable SCP for networking devices
   ios_config:
     lines: ip scp server enable
+    ssh_keyfile: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
     host: "{{ azure_name_prefix|lower }}-student{{ item }}rtr1.eastus.cloudapp.azure.com"
   with_sequence: start=1 end="{{ student_total }}"
-  
+
 # - name: grab all network interfaces for VPC 1 (NETWORKING MODE)
 #   azure_rm_virtualnetwork_facts:
 #     resource_group: "{{azure_name_prefix}}"
