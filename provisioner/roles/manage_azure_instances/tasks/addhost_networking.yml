@@ -53,6 +53,23 @@
       register: rtr4_node_facts
   when: special is defined
 
+- name: ADD CISCO ROUTERS TO INVENTORY
+  add_host:
+    name: "{{ item.tags.Name }}"
+    short_name: "{{ item.tags.short_name }}"
+    ansible_host: "{{ item.tags.public_ip_address }}"
+    username: "{{ item.tags.Student }}"
+    ansible_user: azure-user
+    ansible_port: "{{ ssh_port }}"
+    ansible_ssh_private_key_file: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
+    private_ip: "{{item.tags.private_ip_address}}"
+    ansible_network_os: ios
+    groups:
+      - cisco
+  with_items:
+    - "{{ rtr1_node_facts.vms }}"
+    - "{{ rtr2_node_facts.vms }}"
+
 - name: ADD CORE ROUTERS TO INVENTORY
   add_host:
     name: "{{ item.tags.Name }}"
