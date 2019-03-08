@@ -51,7 +51,7 @@
       product: "{{ azure_instance_types[f5_node].offer }}"
       publisher: "{{ azure_instance_types[f5_node].publisher }}"
     ssh_public_keys:
-      - path: "/home/{{ admin_username }}/.ssh/authorized_keys"
+      - path: "/home/{{ f5_login }}/.ssh/authorized_keys"
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
     append_tags: yes
     tags:
