@@ -2,11 +2,5 @@
 
 hostname rtr{{site}}
 
-interface Loopback0
- ip address 192.168.{{ site }}.10{{ site }} 255.255.255.0
-
-interface Loopback1
- ip address 10.{{ site }}.{{ site }}.10{{ site }} 255.255.255.0
-
 interface GigabitEthernet1
  ip scp server enable
