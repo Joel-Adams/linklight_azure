@@ -1,6 +1,8 @@
 - name: set node types (F5 MODE)
   set_fact:
     f5_node: "{{ azure_lab_node_types_f5['f5'] }}"
+    host1_node: "{{ azure_lab_node_types_f5['host1'] }}"
+    host2_node: "{{ azure_lab_node_types_f5['host1'] }}"
 
 - name: set login names (F5 MODE)
   set_fact:
@@ -110,15 +112,15 @@
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
     name: "{{azure_name_prefix}}.host1.student{{ item }}"
-    vm_size: "{{ azure_instance_types.rhel7.vm_size }}"
+    vm_size: "{{ azure_instance_types[host1_node].vm_size }}"
     admin_username: "{{ azure_login_names['rhel7'] }}"
     ssh_password_enabled: false
     network_interface_names: "{{azure_name_prefix}}.host1.student{{ item }}"
     image:
-      offer: "{{ azure_instance_types.rehl7.offer }}"
-      publisher: "{{ azure_instance_types.rehl7.publisher }}"
-      sku: "{{ azure_instance_types.rehl7.sku }}"
-      version: "{{ azure_instance_types.rehl7.version }}"
+      offer: "{{ azure_instance_types[host1_node].offer }}"
+      publisher: "{{ azure_instance_types[host1_node].publisher }}"
+      sku: "{{ azure_instance_types[host1_node].sku }}"
+      version: "{{ azure_instance_types[host1_node].version }}"
     ssh_public_keys:
       - path: /home/azure-user/.ssh/authorized_keys
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
@@ -178,15 +180,15 @@
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
     name: "{{azure_name_prefix}}.host2.student{{ item }}"
-    vm_size: "{{ azure_instance_types.rhel7.vm_size }}"
+    vm_size: "{{ azure_instance_types[host2_node].vm_size }}"
     admin_username: "{{ azure_login_names['rhel7'] }}"
     ssh_password_enabled: false
     network_interface_names: "{{azure_name_prefix}}.host2.student{{ item }}"
     image:
-      offer: "{{ azure_instance_types.rehl7.offer }}"
-      publisher: "{{ azure_instance_types.rehl7.publisher }}"
-      sku: "{{ azure_instance_types.rehl7.sku }}"
-      version: "{{ azure_instance_types.rehl7.version }}"
+      offer: "{{ azure_instance_types[host2_node].offer }}"
+      publisher: "{{ azure_instance_types[host2_node].publisher }}"
+      sku: "{{ azure_instance_types[host2_node].sku }}"
+      version: "{{ azure_instance_types[host2_node].version }}"
     ssh_public_keys:
       - path: /home/azure-user/.ssh/authorized_keys
         key_data: "{{lookup('file', '{{ azure_name_prefix }}-key') }}"
@@ -195,7 +197,7 @@
       Workshop_host2: "{{azure_name_prefix}}-host2"
   with_sequence: start=1 end="{{ student_total }}"
   register: host2_output
-
+  
 - name: Ensure tags are present for host2 node (F5 MODE)
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
