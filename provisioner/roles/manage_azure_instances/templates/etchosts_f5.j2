@@ -1,26 +1,26 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
-{% for vm in f5_node_facts.instances %}
+{% for vm in f5_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
-{{ vm.public_ip_address }} {{ vm.tags.short_name }}
+{{ vm.tags.public_ip_address }} {{ vm.tags.short_name }}
 {% endif %}
 {% endfor %}
 
-{% for vm in ansible_node_facts.instances %}
+{% for vm in ansible_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
-{{ vm.public_ip_address }} {{ vm.tags.short_name }}
+{{ vm.tags.public_ip_address }} {{ vm.tags.short_name }}
 {% endif %}
 {% endfor %}
 
-{% for vm in host1_node_facts.instances %}
+{% for vm in host1_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
-{{ vm.public_ip_address }} {{ vm.tags.short_name }}
+{{ vm.tags.public_ip_address }} {{ vm.tags.short_name }}
 {% endif %}
 {% endfor %}
 
-{% for vm in host1_node_facts.instances %}
+{% for vm in host1_node_facts.vms %}
 {% if 'student' + item == vm.tags.Student %}
-{{ vm.public_ip_address }} {{vm.tags.short_name}}.{{azure_name_prefix|lower}}.{{workshop_dns_zone}} {{ vm.tags.short_name }}
+{{ vm.tags.public_ip_address }} {{vm.tags.short_name}}.{{azure_name_prefix|lower}}.{{workshop_dns_zone}} {{ vm.tags.short_name }}
 {% endif %}
 {% endfor %}
