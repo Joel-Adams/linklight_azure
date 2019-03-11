@@ -83,7 +83,7 @@
       private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.2.{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
 
-- name: Create a public ip address
+- name: Create a public ip address for host1
   azure_rm_publicipaddress:
     resource_group: "{{azure_name_prefix}}"
     name: "student{{ item }}.host1"
@@ -91,7 +91,7 @@
     domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}host1"
   with_sequence: start=1 end="{{ student_total }}"
 
-- name: Create a network interface using existing security group and public IP
+- name: Create a network interface using existing security group and public IP for host1
   azure_rm_networkinterface:
     name: "{{azure_name_prefix}}.host1.student{{ item }}"
     resource_group: "{{azure_name_prefix}}"
@@ -151,7 +151,7 @@
       private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.6.{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
 
-- name: Create a public ip address
+- name: Create a public ip address for host2
   azure_rm_publicipaddress:
     resource_group: "{{azure_name_prefix}}"
     name: "student{{ item }}.host2"
@@ -159,7 +159,7 @@
     domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}host2"
   with_sequence: start=1 end="{{ student_total }}"
 
-- name: Create a network interface using existing security group and public IP
+- name: Create a network interface using existing security group and public IP for host2
   azure_rm_networkinterface:
     name: "{{azure_name_prefix}}.host2.student{{ item }}"
     resource_group: "{{azure_name_prefix}}"
@@ -170,7 +170,7 @@
     ip_configurations:
       - name: "host2.student{{ item }}.ipconfig1"
         private_ip_allocation_method: Static
-        private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.6.{{ item }}"
+        private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.7.{{ item }}"
         public_ip_address_name: "student{{ item }}.host2"
   with_sequence: start=1 end="{{ student_total }}"
   register: network_interface
@@ -197,7 +197,7 @@
       Workshop_host2: "{{azure_name_prefix}}-host2"
   with_sequence: start=1 end="{{ student_total }}"
   register: host2_output
-  
+
 - name: Ensure tags are present for host2 node (F5 MODE)
   azure_rm_virtualmachine:
     resource_group: "{{azure_name_prefix}}"
@@ -216,7 +216,7 @@
       Students: "Student Count {{student_total}}"
       short_name: "host2"
       public_ip_address: "{{ azure_name_prefix|lower }}-student{{ item }}host2.eastus.cloudapp.azure.com"
-      private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.6.{{ item }}"
+      private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.7.{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
 
 ############## eni check ##############
