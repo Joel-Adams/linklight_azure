@@ -30,6 +30,7 @@
     provider:
       validate_certs: "no"
       user: admin
-      password: admin
+      # password: admin
+      ssh_keyfile: "{{playbook_dir}}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
       server_port: "8443"
       server: "{{ ansible_host }}"
