@@ -21,7 +21,7 @@
       transport: cli
       user: admin
       server: "{{ ansible_host }}"
-    commands: modify auth user admin password admin
+    commands: modify auth user admin password R3dH4t123!
 
 # The bigip_iapplx_package requires rpm installed, on macOS use brew rather than pip or it won't work
 - name: Install AS3
@@ -30,7 +30,7 @@
     provider:
       validate_certs: "no"
       user: admin
-      password: admin
+      password: R3dH4t123!
       # ssh_keyfile: "{{playbook_dir}}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
       server_port: "8443"
       server: "{{ ansible_host }}"

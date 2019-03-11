@@ -71,23 +71,23 @@ azure_instance_types:
     version: latest
     os_disk_size: 20
 
-  f5node:
-    vm_size: Standard_D2s_v3
-    offer: 'f5-big-ip-good'
-    publisher: 'f5-networks'
-    sku: 'f5-bigip-virtual-edition-25m-good-hourly'
-    version: '14.0.001000'
-    os_disk_size: 40
-    os: f5
-
   # f5node:
   #   vm_size: Standard_D2s_v3
-  #   offer: 'f5-big-ip-byol'
+  #   offer: 'f5-big-ip-good'
   #   publisher: 'f5-networks'
-  #   sku: 'f5-big-all-2slot-byol'
-  #   version: '14.1.001000'
+  #   sku: 'f5-bigip-virtual-edition-25m-good-hourly'
+  #   version: '14.0.001000'
   #   os_disk_size: 40
   #   os: f5
+
+  f5node:
+    vm_size: Standard_D2s_v3
+    offer: 'f5-big-ip-byol'
+    publisher: 'f5-networks'
+    sku: 'f5-big-all-2slot-byol'
+    version: '14.1.001000'
+    os_disk_size: 40
+    os: f5
 
 # Login names used for SSH connections. These are baked in to the AMIs.
 azure_login_names:
