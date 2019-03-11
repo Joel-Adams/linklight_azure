@@ -41,7 +41,7 @@
     name: "{{azure_name_prefix}}.f5.student{{ item }}"
     vm_size: "{{ azure_instance_types[f5_node].vm_size }}"
     admin_username: "{{ f5_login }}"
-    ssh_password_enabled: false
+    admin_password: "{{ admin_password }}"
     network_interface_names: "{{azure_name_prefix}}.f5.student{{ item }}"
     image:
       offer: "{{ azure_instance_types[f5_node].offer }}"
