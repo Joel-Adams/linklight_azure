@@ -3,6 +3,6 @@
 #     name: sshd
 #     state: restarted
 
-- name: Reboot a slow machine that might have lots of updates to apply
+- name: Reboot
   reboot:
     reboot_timeout: 300
