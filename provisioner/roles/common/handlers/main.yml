@@ -1,4 +1,8 @@
-- name: restart ssh
-  service:
-    name: sshd
-    state: restarted
+# - name: restart ssh
+#   service:
+#     name: sshd
+#     state: restarted
+
+- name: Reboot a slow machine that might have lots of updates to apply
+  reboot:
+    reboot_timeout: 3600
