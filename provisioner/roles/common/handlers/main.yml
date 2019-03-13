@@ -1,8 +1,4 @@
-# - name: restart ssh
-#   service:
-#     name: sshd
-#     state: restarted
-
-- name: Reboot
-  reboot:
-    reboot_timeout: 300
+- name: restart ssh
+  service:
+    name: sshd
+    state: restarted
