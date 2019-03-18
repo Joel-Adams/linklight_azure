@@ -1,7 +1,3 @@
-- name: Reboot
-  reboot:
-    reboot_timeout: 300
-
 - name: INSTALL CERTBOT
   yum:
     name: certbot

@@ -8,6 +8,10 @@
 #       validate_certs: false
 #       server: "{{ ansible_host }}"
 
+- name: Reboot
+  reboot:
+    reboot_timeout: 300
+
 - name: Wait for BIG-IP to boot up completely
   wait_for:
     host: "{{ ansible_host }}"
