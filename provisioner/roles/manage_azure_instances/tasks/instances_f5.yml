@@ -94,7 +94,7 @@
 
 - name: Print Public IP Information
   debug:
-    var: host1_publicip
+    var: host1_publicip.ip_address
 
 - name: Create a network interface using existing security group and public IP for host1
   azure_rm_networkinterface:
