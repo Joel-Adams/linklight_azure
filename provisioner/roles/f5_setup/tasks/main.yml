@@ -19,6 +19,7 @@
 
 - name: Wait for BIG-IP to boot up completely
   wait_for:
+    delay: 300
     host: "{{ ansible_host }}"
     port: 8443
     state: present
