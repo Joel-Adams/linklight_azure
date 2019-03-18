@@ -90,6 +90,11 @@
     allocation_method: Dynamic
     domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}host1"
   with_sequence: start=1 end="{{ student_total }}"
+  register: host1_publicip
+
+- name: Print Public IP Information
+  debug:
+    var: host1_publicip
 
 - name: Create a network interface using existing security group and public IP for host1
   azure_rm_networkinterface:
