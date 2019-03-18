@@ -8,9 +8,14 @@
 #       validate_certs: false
 #       server: "{{ ansible_host }}"
 
-- name: Reboot
-  reboot:
-    reboot_timeout: 300
+- name: Reboot F5 systems after creation
+  bigip_command:
+    provider:
+      ssh_keyfile: "{{playbook_dir}}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
+      transport: cli
+      user: admin
+      server: "{{ ansible_host }}"
+    commands: reboot
 
 - name: Wait for BIG-IP to boot up completely
   wait_for:
