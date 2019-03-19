@@ -33,7 +33,7 @@
     groups:
       - f5
   with_items:
-    - "{{ f5_node_facts.vms }}"
+    # - "{{ f5_node_facts.vms }}"
     - "{{ f5_public_ip.ansible_facts }}"
 
 - name: grab facts for host1 node (F5 MODE)
