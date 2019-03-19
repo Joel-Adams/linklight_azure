@@ -35,12 +35,16 @@
     tags: host1_public_ip
   register: host1_public_ip
 
+- name: Debug Information step 1
+  debug:
+    var: host1_public_ip
+
 - name: Set FACTS
   set_fact:
     host1_networking: "{{ host1_public_ip.ansible_facts }}"
   register: host1_networking
 
-- name: Debug Information
+- name: Debug Information step 2
   debug:
     var: host1_networking
 
