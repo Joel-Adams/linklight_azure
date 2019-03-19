@@ -6,7 +6,7 @@
 
 - name: Print Public IP Information F5
   debug:
-    var: f5_public_ip
+    var: f5_public_ip.ansible_facts
 
 - name: grab facts for f5 node (F5 MODE)
   azure_rm_virtualmachine_facts:
