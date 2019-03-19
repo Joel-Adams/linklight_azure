@@ -1,7 +1,7 @@
 - name: Get facts for one Public IP
   azure_rm_publicipaddress_facts:
     resource_group: "{{azure_name_prefix}}"
-    # tags: Workshop_f5
+    tags: f5_public_ip
   register: f5_public_ip
 
 - name: Print Public IP Information F5
