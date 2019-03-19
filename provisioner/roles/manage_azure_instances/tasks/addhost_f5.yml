@@ -30,10 +30,10 @@
 - name: add f5 to groups (F5 MODE)
   add_host:
     # name: "{{ item.tags.Name }}"
-    # name: "{{ item.name }}"
+    name: "{{ item.name }}"
     # short_name: "{{ item.tags.short_name }}"
     # ansible_host: "{{ item.tags.public_ip_address }}"
-    ansible_host: "{{ item.azure_publicipaddresses.name }}"
+    # ansible_host: "{{ item.azure_publicipaddresses.name }}"
     ansible_user: "{{ f5_login }}"
     # ansible_password: admin
     ansible_port: "{{ ssh_port }}"
@@ -43,7 +43,7 @@
       - f5
   with_items:
     # - "{{ f5_node_facts.vms }}"
-    - "{{ f5_public_ip.ansible_facts }}"
+    - "{{ f5_networking.azure_publicipaddresses }}"
 
 - name: grab facts for host1 node (F5 MODE)
   azure_rm_virtualmachine_facts:
