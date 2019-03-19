@@ -40,6 +40,10 @@
     host1_networking: "{{ host1_public_ip.ansible_facts }}"
   register: host1_networking
 
+- name: Debug Information
+  debug:
+    var: host1_networking
+
 - name: grab facts for host1 node (F5 MODE)
   azure_rm_virtualmachine_facts:
     resource_group: "{{azure_name_prefix}}"
