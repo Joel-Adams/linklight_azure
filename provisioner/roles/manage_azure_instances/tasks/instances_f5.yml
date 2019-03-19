@@ -18,6 +18,8 @@
     domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}f5"
     tags:
       'f5_public_ip': "{{azure_name_prefix}}-f5-IP"
+      short_name: "f5"
+      private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.2.{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
 
 - name: Create a network interface for F5 node using existing security group and public IP
