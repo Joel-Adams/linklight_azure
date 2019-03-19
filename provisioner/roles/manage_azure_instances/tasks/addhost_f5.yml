@@ -1,3 +1,14 @@
+- name: Get facts for one Public IP
+  azure_rm_publicipaddress_facts:
+    resource_group: "{{azure_name_prefix}}"
+    name: "student{{ item }}.f5"
+  with_sequence: start=1 end="{{ student_total }}"
+  register: f5_public_ip
+
+- name: Print Public IP Information F5
+  debug:
+    var: f5_public_ip
+
 - name: grab facts for f5 node (F5 MODE)
   azure_rm_virtualmachine_facts:
     resource_group: "{{azure_name_prefix}}"
@@ -23,10 +34,6 @@
     resource_group: "{{azure_name_prefix}}"
     tags: Workshop_host1
   register: host1_node_facts
-
-- name: Print Public IP Information
-  debug:
-    var: host1_node_facts
 
 - name: add host1 to groups (NETWORKING MODE)
   add_host:
