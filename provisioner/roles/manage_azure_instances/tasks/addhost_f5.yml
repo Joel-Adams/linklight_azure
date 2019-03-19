@@ -14,6 +14,10 @@
     tags: Workshop_f5
   register: f5_node_facts
 
+- name: Print F5 Node Facts
+  debug:
+    var: f5_node_facts
+
 - name: add f5 to groups (F5 MODE)
   add_host:
     name: "{{ item.tags.Name }}"
