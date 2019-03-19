@@ -20,6 +20,7 @@
       'f5_public_ip': "{{azure_name_prefix}}-f5-IP"
       short_name: "f5"
       private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.2.{{ item }}"
+      Student: "student{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
 
 - name: Create a network interface for F5 node using existing security group and public IP
@@ -97,6 +98,7 @@
       'host1_public_ip': "{{azure_name_prefix}}-host1-IP"
       short_name: "host1"
       private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.6.{{ item }}"
+      Student: "student{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
   register: host1_publicip
 
@@ -175,6 +177,7 @@
       'host2_public_ip': "{{azure_name_prefix}}-host2-IP"
       short_name: "host2"
       private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.7.{{ item }}"
+      Student: "student{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
 
 - name: Create a network interface using existing security group and public IP for host2
