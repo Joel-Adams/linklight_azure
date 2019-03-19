@@ -21,7 +21,7 @@
 - name: add f5 to groups (F5 MODE)
   add_host:
     # name: "{{ item.tags.Name }}"
-    name: "{{ item.name }}"
+    # name: "{{ item.name }}"
     # short_name: "{{ item.tags.short_name }}"
     # ansible_host: "{{ item.tags.public_ip_address }}"
     ansible_host: "{{ item.location }}"
