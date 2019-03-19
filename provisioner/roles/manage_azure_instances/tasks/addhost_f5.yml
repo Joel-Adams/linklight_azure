@@ -24,7 +24,7 @@
     # name: "{{ item.name }}"
     # short_name: "{{ item.tags.short_name }}"
     # ansible_host: "{{ item.tags.public_ip_address }}"
-    ansible_host: "{{ item.azure_publicipaddresses }}"
+    ansible_host: "{{ item.azure_publicipaddresses.name }}"
     ansible_user: "{{ f5_login }}"
     # ansible_password: admin
     ansible_port: "{{ ssh_port }}"
