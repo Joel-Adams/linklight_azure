@@ -100,7 +100,7 @@
       private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.6.{{ item }}"
       Student: "student{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
-  register: host1_publicip
+  # register: host1_publicip
 
 # - name: Print Public IP Information
 #   debug:
