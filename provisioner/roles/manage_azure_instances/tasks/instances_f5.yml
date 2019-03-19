@@ -93,6 +93,10 @@
     name: "student{{ item }}.host1"
     allocation_method: Dynamic
     domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}host1"
+    tags:
+      'host1_public_ip': "{{azure_name_prefix}}-host1-IP"
+      short_name: "host1"
+      private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.6.{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
   register: host1_publicip
 
@@ -167,6 +171,10 @@
     name: "student{{ item }}.host2"
     allocation_method: Dynamic
     domain_name: "{{ azure_name_prefix|lower }}-student{{ item }}host2"
+    tags:
+      'host2_public_ip': "{{azure_name_prefix}}-host2-IP"
+      short_name: "host2"
+      private_ip_address: "{{ azure_subnet.split('.')[0] }}.{{ azure_subnet.split('.')[1] }}.7.{{ item }}"
   with_sequence: start=1 end="{{ student_total }}"
 
 - name: Create a network interface using existing security group and public IP for host2

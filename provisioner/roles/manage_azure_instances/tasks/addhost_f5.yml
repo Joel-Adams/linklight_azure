@@ -1,21 +1,13 @@
-- name: Get facts for one Public IP
+- name: Get facts for F5 Public IP
   azure_rm_publicipaddress_facts:
     resource_group: "{{azure_name_prefix}}"
     tags: f5_public_ip
   register: f5_public_ip
 
-- name: Print Public IP Information F5
-  debug:
-    var: f5_public_ip.ansible_facts
-
 - name: Set FACTS
   set_fact:
     f5_networking: "{{ f5_public_ip.ansible_facts }}"
   register: f5_networking
-
-- name: Debug
-  debug:
-    var: f5_networking
 
 - name: grab facts for f5 node (F5 MODE)
   azure_rm_virtualmachine_facts:
@@ -23,27 +15,30 @@
     tags: Workshop_f5
   register: f5_node_facts
 
-- name: Print F5 Node Facts
-  debug:
-    var: f5_node_facts.vms
-
 - name: add f5 to groups (F5 MODE)
   add_host:
-    # name: "{{ item.tags.Name }}"
     name: "{{ item.name }}"
     short_name: "{{ item.tags.short_name }}"
-    # ansible_host: "{{ item.tags.public_ip_address }}"
     ansible_host: "{{ item.properties.ipAddress }}"
     ansible_user: "{{ f5_login }}"
-    # ansible_password: admin
     ansible_port: "{{ ssh_port }}"
     ansible_ssh_private_key_file: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
     private_ip: "{{item.tags.private_ip_address}}"
     groups:
       - f5
   with_items:
-    # - "{{ f5_node_facts.vms }}"
     - "{{ f5_networking.azure_publicipaddresses }}"
+
+- name: Get facts for Host1 Public IP
+  azure_rm_publicipaddress_facts:
+    resource_group: "{{azure_name_prefix}}"
+    tags: host1_public_ip
+  register: host1_public_ip
+
+- name: Set FACTS
+  set_fact:
+    host1_networking: "{{ host1_public_ip.ansible_facts }}"
+  register: host1_networking
 
 - name: grab facts for host1 node (F5 MODE)
   azure_rm_virtualmachine_facts:
@@ -53,18 +48,28 @@
 
 - name: add host1 to groups (NETWORKING MODE)
   add_host:
-    name: "{{ item.tags.Name }}"
+    name: "{{ item.name }}"
     short_name: "{{ item.tags.short_name }}"
-    ansible_host: "{{ item.tags.public_ip_address }}"
-    username: "{{ item.tags.Student }}"
-    ansible_user: "{{ azure_login_names['rhel7'] }}"
+    ansible_host: "{{ item.properties.ipAddress }}"
+    ansible_user: "{{ f5_login }}"
     ansible_port: "{{ ssh_port }}"
     ansible_ssh_private_key_file: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
     private_ip: "{{item.tags.private_ip_address}}"
     groups:
       - lab_hosts
       - managed_nodes
-  with_items: "{{ host1_node_facts.vms }}"
+  with_items: "{{ host1_networking.azure_publicipaddresses }}"
+
+- name: Get facts for Host2 Public IP
+  azure_rm_publicipaddress_facts:
+    resource_group: "{{azure_name_prefix}}"
+    tags: host2_public_ip
+  register: host2_public_ip
+
+- name: Set FACTS
+  set_fact:
+    host2_networking: "{{ host2_public_ip.ansible_facts }}"
+  register: host2_networking
 
 - name: grab facts for host2 node (F5 MODE)
   azure_rm_virtualmachine_facts:
@@ -74,18 +79,17 @@
 
 - name: add host2 to groups (NETWORKING MODE)
   add_host:
-    name: "{{ item.tags.Name }}"
+    name: "{{ item.name }}"
     short_name: "{{ item.tags.short_name }}"
-    ansible_host: "{{ item.tags.public_ip_address }}"
-    username: "{{ item.tags.Student }}"
-    ansible_user: "{{ azure_login_names['rhel7'] }}"
+    ansible_host: "{{ item.properties.ipAddress }}"
+    ansible_user: "{{ f5_login }}"
     ansible_port: "{{ ssh_port }}"
     ansible_ssh_private_key_file: "{{ playbook_dir }}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
     private_ip: "{{item.tags.private_ip_address}}"
     groups:
       - lab_hosts
       - managed_nodes
-  with_items: "{{ host2_node_facts.vms }}"
+  with_items: "{{ host2_networking.azure_publicipaddresses }}"
 
 - name: Generate student inventories
   template:
