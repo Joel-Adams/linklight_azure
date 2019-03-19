@@ -4,6 +4,10 @@
     tags: f5_public_ip
   register: f5_public_ip
 
+- name: Debug Information step 0
+  debug:
+    var: f5_public_ip
+
 - name: Set FACTS
   set_fact:
     f5_networking: "{{ f5_public_ip.ansible_facts }}"
