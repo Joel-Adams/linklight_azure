@@ -16,7 +16,7 @@
 
 - name: Print F5 Node Facts
   debug:
-    var: f5_node_facts
+    var: f5_node_facts.vms
 
 - name: add f5 to groups (F5 MODE)
   add_host:
