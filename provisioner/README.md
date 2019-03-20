@@ -16,6 +16,7 @@
 # Requirements
 - This provisioner must be run with Ansible Engine v2.7.0 or higher.
 - Azure Account (follow directions on one time setup below)
+- To create Azure login information follow: https://www.terraform.io/docs/providers/azurerm/auth/service_principal_client_secret.html 
 
 # Lab Setup
 [For One Time Setup - click here](../docs/setup.md)
