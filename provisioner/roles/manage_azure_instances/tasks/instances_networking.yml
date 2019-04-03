@@ -138,7 +138,7 @@
         public_ip_address_name: "student{{ item }}.rtr2"
   with_sequence: start=1 end="{{ student_total }}"
   register: network_interface
-#  when: resource_group.changed
+  when: resource_group.changed
 
 - name: Create Azure instances for rtr2 node (NETWORKING MODE)
   azure_rm_virtualmachine:
@@ -363,7 +363,7 @@
         public_ip_address_name: "student{{ item }}.host1"
   with_sequence: start=1 end="{{ student_total }}"
   register: network_interface
-  when: rtr1_output.changed
+  # when: rtr1_output.changed
 
 - name: Create Azure instances for host1 node in VPC-2 (NETWORKING MODE)
   azure_rm_virtualmachine:
