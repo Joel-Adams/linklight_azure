@@ -58,14 +58,6 @@
     name: "{{ azure_name_prefix }}-subnet"
     virtual_network_name: "{{ azure_name_prefix }}-vpc"
     address_prefix_cidr: "{{azure_subnet}}"
-    tags:
-      Name: "{{ azure_name_prefix }}-subnet"
-      Linklight: "This was provisioned through the linklight provisioner"
-      Students: "Student Count {{student_total}}"
-  register: create_subnet
-  when: azure_vpc_id is undefined
-  until: create_subnet is not failed
-  retries: 15
 
 - name: Create directory for SSH keys
   file:
