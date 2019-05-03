@@ -27,13 +27,13 @@
     state: latest
   when: not f5workshop
 
-- name: install pip setup tools
-  become: yes
-  pip:
-    name:
-      - setuptools
-    state: latest
-  when: networking
+# - name: install pip setup tools
+#   become: yes
+#   pip:
+#     name:
+#       - setuptools
+#     state: latest
+#   when: networking
 
 - name: install ncclient for juniper devices (NETWORK AUTOMATION MODE)
   become: yes
