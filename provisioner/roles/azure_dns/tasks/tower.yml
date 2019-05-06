@@ -1,3 +1,10 @@
+- name: Remove urllib3
+  become: yes
+  pip:
+    name:
+      - urllib3
+    state: absent
+
 - name: INSTALL CERTBOT
   yum:
     name: certbot
