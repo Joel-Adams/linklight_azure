@@ -19,7 +19,6 @@
 
 - name: Wait for BIG-IP to boot up completely
   wait_for:
-    # delay: 300
     host: "{{ ansible_host }}"
     port: 8443
     state: present
@@ -36,11 +35,10 @@
 # The bigip_iapplx_package requires rpm installed, on macOS use brew rather than pip or it won't work
 - name: Install AS3
   bigip_iapplx_package:
-    package: "{{playbook_dir}}/roles/f5_setup/files/f5-appsvcs-3.4.0-2.noarch.rpm"
+    package: "{{playbook_dir}}/roles/f5_setup/files/f5-appsvcs-3.10.0-5.noarch.rpm"
     provider:
       validate_certs: "no"
       user: admin
       password: R3dH4t123!
-      # ssh_keyfile: "{{playbook_dir}}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
       server_port: "8443"
       server: "{{ ansible_host }}"
