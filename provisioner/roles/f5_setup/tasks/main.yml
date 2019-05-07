@@ -37,10 +37,10 @@
   bigip_iapplx_package:
     package: "{{playbook_dir}}/roles/f5_setup/files/f5-appsvcs-3.10.0-5.noarch.rpm"
     provider:
-      ssh_keyfile: "{{playbook_dir}}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
+      # ssh_keyfile: "{{playbook_dir}}/{{azure_name_prefix}}/{{azure_name_prefix}}-private.pem"
       validate_certs: "no"
       user: admin
       password: R3dH4t123!
-      transport: cli
+      # transport: cli
       server_port: "8443"
       server: "{{ ansible_host }}"
