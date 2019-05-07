@@ -17,7 +17,7 @@
   tags:
     - user_accounts
     - users
-    
-- name: Reboot
-  reboot:
-    reboot_timeout: 300
+
+# - name: Reboot
+#   reboot:
+#     reboot_timeout: 300
