@@ -49,7 +49,7 @@ Add a tasks section with a set_fact for setting the provider values
   hosts: lb
   connection: local
   gather_facts: false
-  
+
 tasks:
     - name: Setup provider
       set_fact:
@@ -185,7 +185,7 @@ Login to the F5 with your web browser to see what was configured.  Grab the IP i
 
 Login information for the BIG-IP:
 - username: admin
-- password: admin
+- password: R3dH4t123!
 
 Navigate the menu on the left and view that the configuration has been deleted
 * Local Traffic Manager -> Virtual Server
