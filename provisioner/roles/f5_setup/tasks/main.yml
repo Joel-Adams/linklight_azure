@@ -35,8 +35,9 @@
       - restart /sys service restnoded
       - restart /sys service restjavad
 
- - pause:
-     minutes: 10
+- name: Wait for commands to complete
+  pause:
+    minutes: 10
 
 # The bigip_iapplx_package requires rpm installed, on macOS use brew rather than pip or it won't work
 - name: Install AS3
