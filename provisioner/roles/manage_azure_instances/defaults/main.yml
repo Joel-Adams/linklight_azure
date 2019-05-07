@@ -81,7 +81,7 @@ azure_instance_types:
   #   os: f5
 
   f5node:
-    vm_size: Standard_D2s_v3
+    vm_size: Standard_D4s_v3
     offer: 'f5-big-ip-good'
     publisher: 'f5-networks'
     sku: 'f5-bigip-virtual-edition-1g-good-hourly'
