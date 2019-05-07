@@ -8,6 +8,19 @@
     name: httpd
     state: started
 
+- name: Open ports for access
+  firewalld:
+    service:
+      - http
+      - https
+    permanent: true
+    state: enabled
+
+- name: Restart the firewalld service to load in the firewall changes
+  service:
+    name: firewalld
+    state: restarted
+
 - name: copy index.html
   template:
     src: index.j2
