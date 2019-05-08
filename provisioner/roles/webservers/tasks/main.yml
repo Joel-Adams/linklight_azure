@@ -10,11 +10,12 @@
 
 - name: Open ports for access
   firewalld:
-    service:
-      - http
-      - https
-    permanent: true
+    service: {{ item }}
+    permanent: yes
     state: enabled
+  with_items:
+    - http
+    - https
 
 - name: Restart the firewalld service to load in the firewall changes
   service:
