@@ -10,7 +10,7 @@
 
 - name: Open ports for access
   firewalld:
-    service: {{ item }}
+    service: "{{ item }}"
     permanent: yes
     state: enabled
   with_items:
